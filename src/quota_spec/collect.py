@@ -90,6 +90,7 @@ def prepare(output=Path("data"), count=200, think_s=0.015, service_s=0.01):
                     Call.search(candidate) if candidate else None,
                     duration,
                     json.dumps(results, ensure_ascii=False)[:1024],
+                    candidate_delay_s=candidate_wall,
                 )
             )
         # Measure incorrect candidates separately after the observed trajectory,

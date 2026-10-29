@@ -64,9 +64,10 @@ class Step:
     candidate: Call | None = None
     candidate_duration_s: float = 1.0
     result_excerpt: str = ""
+    candidate_delay_s: float = 0.0
 
     def __post_init__(self) -> None:
-        for name in ("think_s", "duration_s", "candidate_duration_s"):
+        for name in ("think_s", "duration_s", "candidate_duration_s", "candidate_delay_s"):
             nonnegative(getattr(self, name), name)
         if not isinstance(self.required, Call) or (
             self.candidate is not None and not isinstance(self.candidate, Call)
@@ -85,6 +86,10 @@ class Task:
     steps: tuple[Step, ...]
     deadline_s: float | None = None  # Absolute experiment time, inclusive.
     task_context: str = ""
+    final_think_s: float = 0.0
+    final_candidate: Call | None = None
+    final_candidate_duration_s: float = 0.0
+    final_candidate_delay_s: float = 0.0
 
     def __post_init__(self) -> None:
         nonnegative(self.arrival_s, "arrival_s")
@@ -96,8 +101,10 @@ class Task:
             not isinstance(step, Step) for step in self.steps
         ):
             raise ValueError("steps must be a tuple of Step objects")
-        if not self.steps:
-            raise ValueError("A task must contain at least one step")
+        for name in ("final_think_s", "final_candidate_duration_s", "final_candidate_delay_s"):
+            nonnegative(getattr(self, name), name)
+        if self.final_candidate is not None and not isinstance(self.final_candidate, Call):
+            raise ValueError("final_candidate must be a Call")
         if self.deadline_s is not None:
             nonnegative(self.deadline_s, "deadline_s")
             if self.deadline_s < self.arrival_s:
@@ -176,6 +183,12 @@ def load_tasks(data: list[dict[str, Any]]) -> tuple[Task, ...]:
             arrival_s=row["arrival_s"],
             deadline_s=row.get("deadline_s"),
             task_context=row.get("task_context", ""),
+            final_think_s=row.get("final_think_s", 0),
+            final_candidate=Call.search(row["final_candidate_query"])
+            if row.get("final_candidate_query") is not None
+            else None,
+            final_candidate_duration_s=row.get("final_candidate_duration_s", 0),
+            final_candidate_delay_s=row.get("final_candidate_delay_s", 0),
             steps=tuple(
                 Step(
                     think_s=s["think_s"],
@@ -186,6 +199,7 @@ def load_tasks(data: list[dict[str, Any]]) -> tuple[Task, ...]:
                     else None,
                     candidate_duration_s=s.get("candidate_duration_s", s["duration_s"]),
                     result_excerpt=s.get("result_excerpt", ""),
+                    candidate_delay_s=s.get("candidate_delay_s", 0),
                 )
                 for s in row["steps"]
             ),

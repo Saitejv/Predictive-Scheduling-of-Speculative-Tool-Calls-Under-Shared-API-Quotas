@@ -24,8 +24,10 @@ async def validate(data: Path, output: Path, count=12, agents=4):
     corpus = SearchCorpus.load(data / "corpus.json")
     tasks = load_tasks(json.loads((data / "pilot.json").read_text()))[:count]
     labels = {r["task_id"]: r for r in json.loads((data / "labels.json").read_text())}
-    if not tasks:
-        raise ValueError("Pilot trace is empty")
+    if len(tasks) != count:
+        raise ValueError("Requested count exceeds available pilot tasks")
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Output is not empty; choose a fresh directory")
     output.mkdir(parents=True, exist_ok=True)
     all_outputs, summary = {}, {}
     for name, policy in (

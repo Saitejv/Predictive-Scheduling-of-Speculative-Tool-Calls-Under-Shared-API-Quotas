@@ -58,6 +58,16 @@ def inspect(output, *, online=False):
             "contract": "Same System One endpoint; adapter URL must target a server loaded with the selected pinned artifact",
             "source": "https://github.com/jaredpalmer/kev",
         },
+        "qa": {
+            "endpoint_configured": bool(os.environ.get("QA_CHAT_URL")),
+            "model_configured": bool(os.environ.get("QA_MODEL")),
+            "credential_present": bool(os.environ.get("QA_API_KEY")),
+            "status": "configured_not_probed"
+            if os.environ.get("QA_CHAT_URL") and os.environ.get("QA_MODEL")
+            else "unavailable_missing_endpoint_or_model",
+            "inference_latency_s": None,
+            "cost_usd": None,
+        },
     }
     (output / "preflight.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

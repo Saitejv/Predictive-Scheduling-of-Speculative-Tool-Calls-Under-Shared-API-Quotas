@@ -24,12 +24,14 @@ retain observed-state context, with corpus provenance in a separate manifest.
 ```
 
 `task_id` must be unique. `deadline_s` is optional and absolute, not a relative
-timeout. A task must contain at least one step. Each step begins when the prior
+timeout. A task may contain zero search steps (an immediate model answer). Each step begins when the prior
 required result becomes available, or at task arrival for the first step.
 `think_s` elapses before its required invocation is ready. `duration_s` is the
 recorded tool execution time, excluding quota wait.
 
-An optional `candidate_query` is an observed hint made available at step entry.
+An optional `candidate_query` is an observed hint made available after
+`candidate_delay_s` seconds from step entry (default zero). New collectors record
+its generation time and include that time in `think_s`.
 Omit it or set it to null to provide no candidate. `candidate_duration_s` defaults
 to the required duration; exact-match candidates must have the same tool duration
 as their required invocation. An incorrect candidate can have its own duration.
@@ -44,8 +46,9 @@ speculation. All baselines share that behavior.
 
 ## Event order
 
-At an equal timestamp, process tool completions, required readiness, step entry,
-quota wakeups, then candidate decisions. Ties within a category use stable
+At an equal timestamp, process tool completions, finished decisions/resumed
+prediction waiters, required readiness, step entry, quota wakeups, then new
+candidates. Required work still wins ties with newly proposed optional work. Ties within a category use stable
 insertion order. Required calls dispatch FIFO as soon as quota is available.
 Quota windows are `[k * window_s, (k + 1) * window_s)` and each dispatch charges
 one unit. Tool completion has no quota effect.
@@ -97,3 +100,22 @@ refund quota; failure/retry trajectories are not part of the replay trace schema
 Running execution finish times in policy snapshots are estimates based on prior
 completed durations, falling back to `--expected-duration-s` (default 1 second).
 The actual trace duration remains hidden until completion.
+
+## Terminal answers and delayed decisions
+
+Optional task fields `final_think_s`, `final_candidate_query`,
+`final_candidate_duration_s`, and `final_candidate_delay_s` preserve the final
+answer-generation phase. Numeric defaults are zero; candidate defaults to null.
+Task completion follows this phase, including no-search answers. Final candidates
+can consume quota but cannot be reused by a search that never occurs.
+
+Prediction runs are serialized independently of tool execution. Replay dispatches
+optional work only after inference finishes, rechecking the observed state revision,
+quota window, registry and required queue. Stale decisions reject. Required
+readiness of the candidate owner waits for inference as needed; unrelated tasks
+continue. Admission inference overlaps main-model thinking, matching the QA live
+harness. API latency is never implemented by spending quota in an earlier window.
+
+Frozen configurations are version 2 and fingerprint source, normalized traces and
+forecast banks. Old trace JSON remains readable; old frozen study configurations
+are rejected because their execution semantics differ.

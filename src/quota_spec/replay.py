@@ -14,6 +14,7 @@ from .models import (
     Observation,
     QueuedCall,
     Snapshot,
+    Step,
     Task,
     nonnegative,
 )
@@ -51,7 +52,15 @@ class ReplayResult:
 class Replay:
     # Stable tie order: tool completion, required readiness, task/step entry,
     # quota wakeup, then optional admission. Required work wins same-time ties.
-    PRIORITY = {"finish": 0, "required": 1, "enter": 2, "refill": 3, "candidate": 4}
+    PRIORITY = {
+        "finish": 0,
+        "decision": 1,
+        "candidate_resume": 1,
+        "required": 2,
+        "enter": 3,
+        "refill": 4,
+        "candidate": 5,
+    }
 
     def __init__(
         self,
@@ -102,6 +111,26 @@ class Replay:
         recent_required: list[float] = []
         blocked_until: dict[str, float] = {}
         modeled_overhead = 0.0
+        prediction_available = 0.0
+        revision = 0
+
+        def step_at(tid, index):
+            task = self.tasks[tid]
+            if index < len(task.steps):
+                return task.steps[index]
+            return Step(
+                task.final_think_s,
+                Call("__answer__", "{}"),
+                0,
+                task.final_candidate,
+                task.final_candidate_duration_s,
+                candidate_delay_s=task.final_candidate_delay_s,
+            )
+
+        def finish_task(tid):
+            finish_times[tid] = now
+            log("task_finished", task_id=tid)
+            agents.pop(tid, None)
 
         def push(at: float, kind: str, payload=None) -> None:
             nonlocal serial
@@ -113,10 +142,9 @@ class Replay:
 
         def advance(tid: str, index: int) -> None:
             completed[tid] += 1
-            if index + 1 == len(self.tasks[tid].steps):
-                finish_times[tid] = now
-                log("task_finished", task_id=tid)
-                agents.pop(tid, None)
+            task = self.tasks[tid]
+            if index + 1 == len(task.steps) and not (task.final_think_s or task.final_candidate):
+                finish_task(tid)
             else:
                 push(now, "enter", (tid, index + 1))
 
@@ -168,9 +196,11 @@ class Replay:
 
         while heap:
             now, _, _, kind, payload = heapq.heappop(heap)
+            if kind in ("enter", "finish", "refill"):
+                revision += 1
             if kind == "enter":
                 tid, index = payload
-                step = self.tasks[tid].steps[index]
+                step = step_at(tid, index)
                 agents[tid] = AgentState(
                     tid,
                     now,
@@ -185,11 +215,16 @@ class Replay:
                 log("step_entered", task_id=tid, step=index)
                 push(now + step.think_s, "required", payload)
                 if step.candidate is not None:
-                    push(now, "candidate", payload)
-            elif kind == "candidate":
+                    push(now + step.candidate_delay_s, "candidate", payload)
+            elif kind in ("candidate", "candidate_resume"):
                 tid, index = payload
-                step = self.tasks[tid].steps[index]
+                step = step_at(tid, index)
                 key = (tid, index)
+                if now < prediction_available:
+                    # The live gateway serializes prediction while tools keep running.
+                    blocked_until[tid] = max(blocked_until.get(tid, now), prediction_available)
+                    push(prediction_available, "candidate_resume", payload)
+                    continue
                 completed_executions = [ex for ex in executions if ex.done]
                 observed_duration = (
                     sum(ex.finish_s - ex.started_s for ex in completed_executions)
@@ -249,21 +284,59 @@ class Replay:
                 overhead = getattr(policy, "overhead_s", 0.0) if details else 0.0
                 modeled_overhead += overhead
                 blocked_until[tid] = now + overhead
-                decisions[key] = admitted
+                prediction_available = now + overhead
+                decision = (tid, index, admitted, eligible, details, revision, quota.window_index)
+                if overhead:
+                    push(now + overhead, "decision", decision)
+                else:
+                    decisions[key] = admitted
+                    log(
+                        "candidate_decided",
+                        task_id=tid,
+                        step=index,
+                        admitted=admitted,
+                        eligible=eligible,
+                        stale=False,
+                        **details,
+                    )
+                    if admitted:
+                        start(tid, step.candidate, step.candidate_duration_s, True)
+                        revision += 1
+            elif kind == "decision":
+                tid, index, admitted, eligible, details, old_revision, window = payload
+                remaining = quota.remaining(now)
+                stale = (
+                    revision != old_revision
+                    or quota.window_index != window
+                    or tid not in agents
+                    or agents[tid].phase != "thinking"
+                    or completed[tid] != index
+                    or bool(queue)
+                    or remaining < 1
+                )
+                admitted = admitted and not stale
+                decisions[tid, index] = admitted
                 log(
                     "candidate_decided",
                     task_id=tid,
                     step=index,
                     admitted=admitted,
                     eligible=eligible,
+                    stale=stale,
                     **details,
                 )
                 if admitted:
-                    start(tid, step.candidate, step.candidate_duration_s + overhead, True)
+                    step = step_at(tid, index)
+                    start(tid, step.candidate, step.candidate_duration_s, True)
+                    revision += 1
             elif kind == "required":
                 tid, index = payload
                 if now < blocked_until.get(tid, now):
                     push(blocked_until[tid], "required", payload)
+                    continue
+                revision += 1
+                if index == len(self.tasks[tid].steps):
+                    finish_task(tid)
                     continue
                 step = self.tasks[tid].steps[index]
                 histories[tid].append(step.required)
@@ -317,7 +390,7 @@ class Replay:
             "tasks": len(self.tasks),
             "mean_completion_s": sum(durations) / len(durations),
             "p95_completion_s": percentile(durations, 0.95),
-            "mean_required_wait_s": sum(waits) / len(waits),
+            "mean_required_wait_s": sum(waits) / len(waits) if waits else 0.0,
             "p95_required_wait_s": percentile(waits, 0.95),
             "deadline_tasks": len(deadline_tasks),
             "deadline_misses": deadline_misses,

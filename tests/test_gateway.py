@@ -111,7 +111,8 @@ class GatewayTests(unittest.IsolatedAsyncioTestCase):
         except ImportError:
             self.skipTest("Install .[live] for HTTP tests")
         corpus = SearchCorpus([{"title": "x", "text": "x is a document"}])
-        app = create_app(corpus, window_s=0.05)
+        # HTTP contract validation must not depend on import/thread startup speed.
+        app = create_app(corpus, window_s=10)
         async with httpx.AsyncClient(
             transport=httpx.ASGITransport(app), base_url="http://test"
         ) as client:

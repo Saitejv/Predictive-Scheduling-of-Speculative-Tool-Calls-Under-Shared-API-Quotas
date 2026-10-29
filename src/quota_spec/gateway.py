@@ -16,15 +16,29 @@ class Entry:
     speculative: bool
     expected_finish_s: float
     worker: asyncio.Task | None = None
+    used: bool = False
+    started_s: float | None = None
 
 
 class Gateway:
-    def __init__(self, tool, capacity=3, window_s=10.0, policy=None, expected_duration_s=0.01):
+    def __init__(
+        self,
+        tool,
+        capacity=3,
+        window_s=10.0,
+        policy=None,
+        expected_duration_s=0.01,
+        required_order="fifo",
+    ):
         self.tool, self.policy = tool, policy or CurrentCapacity()
         self.quota = FixedWindowQuota(capacity, window_s)
         self.origin = time.monotonic()
         nonnegative(expected_duration_s, "expected_duration_s")
         self.expected_duration_s = expected_duration_s
+        self.completed_execution_count = 0
+        if required_order not in ("fifo", "progress"):
+            raise ValueError("required_order must be fifo or progress")
+        self.required_order = required_order
         self.lock = asyncio.Lock()
         self.prediction_lock = asyncio.Lock()
         self.registry = {}
@@ -72,6 +86,7 @@ class Gateway:
         if not self.quota.consume(now):
             raise RuntimeError("Atomic dispatch without quota")
         entry.expected_finish_s = now + self.expected_duration_s
+        entry.started_s = now
         self.log(
             "call_started",
             task_id=key[0],
@@ -92,7 +107,15 @@ class Gateway:
 
     def _pump(self):
         while self.queue and self.quota.remaining(self.now()):
-            key, entry, _ = self.queue.popleft()
+            if self.required_order == "progress":
+                self.queue = deque(
+                    sorted(
+                        self.queue,
+                        key=lambda row: (-self.agents[row[0][0]].completed_calls, row[2]),
+                    )
+                )
+            key, entry, ready = self.queue.popleft()
+            self.log("required_wait", task_id=key[0], wait_s=self.now() - ready)
             self._start(key, entry)
         if self.queue and self.wakeup is None:
             self.wakeup = asyncio.create_task(self._refill())
@@ -127,6 +150,10 @@ class Gateway:
         # Runs synchronously on the event loop; no suspension during this mutation.
         if worker.cancelled() and not entry.future.done():
             if self.registry.get(key) is entry:
+                if entry.speculative and not entry.used:
+                    self.log(
+                        "unused_speculation", task_id=key[0], arguments_json=key[1].arguments_json
+                    )
                 self.registry.pop(key)
             entry.future.cancel()
             self._finish_progress(key, failed=True)
@@ -138,6 +165,12 @@ class Gateway:
         except (Exception, asyncio.CancelledError) as exc:
             async with self.lock:
                 if self.registry.get(key) is entry:
+                    if entry.speculative and not entry.used:
+                        self.log(
+                            "unused_speculation",
+                            task_id=key[0],
+                            arguments_json=key[1].arguments_json,
+                        )
                     self.registry.pop(key)
                 self._finish_progress(key, failed=True)
                 if not entry.future.done():
@@ -153,12 +186,23 @@ class Gateway:
             return
         async with self.lock:
             entry.expected_finish_s = self.now()
+            duration = entry.expected_finish_s - entry.started_s
+            self.completed_execution_count += 1
+            self.expected_duration_s += (
+                duration - self.expected_duration_s
+            ) / self.completed_execution_count
             # Only a matching required request may expose optional results to progress.
             self._finish_progress(key, result)
             if not entry.future.done():
                 entry.future.set_result(result)
             self.revision += 1
-            self.log("call_finished", task_id=key[0], speculative=entry.speculative)
+            self.log(
+                "call_finished",
+                task_id=key[0],
+                speculative=entry.speculative,
+                arguments_json=key[1].arguments_json,
+                duration_s=self.now() - entry.started_s,
+            )
 
     async def required(self, task_id, call):
         key = (task_id, call)
@@ -194,6 +238,8 @@ class Gateway:
             elif entry.future.done():
                 self.log("result_reused", task_id=task_id)
                 self._finish_progress(key, entry.future.result())
+                if pending is None and not entry.speculative:
+                    self.log("required_wait", task_id=task_id, wait_s=0.0)
             elif entry.worker is not None:
                 old = self.agents[task_id]
                 now = self.now()
@@ -201,6 +247,9 @@ class Gateway:
                     old, observed_at_s=now, phase="running", phase_since_s=now
                 )
                 self.log("inflight_joined", task_id=task_id)
+            if pending is None and entry.speculative:
+                self.log("required_wait", task_id=task_id, wait_s=0.0)
+            entry.used = True
         # Completion updates progress once, even if every HTTP client disconnects.
         return await asyncio.shield(entry.future)
 
@@ -213,6 +262,12 @@ class Gateway:
             for key in list(self.registry):
                 if key[0] == task_id:
                     entry = self.registry.pop(key)
+                    if entry.speculative and not entry.used:
+                        self.log(
+                            "unused_speculation",
+                            task_id=task_id,
+                            arguments_json=key[1].arguments_json,
+                        )
                     if entry.worker and not entry.worker.done():
                         entry.worker.cancel()
                         workers.append(entry.worker)
@@ -253,7 +308,7 @@ class Gateway:
                             c,
                             e.expected_finish_s
                             if e.future.done()
-                            else max(now, e.expected_finish_s),
+                            else max(now, e.started_s + self.expected_duration_s),
                         )
                         for (tid, c), e in self.registry.items()
                         if e.worker is not None
@@ -337,7 +392,13 @@ def create_app(corpus=None, *, capacity=None, window_s=None, policy=None):
     async def search(call):
         return await asyncio.to_thread(corpus.search, json.loads(call.arguments_json)["query"])
 
-    gateway = Gateway(search, capacity, window_s, policy)
+    gateway = Gateway(
+        search,
+        capacity,
+        window_s,
+        policy,
+        required_order=os.environ.get("QUOTA_REQUIRED_ORDER", "fifo"),
+    )
 
     @asynccontextmanager
     async def lifespan(app):

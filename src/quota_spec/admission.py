@@ -63,9 +63,12 @@ def sample_scenarios(state, predictor, config):
             chain = []
             if rng.random() < forecast.next_probability:
                 for index in range(config.max_calls):
-                    delay = rng.choice(forecast.delays_s)
+                    delays = forecast.delays_s
                     if index == 0 and agent.phase == "thinking":
-                        delay = max(0.0, delay - (state.now_s - agent.phase_since_s))
+                        elapsed = state.now_s - agent.phase_since_s
+                        surviving = tuple(d - elapsed for d in delays if d >= elapsed)
+                        delays = surviving or (0.0,)
+                    delay = rng.choice(delays)
                     call = (
                         state.candidate
                         if agent.task_id == state.task_id
@@ -130,11 +133,12 @@ def rollout(state: Observation, scenario: dict, admit: bool, overhead_s: float, 
         )
 
     if admit:
-        if not quota.consume(state.now_s):
+        if not quota.remaining(state.now_s):
             raise ValueError("Ineligible speculative rollout")
         own = scenario[state.task_id]
         duration = own[0].duration_s if own else 1.0
-        cache[state.task_id, state.candidate] = state.now_s + overhead_s + duration
+        # Charge dispatch in its actual window, after prediction completes.
+        push(state.now_s + overhead_s, state.task_id, state.candidate, duration, -2)
     known = {q.task_id: q for q in snapshot.required}
     for agent in snapshot.agents:
         chain = scenario[agent.task_id]
@@ -167,6 +171,10 @@ def rollout(state: Observation, scenario: dict, admit: bool, overhead_s: float, 
             push(ready, agent.task_id, d.call, d.duration_s, 0)
     while queue:
         ready, _, original_ready, original_serial, tid, call, duration, index = heapq.heappop(queue)
+        if index == -2:
+            if ready <= end and (tid, call) not in cache and quota.consume(ready):
+                cache[tid, call] = ready + duration
+            continue
         if ready > end:
             finishes[tid] = censored
             continue
@@ -222,6 +230,7 @@ class PredictiveAdmission:
                 if getattr(self.predictor, "measured_overhead", False)
                 else self.config.overhead_s
             )
+            simulation_overhead += getattr(self.predictor, "decision_overhead_s", 0.0)
             gains, owner_gains, added_misses = [], [], []
             # Risk denominator: every observed deadline within the horizon in each sample.
             deadlines = {
@@ -255,6 +264,7 @@ class PredictiveAdmission:
                 if getattr(self.predictor, "measured_overhead", False)
                 else self.config.overhead_s
             )
+            self.overhead_s += getattr(self.predictor, "decision_overhead_s", 0.0)
             # Own-only ablation changes only the gain objective, retaining global risk.
             result = gain > self.overhead_s and risk <= self.config.epsilon
             self.last_decision = {
@@ -279,6 +289,7 @@ class PredictiveAdmission:
                 if getattr(self.predictor, "measured_overhead", False)
                 else self.config.overhead_s
             )
+            self.overhead_s += getattr(self.predictor, "decision_overhead_s", 0.0)
             self.last_decision = {
                 "fallback": type(exc).__name__,
                 "reason": str(exc)[:200],

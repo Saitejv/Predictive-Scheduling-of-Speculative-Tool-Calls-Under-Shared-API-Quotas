@@ -43,13 +43,17 @@ class UsageForecastReserve:
     def admit(self, state):
         import math
 
+        from .quota import FixedWindowQuota
+
         if state.snapshot is None:
             return False
         window = state.snapshot.window_s
         history = state.snapshot.recent_required_s
         lookback = min(window, max(state.now_s, 1e-9))
         rate = sum(t >= state.now_s - window for t in history) / lookback
-        remaining_s = (math.floor(state.now_s / window) + 1) * window - state.now_s
+        remaining_s = (
+            FixedWindowQuota(state.snapshot.capacity, window).next_refill(state.now_s) - state.now_s
+        )
         reserve = max(self.minimum, math.ceil(rate * remaining_s))
         self.last_decision = {"forecast_reserve": reserve}
         return state.queued_required == 0 and state.quota_remaining > reserve

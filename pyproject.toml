@@ -12,9 +12,14 @@ dependencies = []
 [project.optional-dependencies]
 live = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "httpx>=0.28,<1"]
 analysis = ["matplotlib>=3.9,<4"]
+dev = ["ruff>=0.11,<1"]
 
 [project.scripts]
 quota-spec = "quota_spec.cli:main"
+quota-collect-qa = "quota_spec.collect_qa:main"
+quota-forecast = "quota_spec.forecast_bank:main"
+quota-study = "quota_spec.experiments:main"
+quota-pipeline = "quota_spec.pipeline:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

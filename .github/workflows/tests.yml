@@ -1,6 +1,16 @@
 name: Offline verification
 on: [push, pull_request]
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[dev]'
+      - run: ruff check src tests
+      - run: ruff format --check src tests
   tests:
     runs-on: ubuntu-latest
     strategy:
@@ -17,3 +27,5 @@ jobs:
       - run: python -m quota_spec.cli --skip-reference --output results/ci
       - if: matrix.extras != ''
         run: python -m quota_spec.qa --backend mock --count 2 --output results/qa-ci
+      - if: matrix.extras != ''
+        run: python -m quota_spec.pipeline --backend mock --predictors mock --contexts progress --count 4 --samples 1 --seeds 7 --window-s .1 --live-count 2 --no-plots --output results/pipeline-ci

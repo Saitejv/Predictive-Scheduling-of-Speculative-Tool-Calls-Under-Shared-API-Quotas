@@ -39,6 +39,12 @@ def dump_tasks(tasks: tuple[Task, ...]) -> list[dict]:
             "arrival_s": t.arrival_s,
             "deadline_s": t.deadline_s,
             "task_context": t.task_context,
+            "final_think_s": t.final_think_s,
+            "final_candidate_query": json.loads(t.final_candidate.arguments_json)["query"]
+            if t.final_candidate
+            else None,
+            "final_candidate_duration_s": t.final_candidate_duration_s,
+            "final_candidate_delay_s": t.final_candidate_delay_s,
             "steps": [
                 {
                     "think_s": s.think_s,
@@ -49,6 +55,7 @@ def dump_tasks(tasks: tuple[Task, ...]) -> list[dict]:
                     else None,
                     "candidate_duration_s": s.candidate_duration_s,
                     "result_excerpt": s.result_excerpt,
+                    "candidate_delay_s": s.candidate_delay_s,
                 }
                 for s in t.steps
             ],

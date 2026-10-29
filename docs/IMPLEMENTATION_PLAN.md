@@ -1,82 +1,44 @@
-# Implementation plan
+# Proposal implementation checklist
 
-Updated October 28, 2026 against the October 23 proposal. Checked items have
-local code or measured artifacts. Scripted retrieval traces are explicitly
-identified; external model runs and LLM answer validation remain open.
+Updated October 29, 2026. Software readiness and empirical measurements are
+separate: no real model inference was performed during this credential-free work.
 
-## First milestone: replay and pilot
+## Implemented and ready to run
 
-- [x] Initialize a local Git repository and preserve the original proposal.
-- [x] Write architecture, trace, evaluation, and implementation documentation.
-- [x] Implement fixed-window accounting, FIFO required dispatch, exact reuse,
-  in-flight joining, and serial dependency-aware readiness.
-- [x] Implement no speculation, current capacity, and fixed reserve baselines.
-- [x] Implement a separate future-informed greedy reference.
-- [x] Provide seeded synthetic comparisons and machine-readable artifacts.
-- [x] Test accounting, reuse, same-time ordering, dependencies, and leakage boundary.
-- [x] Collect 20 measured scripted retrieval pilot traces, with original task IDs
-  and dataset provenance; the pilot is a subset of development tasks.
-- [x] Audit Jev/Kev access, hardware and exact API contracts; select and resolve
-  a pretrained Kev artifact. See `MODEL_ACCESS.md`.
-- [ ] Measure actual Jev/Kev inference cost and latency on working model access.
-  Blockers: no Jev credential, no Kev endpoint/runtime, limited local disk space.
-- [x] Build and freeze a local search corpus from a HotpotQA subset.
-- [x] Record candidates from one fixed observed-state generator, at most one per step.
-- [x] Compare reserves/reference on the pilot; preserve synthetic cases showing
-  useful reference admission, rejection under cross-agent harm, and no mean gain.
+- [x] Fixed-window quota ledger with no refunds on completion/cancellation.
+- [x] Atomic asyncio/FastAPI gateway, FIFO required priority, exact caching and joining.
+- [x] Dependency-aware replay with observed-only policy inputs.
+- [x] Paired cross-agent admission with horizon/sample bounds and estimated risk guard.
+- [x] No-speculation, current-capacity, fixed-reserve and usage-reserve baselines.
+- [x] Own-agent ablation; separate progress-ordering controls with and without speculation; privileged greedy reference.
+- [x] Development-only history transitions and time distributions.
+- [x] Bounded Jev/Kev HTTP adapters, timeouts, response validation and failure telemetry.
+- [x] Five predictor/context configurations and frozen-response policy comparisons.
+- [x] Held-out reuse/next/continuation calibration and token/cost recording.
+- [x] Checksummed local corpus and source dataset attribution.
+- [x] Main QA integration and resumable, checksummed LLM trajectory collection.
+- [x] Final answer generation, no-search answers and terminal candidates in replay.
+- [x] Candidate timing, inference timing and stale-dispatch revalidation.
+- [x] Frozen development tuning and all 12 focused sensitivity settings.
+- [x] Paired seeds and multi-metric bootstrap intervals, including full versus own.
+- [x] Live QA answer EM/F1 and quota/latency/failure reporting.
+- [x] One-command workflow, mock modes, resume, reports, plots and CI smoke coverage.
 
-The November 2/4 checkpoint can demonstrate replay, quota/reuse tests, the pilot,
-and comparisons. These retrieval traces do not replace the planned LLM pilot.
+## Empirical work that starts after access is configured
 
-## Admission and history
+- [ ] Authenticate the chosen QA endpoint, Jev account and pretrained Kev server.
+- [ ] Run the real 10–20-task pilot and choose the experiment timescale on development.
+- [ ] Collect 100–200 successful LLM task traces and actual inference costs.
+- [ ] Freeze Jev/Kev forecasts and run held-out context/scheduling comparisons.
+- [ ] Inspect real live answer accuracy and replay/live discrepancies.
+- [ ] Write the final course paper from those measurements, including negative results.
 
-- [x] Specify a bounded prediction schema and observed-state snapshot format.
-- [x] Fit development-only history transitions and time-to-next-call distributions.
-- [x] Implement paired simulation with fixed sample budget and horizon.
-- [x] Include quota debt, reuse, predicted future required calls, and overhead.
-- [x] Define and log the deadline-risk estimate and rejection fallback.
-- [x] Add the recent-usage forecast reserve baseline.
-- [x] With the predictor/scenario seed fixed, compare full and own-agent-only admission.
-- [x] Add regression tests for prediction error, bursts, and horizon boundaries.
+The question/top-title candidate generator is an explicit heuristic substitution
+for a learned generator. The core contribution is the cross-agent admission rule,
+not reproduction of an external candidate-generation system. Forecast-bank
+contexts freeze phase-entry elapsed time; adaptive elapsed-state behavior is
+covered separately by the live gateway and CLI. The fixed-window, serial-chain,
+single-process scope remains intentional.
 
-## Models and context ablations
-
-- [x] Implement Jev and Kev HTTP adapters behind the bounded prediction schema.
-- [ ] Run task/candidate, history, progress/excerpt and removal ablations with real
-  Jev/Kev predictions. Context selection is implemented; access is unavailable.
-- [x] Enforce observed-at timestamps, bounded excerpts/history, and total prediction timeouts.
-- [x] Implement latency, token, monetary-cost and failure telemetry; compute held-out
-  history calibration. Missing cost and external measurements remain null.
-- [ ] Collect actual Jev/Kev telemetry and calibration after access is configured.
-- [x] Keep the same candidate generator across speculative policies.
-- [x] Report Jev unavailability without fabricated integration results.
-
-## Experiments and live validation
-
-- [x] Implement FastAPI/asyncio gateway with atomic reservation and call registry.
-- [x] Run 12 live scripted retrieval tasks across three policies; compare replay
-  timing and verify exact required-result equality and fixed-window budgets.
-- [x] Implement bounded main-model HTTP QA integration and synthetic offline tests.
-  Configuration and usage: `API_SETUP.md`.
-- [ ] Run live **LLM** agents and measure answer correctness, inference/candidate
-  cost and timing. The local harness does not generate QA answers.
-- [x] Expand to 200 measured scripted task traces, split by task 100/100 into
-  development/evaluation. Retain dataset IDs, labels, observations and checksums.
-- [x] Freeze development-tuned configurations before held-out comparisons.
-- [x] Run 1/2/4/8-agent, burst/staggered-arrival, quota-capacity, quota-period,
-  and controlled prediction-error sweeps (12 settings, five seeds).
-- [x] Add progress-aware required ordering as a separate controlled experiment.
-- [x] Compute paired repeated-seed confidence intervals and report regressions.
-- [x] Prepare sensitivity plots, limitations, reproducibility instructions, and an
-  exploratory report with measured local results.
-- [ ] Complete the final eight-page research report after real-model and LLM-agent
-  evidence is available. The proposal's deadline is December 17, 1:00 p.m. EST.
-
-## Remaining external work
-
-1. Provide Jev access and a pretrained Kev serving environment with sufficient disk.
-2. Run the implemented context ablations and collect actual external-model telemetry.
-3. Collect LLM-agent traces and answer-quality results; repeat the frozen evaluation.
-4. Finish the final report using those measurements, including negative results.
-
-No hosted remote is configured. Publishing code was not part of the local task.
+See [RUNBOOK.md](RUNBOOK.md) for the exact commands and [REVIEW_VALIDATION.md](REVIEW_VALIDATION.md)
+for key-free evidence. Existing numerical reports are historical until regenerated.

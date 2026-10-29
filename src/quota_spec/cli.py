@@ -23,7 +23,7 @@ def main() -> None:
     parser.add_argument(
         "--expected-duration-s",
         type=float,
-        default=1.0,
+        default=None,
         help="Initial observable tool duration estimate",
     )
     parser.add_argument("--reserve", type=int, default=1)
@@ -68,7 +68,9 @@ def main() -> None:
             args.capacity,
             args.window_s,
             required_order=args.required_order,
-            expected_duration_s=args.expected_duration_s,
+            expected_duration_s=1.0
+            if args.expected_duration_s is None
+            else args.expected_duration_s,
         )
         policies = {
             "no_speculation": NoSpeculation(),
@@ -84,6 +86,9 @@ def main() -> None:
             if {t.task_id for t in tasks} & {t.task_id for t in development}:
                 raise ValueError("Development/evaluation task IDs overlap")
             history = HistoryPredictor.fit(development)
+            if args.expected_duration_s is None:
+                durations = [step.duration_s for task in development for step in task.steps]
+                replay.expected_duration_s = sum(durations) / len(durations) if durations else 0.0
             predictor = history
             if args.predictor != "history":
                 from .adapters import JevPredictor, KevPredictor, MockSystemOnePredictor
@@ -108,6 +113,8 @@ def main() -> None:
             raise ValueError("Model predictors require --history-trace for timing distributions")
     except (ValueError, KeyError, TypeError, OSError) as exc:
         parser.error(str(exc))
+    if args.output.exists() and any(args.output.iterdir()):
+        parser.error("Output is not empty; choose a fresh directory")
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "trace.json").write_text(json.dumps(dump_tasks(tasks), indent=2) + "\n")
     config = {
@@ -123,7 +130,7 @@ def main() -> None:
         "skip_reference": args.skip_reference,
     }
     config.update(
-        expected_duration_s=args.expected_duration_s,
+        expected_duration_s=replay.expected_duration_s,
         required_order=args.required_order,
         predictor=args.predictor,
         context=args.context,

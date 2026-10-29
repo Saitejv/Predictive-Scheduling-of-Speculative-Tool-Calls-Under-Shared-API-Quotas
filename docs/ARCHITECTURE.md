@@ -29,6 +29,8 @@ flowchart LR
 | `adapters.py` | Total-timeout Jev/Kev System One contracts and inference telemetry |
 | `gateway.py` | Single-process atomic live registry/reservation and HTTP factory |
 | `search.py`, `collect.py` | Checksummed BM25 corpus and observed scripted trace collection |
+| `collect_qa.py`, `forecast_bank.py`, `pipeline.py` | Resumable LLM traces, frozen probabilities and complete experiment workflow |
+| `telemetry.py` | Actual-call/token/cost summaries including retained failed attempts |
 | `experiments.py`, `live.py` | Tuning, held-out sweeps, bootstrap and live fidelity checks |
 
 Jev/Kev adapters have mock contract tests; real inference is unavailable. The
@@ -48,7 +50,7 @@ future arrivals, required identities, durations and dependencies. Online policie
 never receive the ground-truth `Task` or `Step` objects.
 
 A result excerpt stored in a trace step becomes visible only after that step
-completes. Candidates are available at step entry and generated from the question
+completes. Candidates become available after their recorded generation delay and generated from the question
 and previous observed search results. No gold answer or supporting-fact label
 is passed to the generator/predictor. History fitting uses development labels;
 held-out labels are inspected only by evaluation/calibration code.
@@ -97,7 +99,7 @@ finite samples and registry estimates prevent arbitrary-arrival guarantees.
 ## Execution invariants and timing
 
 Required FIFO priority stays fixed across admission comparisons. Progress-aware
-required ordering is a separate no-speculation control that prioritizes larger
+required ordering has separate no-speculation and current-capacity controls that prioritize larger
 observed completed-call counts; readiness and stable order break ties.
 
 The registry key is exactly `(task_id, tool, canonical_arguments)`. Casing and
@@ -106,14 +108,13 @@ is reused without another charge. Optional callers receive admission status
 only; result contents are delivered upon a matching required request. No
 cross-agent sharing, semantic matching or eviction is assumed.
 
-Replay considers a candidate once at step entry and skips stale step events. It reserves quota at decision
-time and adds frozen modeled overhead to the speculative completion time;
-required readiness of its owner cannot precede that overhead. This conservative
-reservation convention differs from the live gateway, which performs inference
-before acquiring the atomic reservation lock and revalidates eligibility. Live
-and replay timing therefore need measurement rather than an exact-equivalence
-claim. Scheduler wall time is diagnostic; frozen overhead preserves deterministic
-simulated outcomes for a saved configuration.
+Replay considers each candidate after its recorded generation delay. It serializes
+prediction independently from tool execution, then revalidates the observed state
+revision, quota window, owner phase and required queue before dispatch. Quota is
+charged in the dispatch window, after inference. Main-model thinking overlaps
+admission; the owner's action waits for both. The live QA harness follows the
+same overlap convention. Actual scheduler and event-loop timing still vary by
+host; frozen modeled costs make saved replay outcomes reproducible.
 
 The future-informed reference uses a separate privileged callback. It compares
 full remaining ground-truth admit/reject rollouts, fixes prior decisions, disables

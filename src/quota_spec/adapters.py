@@ -28,6 +28,10 @@ class SystemOnePredictor:
         transport=None,
         decision_timeout_s=5.0,
     ):
+        if input_usd_per_million is None and os.environ.get("QUOTA_INPUT_USD_PER_MILLION"):
+            input_usd_per_million = float(os.environ["QUOTA_INPUT_USD_PER_MILLION"])
+        if output_usd_per_million is None and os.environ.get("QUOTA_OUTPUT_USD_PER_MILLION"):
+            output_usd_per_million = float(os.environ["QUOTA_OUTPUT_USD_PER_MILLION"])
         nonnegative(timeout_s, "timeout_s")
         if not 0 < timeout_s <= 60:
             raise ValueError("timeout_s must be in (0, 60]")
@@ -63,6 +67,7 @@ class SystemOnePredictor:
         self.api_key, self.context, self.timeout_s = api_key, context, timeout_s
         self.input_price, self.output_price = input_usd_per_million, output_usd_per_million
         self.transport = transport
+        self.model_revision = os.environ.get("KEV_REVISION") if model.startswith("kev") else None
         self.records = []
 
     def begin_decision(self):
@@ -104,7 +109,7 @@ class SystemOnePredictor:
         questions = {
             "reuse": {
                 "type": "noul",
-                "instructions": "Will this agent's next required search use exactly the candidate tool and arguments?",
+                "instructions": "Conditional on this agent making another required search, will its next search use exactly the candidate tool and arguments?",
             },
             "next": {
                 "type": "noul",
@@ -120,6 +125,7 @@ class SystemOnePredictor:
             "task_id": agent.task_id,
             "observed_at_s": state.now_s,
             "model_requested": self.model,
+            "model_revision": self.model_revision,
             "context": self.context,
             "input_chars": len(json.dumps(context)),
             "cost_usd": None,
@@ -165,6 +171,7 @@ class SystemOnePredictor:
             return prediction
         except Exception as exc:
             record["failure"] = type(exc).__name__
+            record["http_status"] = getattr(getattr(exc, "response", None), "status_code", None)
             raise ValueError(f"{self.model} prediction failed: {type(exc).__name__}") from exc
         finally:
             record["latency_s"] = time.perf_counter() - started
@@ -198,6 +205,7 @@ class KevPredictor(SystemOnePredictor):
             api_key=kwargs.pop("api_key", None) or os.environ.get("KEV_API_KEY"),
             **kwargs,
         )
+        self.model_revision = os.environ.get("KEV_REVISION")
 
 
 class MockSystemOnePredictor(SystemOnePredictor):
