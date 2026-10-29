@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quota-spec"
+version = "0.1.0"
+description = "Replay experiments for speculative tool calls under shared API quotas"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+live = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "httpx>=0.28,<1"]
+analysis = ["matplotlib>=3.9,<4"]
+
+[project.scripts]
+quota-spec = "quota_spec.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

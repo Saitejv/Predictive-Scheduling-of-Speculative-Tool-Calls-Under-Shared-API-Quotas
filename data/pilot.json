@@ -1,0 +1,642 @@
+[
+  {
+    "task_id": "5ae005b555429942ec259bec",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "In what year was the novel that Louren\u00e7o Mutarelli based \"Nina\" on based first published?",
+    "steps": [
+      {
+        "think_s": 0.01680337599827908,
+        "query": "In what year was the novel that Louren\u00e7o Mutarelli based \"Nina\" on based first published?",
+        "duration_s": 0.030351042005349882,
+        "candidate_query": "In what year was the novel that Louren\u00e7o Mutarelli based \"Nina\" on based first published?",
+        "candidate_duration_s": 0.030351042005349882,
+        "result_excerpt": "[{\"title\": \"Louren\u00e7o Mutarelli\", \"text\": \"In addition to comic books, Mutarelli has also created plays, books, and all the illustration and animated sequences of the 2004 motion picture \\\"Nina\\\", which was based on the novel \\\"Crime and Punishment\\\" by Dostoyevsky.\", \"score\": 48.13733183}, {\"title\": \"Drained\", \"text\": \"Drained, (Portuguese: O Cheiro do Ralo_ is a 2006 Brazilian dark comedy film based on a novel by Louren\u00e7o Mutarelli. It was directed by Heitor Dhalia, and stars Selton Mello. The film was produced by Gera\u00e7\u00e3o Conte\u00fado, Primo Filmes & RT Features.\", \"score\": 32.93251399}, {\"title\": \"Quando Eu Era Vivo\", \"text\": \"Quando Eu Era Vivo (English: When I Was Alive ) is a 2014 Brazilian drama-thriller film directed by Marco Dutra, based on the novel \\\"A Arte de Produzir Efeito Sem Causa\\\" by Louren\u00e7o Mutarelli.\", \"score\": 31.77940115}, {\"title\": \"The Birds on the Trees\", \"text\": \"The Birds on the Trees is a novel by Nina Bawden first published in 1970 about a middle-class English family whose 19-year-old"
+      },
+      {
+        "think_s": 0.01878150000993628,
+        "query": "Louren\u00e7o Mutarelli",
+        "duration_s": 0.01719654099724721,
+        "candidate_query": "Louren\u00e7o Mutarelli",
+        "candidate_duration_s": 0.01719654099724721,
+        "result_excerpt": "[{\"title\": \"Louren\u00e7o Mutarelli\", \"text\": \"In addition to comic books, Mutarelli has also created plays, books, and all the illustration and animated sequences of the 2004 motion picture \\\"Nina\\\", which was based on the novel \\\"Crime and Punishment\\\" by Dostoyevsky.\", \"score\": 30.28472343}, {\"title\": \"Drained\", \"text\": \"Drained, (Portuguese: O Cheiro do Ralo_ is a 2006 Brazilian dark comedy film based on a novel by Louren\u00e7o Mutarelli. It was directed by Heitor Dhalia, and stars Selton Mello. The film was produced by Gera\u00e7\u00e3o Conte\u00fado, Primo Filmes & RT Features.\", \"score\": 23.35254516}, {\"title\": \"Quando Eu Era Vivo\", \"text\": \"Quando Eu Era Vivo (English: When I Was Alive ) is a 2014 Brazilian drama-thriller film directed by Marco Dutra, based on the novel \\\"A Arte de Produzir Efeito Sem Causa\\\" by Louren\u00e7o Mutarelli.\", \"score\": 22.0777389}, {\"title\": \"Paddy O'Toole\", \"text\": \"Paddy J. O'Toole (born 15 January 1938) is a former Irish Fine Gael politician. He was nominated by the Taoiseach Liam Cosgrave to the 1"
+      },
+      {
+        "think_s": 0.01680974999908358,
+        "query": "Drained",
+        "duration_s": 0.016228042004513554,
+        "candidate_query": "Louren\u00e7o Mutarelli",
+        "candidate_duration_s": 0.016228042004513554,
+        "result_excerpt": "[{\"title\": \"Drained\", \"text\": \"Drained, (Portuguese: O Cheiro do Ralo_ is a 2006 Brazilian dark comedy film based on a novel by Louren\u00e7o Mutarelli. It was directed by Heitor Dhalia, and stars Selton Mello. The film was produced by Gera\u00e7\u00e3o Conte\u00fado, Primo Filmes & RT Features.\", \"score\": 12.79917801}, {\"title\": \"Commanda Lake\", \"text\": \"Commanda Lake (or Lake Commanda) is a lake in central Ontario, Canada. Located on the border between Patterson Township and Pringle Township, in the Almaguin Highlands region of the District of Parry Sound, it is fed by Gee Creek, Commanda Creek and Beaudry Creek and is drained by the Restoule River. The Lake is shaped like the number \\\"3\\\", its middle spur is called Deep Bay. The lake is home to one permanent island, located off a point in its east. This is a mud bottom lake and its water is \\\"tea coloured.\\\" On the north shore of the lake is the community of Restoule, but cottages line many of the shore lines. Lots of crown land also surrounds the lake shore making it a very "
+      }
+    ]
+  },
+  {
+    "task_id": "5a906a685542990a9849362e",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Where was the world cup hosted that Algeria qualified for the first time into the round of 16?",
+    "steps": [
+      {
+        "think_s": 0.01508295800886117,
+        "query": "Where was the world cup hosted that Algeria qualified for the first time into the round of 16?",
+        "duration_s": 0.0196999999898253,
+        "candidate_query": "Where was the world cup hosted that Algeria qualified for the first time into the round of 16?",
+        "candidate_duration_s": 0.0196999999898253,
+        "result_excerpt": "[{\"title\": \"Algeria at the FIFA World Cup\", \"text\": \"Algeria have appeared in the finals of the FIFA World Cup on four occasions in 1982, 1986, 2010 and 2014. They have once qualified for the knockout rounds, reaching the round of 16 in 2014 before losing to Germany. 32 years before, Algeria nearly qualified to the second round of the 1982 World Cup after beating both West Germany and Chile; however, an arrangement match between West Germany and Austria wound up eliminating the Algerians. In 2014, Algeria qualifyed for the first time into the round of 16.\", \"score\": 54.39075989}, {\"title\": \"1991 Rugby World Cup\", \"text\": \"The 1991 Rugby World Cup was the second edition of the Rugby World Cup, and was jointly hosted by England, Scotland, Wales, Ireland and France; at that time, the five European countries that participated in the Five Nations Championship making it the first Rugby World Cup to be staged in the northern hemisphere, with England as the host of the championship game. Following on from the success"
+      },
+      {
+        "think_s": 0.01876595699286554,
+        "query": "Algeria at the FIFA World Cup",
+        "duration_s": 0.022198250007932074,
+        "candidate_query": "Algeria at the FIFA World Cup",
+        "candidate_duration_s": 0.022198250007932074,
+        "result_excerpt": "[{\"title\": \"Algeria at the FIFA World Cup\", \"text\": \"Algeria have appeared in the finals of the FIFA World Cup on four occasions in 1982, 1986, 2010 and 2014. They have once qualified for the knockout rounds, reaching the round of 16 in 2014 before losing to Germany. 32 years before, Algeria nearly qualified to the second round of the 1982 World Cup after beating both West Germany and Chile; however, an arrangement match between West Germany and Austria wound up eliminating the Algerians. In 2014, Algeria qualifyed for the first time into the round of 16.\", \"score\": 41.05265696}, {\"title\": \"Morocco 2026 FIFA World Cup bid\", \"text\": \"The Morocco 2026 FIFA World Cup bid is Morocco's bid to host the 2026 FIFA World Cup. It is competing with the North America 2026 FIFA World Cup bid, a joint bid between Canada, Mexico and the United States for hosting rights. On 11 August 2017, the Royal Moroccan Football Federation announced that it would submit a bid for the 2026 FIFA World Cup.\", \"score\": 26.18228132}, {\"title"
+      },
+      {
+        "think_s": 0.01751245799823664,
+        "query": "Morocco 2026 FIFA World Cup bid",
+        "duration_s": 0.017943375001777895,
+        "candidate_query": "Algeria at the FIFA World Cup",
+        "candidate_duration_s": 0.017943375001777895,
+        "result_excerpt": "[{\"title\": \"Morocco 2026 FIFA World Cup bid\", \"text\": \"The Morocco 2026 FIFA World Cup bid is Morocco's bid to host the 2026 FIFA World Cup. It is competing with the North America 2026 FIFA World Cup bid, a joint bid between Canada, Mexico and the United States for hosting rights. On 11 August 2017, the Royal Moroccan Football Federation announced that it would submit a bid for the 2026 FIFA World Cup.\", \"score\": 64.50360213}, {\"title\": \"Qatar 2022 FIFA World Cup bid\", \"text\": \"The Qatar 2022 FIFA World Cup bid was a bid by Qatar to host the 2022 FIFA World Cup. The bid has come under FBI investigation for bribery and corruption, leading to the resignation of FIFA President Sepp Blatter. With a population of 2 million people, Qatar will be the first Arab state to host the World Cup.\", \"score\": 35.71328697}, {\"title\": \"Australia 2022 FIFA World Cup bid\", \"text\": \"Australia submitted an unsuccessful bid for the 2022 FIFA World Cup. On 2 December 2010 FIFA announced that the event would be held in Qatar. Austral"
+      }
+    ]
+  },
+  {
+    "task_id": "5a85fb085542994775f606de",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "What is the name of the executive producer of the film that has a score composed by Jerry Goldsmith?",
+    "steps": [
+      {
+        "think_s": 0.01876974901824724,
+        "query": "What is the name of the executive producer of the film that has a score composed by Jerry Goldsmith?",
+        "duration_s": 0.027457874995889142,
+        "candidate_query": "What is the name of the executive producer of the film that has a score composed by Jerry Goldsmith?",
+        "candidate_duration_s": 0.027457874995889142,
+        "result_excerpt": "[{\"title\": \"Legend (film score)\", \"text\": \"Legend: The Music of Jerry Goldsmith is a musical film score by American composer Jerry Goldsmith, released in 1986 for the worldwide release of the film of the same name, (excluding the US). The album was released on compact disc in 1992 through Silva Screen records and featured alternate cover art and additional songs.\", \"score\": 35.03591517}, {\"title\": \"Alien (soundtrack)\", \"text\": \"The iconic, avant-garde score to the film \\\"Alien\\\" was composed by Jerry Goldsmith and is considered by some to be one of his best, most visceral scores. Rather than focusing on themes, Goldsmith creates a bleak and dissonant soundscape that fits the film's dark and intense atmosphere, with only a few \\\"romantic\\\" cues.\", \"score\": 31.07508879}, {\"title\": \"Lionheart (1987 film)\", \"text\": \"Lionheart, also known as Lionheart: The Children's Crusade, is a 1987 adventure film directed by Franklin J. Schaffner and produced by Talia Shire and Stanley O'Toole. Shire's brother, Francis Ford Co"
+      },
+      {
+        "think_s": 0.018773500007227995,
+        "query": "Legend (film score)",
+        "duration_s": 0.0169201249955222,
+        "candidate_query": "Legend (film score)",
+        "candidate_duration_s": 0.0169201249955222,
+        "result_excerpt": "[{\"title\": \"Legend (film score)\", \"text\": \"Legend: The Music of Jerry Goldsmith is a musical film score by American composer Jerry Goldsmith, released in 1986 for the worldwide release of the film of the same name, (excluding the US). The album was released on compact disc in 1992 through Silva Screen records and featured alternate cover art and additional songs.\", \"score\": 24.87949028}, {\"title\": \"A World Apart (film)\", \"text\": \"A World Apart is a 1988 anti-Apartheid drama, written by Shawn Slovo and directed by Chris Menges. It is based on the lives of Slovo's parents, Ruth First and Joe Slovo. The film was a co-production between companies from the UK and Zimbabwe, where the movie was filmed. It features Hans Zimmer's first non-collaborative film score.\", \"score\": 10.91555252}, {\"title\": \"Aliens (soundtrack)\", \"text\": \"The score to the 1986 James Cameron film \\\"Aliens\\\" was composed by James Horner. The score itself includes musical references to Gayane's Adagio from Aram Khachaturian's \\\"Gayane\\\" ballet s"
+      },
+      {
+        "think_s": 0.018777375007630326,
+        "query": "A World Apart (film)",
+        "duration_s": 0.02006591700774152,
+        "candidate_query": "Legend (film score)",
+        "candidate_duration_s": 0.02006591700774152,
+        "result_excerpt": "[{\"title\": \"A World Apart (film)\", \"text\": \"A World Apart is a 1988 anti-Apartheid drama, written by Shawn Slovo and directed by Chris Menges. It is based on the lives of Slovo's parents, Ruth First and Joe Slovo. The film was a co-production between companies from the UK and Zimbabwe, where the movie was filmed. It features Hans Zimmer's first non-collaborative film score.\", \"score\": 23.33951739}, {\"title\": \"Linda Mvusi\", \"text\": \"Linda Mvusi (c. 1955 in Bloemfontein- ) is an actress and architect. Mvusi took an award for best actress at the 1988 Cannes Film Festival for her role in the film \\\"A World Apart\\\" which was directed by Chris Menges. Mvusi was the first South African to get a best Actress award at Cannes. Mvusi also shared in an award for excellence for her architecture on the Apartheid Museum.\", \"score\": 11.91643664}, {\"title\": \"Bottom of the World (film)\", \"text\": \"Bottom of the World is a 2017 drama film. It was directed by Richard Sears, written by Brian Gottlieb and stars Jena Malone, Douglas"
+      }
+    ]
+  },
+  {
+    "task_id": "5a8704f8554299211dda2ba4",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "What is the name of the Isles who were led by Aonghus M\u00f3r and covered a total land area of over 8300 km2?",
+    "steps": [
+      {
+        "think_s": 0.018770957991364412,
+        "query": "What is the name of the Isles who were led by Aonghus M\u00f3r and covered a total land area of over 8300 km2?",
+        "duration_s": 0.029461750003974885,
+        "candidate_query": "What is the name of the Isles who were led by Aonghus M\u00f3r and covered a total land area of over 8300 km2?",
+        "candidate_duration_s": 0.029461750003974885,
+        "result_excerpt": "[{\"title\": \"Kingdom of the Isles\", \"text\": \"The Kingdom of the Isles comprised the Hebrides, the islands of the Firth of Clyde and the Isle of Man from the 9th to the 13th centuries AD. The islands were known to the Norse as the \\\"Su\u00f0reyjar\\\", or \\\"Southern Isles\\\" as distinct from the \\\"Nor\u00f0reyjar\\\" or Northern Isles of Orkney and Shetland. The historical record is incomplete, and the kingdom was not a continuous entity throughout the entire period. The islands concerned are sometimes referred to as the Kingdom of Mann and the Isles, although only some of the later rulers claimed that title. At times the rulers were independent of external control, although for much of the period they had overlords in Norway, Ireland, England, Scotland or Orkney. At times there also appear to have been competing claims for all or parts of the territory. The islands involved have a total land area of over 8300 km2 and extend for more than 500 km from north to south.\", \"score\": 38.66974187}, {\"title\": \"List of rulers of the Ki"
+      },
+      {
+        "think_s": 0.01878112499252893,
+        "query": "Aonghus M\u00f3r",
+        "duration_s": 0.016109625008539297,
+        "candidate_query": "Kingdom of the Isles",
+        "candidate_duration_s": 0.016109625008539297,
+        "result_excerpt": "[{\"title\": \"Aonghus M\u00f3r\", \"text\": \"Aonghus M\u00f3r mac Domhnaill (died c.1293) was a leading figure in the thirteenth-century kingdoms of the Isles and Scotland. He was a son of Domhnall mac Raghnaill, the eponym of Clann Domhnaill, a branch of Clann Somhairle. Aonghus M\u00f3r appears to have succeeded his father in the mid part of the thirteenth century. At the time, the rulers of the Isles were fiercely independent of the Scottish Crown, and owed nominal allegiance to the distant Norwegian Crown. Aonghus M\u00f3r's first certain appearance in the historical record seems to evince his involvement in aiding native Irish kindreds against the consolidation of Anglo-Irish authority in the north-west Ireland. Such cooperation could have been undertaken in the context of overseas kindreds like Clann Domhnaill constructing Irish alliances to gain assistance against Scottish encroachment.\", \"score\": 27.89993996}, {\"title\": \"Lord of Islay\", \"text\": \"Lord of Islay was a thirteenth- and fourteenth-century title borne by the chiefs "
+      },
+      {
+        "think_s": 0.01877779100323096,
+        "query": "Lord of Islay",
+        "duration_s": 0.017856708000181243,
+        "candidate_query": "Aonghus M\u00f3r",
+        "candidate_duration_s": 0.017856708000181243,
+        "result_excerpt": "[{\"title\": \"Lord of Islay\", \"text\": \"Lord of Islay was a thirteenth- and fourteenth-century title borne by the chiefs of Clann Domhnaill before they assumed the title \\\"Lord of the Isles\\\" in the late fourteenth century. The first person regarded to have styled themself \\\"Lord of Islay\\\" is Aonghus M\u00f3r, son of the eponymous ancestor of the clan, Domhnall mac Raghnaill. The designation \\\"of Islay\\\" was frequently used by these lords and later members of the clan.\", \"score\": 26.99924178}, {\"title\": \"Lord Haliburton of Dirleton\", \"text\": \"Lord Haliburton of Dirleton (or \\\"Dirletoun\\\") was a Scottish Lordship of Parliament created \\\"circa.\\\" 1450 for Sir Walter de Haliburton, Lord High Treasurer of Scotland. The seat of Lord Haliburton was at Dirleton Castle in present-day East Lothian.\", \"score\": 12.89433732}, {\"title\": \"Lord High Treasurer\", \"text\": \"The post of Lord High Treasurer or Lord Treasurer was an English government position and has been a British government position since the Acts of Union of 1707. A "
+      }
+    ]
+  },
+  {
+    "task_id": "5a80840f554299485f59863b",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "What WB supernatrual drama series was Jawbreaker star Rose Mcgowan best known for being in?",
+    "steps": [
+      {
+        "think_s": 0.018788125002174638,
+        "query": "What WB supernatrual drama series was Jawbreaker star Rose Mcgowan best known for being in?",
+        "duration_s": 0.02927629099576734,
+        "candidate_query": "What WB supernatrual drama series was Jawbreaker star Rose Mcgowan best known for being in?",
+        "candidate_duration_s": 0.02927629099576734,
+        "result_excerpt": "[{\"title\": \"Rose McGowan\", \"text\": \"Rose Arianna McGowan (born September 5, 1973) is an Italian-born American actress, film producer, director and singer. She is best known to television audiences for having played Paige Matthews in The WB supernatural drama series \\\"Charmed\\\" from 2001 to 2006.\", \"score\": 42.14874225}, {\"title\": \"Safe Harbor (TV series)\", \"text\": \"Safe Harbor is an American television drama series that aired on The WB Television Network from September 20, 1999 to November 28, 1999. The series was created and executive produced by Brenda Hampton, who at the time was best known for work on the fellow WB series \\\"7th Heaven\\\", the series was paired with \\\"7th Heaven\\\" on the network's Monday night lineup. Despite \\\"7th Heaven\\\" being the No. 1 show on The WB during the 1999-2000 season, \\\"Safe Harbor\\\" was unable to hold a solid audience after \\\"7th Heaven\\\" and was canceled after ten episodes and one season with the show moving to Sunday nights where the last two episodes aired.\", \"score\": 25."
+      },
+      {
+        "think_s": 0.018771499991999008,
+        "query": "Rose McGowan",
+        "duration_s": 0.01611974999832455,
+        "candidate_query": "Rose McGowan",
+        "candidate_duration_s": 0.01611974999832455,
+        "result_excerpt": "[{\"title\": \"Rose McGowan\", \"text\": \"Rose Arianna McGowan (born September 5, 1973) is an Italian-born American actress, film producer, director and singer. She is best known to television audiences for having played Paige Matthews in The WB supernatural drama series \\\"Charmed\\\" from 2001 to 2006.\", \"score\": 20.84937182}, {\"title\": \"Jawbreaker (film)\", \"text\": \"Jawbreaker is a 1999 American black comedy film written and directed by Darren Stein. The film stars Rose McGowan, Rebecca Gayheart, and Julie Benz as girls in an exclusive clique in their high school. Charlotte Ayanna has a non-speaking cameo role as the murdered leader of the group. The film was inspired by the film \\\"Heathers\\\", and is often compared to it, particularly the plot involving a popular female clique, and the ostensibly accidental killing of one of its members.\", \"score\": 10.95807723}, {\"title\": \"Charmed (season 4)\", \"text\": \"The fourth season of \\\"Charmed\\\", an American supernatural drama television series, began airing on October 4, 2001"
+      },
+      {
+        "think_s": 0.018396708997897804,
+        "query": "Jawbreaker (film)",
+        "duration_s": 0.017484042007708922,
+        "candidate_query": "Rose McGowan",
+        "candidate_duration_s": 0.017484042007708922,
+        "result_excerpt": "[{\"title\": \"Jawbreaker (film)\", \"text\": \"Jawbreaker is a 1999 American black comedy film written and directed by Darren Stein. The film stars Rose McGowan, Rebecca Gayheart, and Julie Benz as girls in an exclusive clique in their high school. Charlotte Ayanna has a non-speaking cameo role as the murdered leader of the group. The film was inspired by the film \\\"Heathers\\\", and is often compared to it, particularly the plot involving a popular female clique, and the ostensibly accidental killing of one of its members.\", \"score\": 17.98889602}, {\"title\": \"Film laboratory\", \"text\": \"A film laboratory is a commercial service enterprise and technical facility for the film industry where specialists develop, print, and conform film material for classical film production and distribution which is based on film material, such as negative and positive, black and white and color, on different film formats: 65-70mm, 35mm, 16mm, 9.5mm, 8mm. The film laboratory managers can charge by the footage or by time used while in lab"
+      }
+    ]
+  },
+  {
+    "task_id": "5a7320565542991f9a20c61d",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "who is younger Keith Bostic or Jerry Glanville ?",
+    "steps": [
+      {
+        "think_s": 0.015652665999368764,
+        "query": "who is younger Keith Bostic or Jerry Glanville ?",
+        "duration_s": 0.02021879199310206,
+        "candidate_query": "who is younger Keith Bostic or Jerry Glanville ?",
+        "candidate_duration_s": 0.02021879199310206,
+        "result_excerpt": "[{\"title\": \"Keith Bostic (American football)\", \"text\": \"William Keith Bostic (born January 17, 1961) is a former professional American football player who played for seven seasons in the National Football League (NFL). During his career he played safety for the Houston Oilers and the Cleveland Browns. Bostic served as the Oiler defensive captain under Jerry Glanville. He earned one Pro Bowl selection and missed another based on a tiebreaker for the last safety chosen. In his Pro Bowl season, he led the American Football Conference in interceptions.\", \"score\": 35.70259122}, {\"title\": \"Keith Bostic\", \"text\": \"Keith Bostic is an American Software Engineer and one of the key people in the history of Berkeley Software Distribution UNIX and Open Source software.\", \"score\": 26.04895622}, {\"title\": \"Portland State Vikings football under Jerry Glanville\", \"text\": \"Portland State Vikings football under Jerry Glanville\", \"score\": 21.78804727}, {\"title\": \"Jerry Glanville\", \"text\": \"Jerry Michael Glanville (born October 1"
+      },
+      {
+        "think_s": 0.01876658300170675,
+        "query": "Keith Bostic",
+        "duration_s": 0.015931792004266754,
+        "candidate_query": "Keith Bostic (American football)",
+        "candidate_duration_s": 0.015931792004266754,
+        "result_excerpt": "[{\"title\": \"Keith Bostic\", \"text\": \"Keith Bostic is an American Software Engineer and one of the key people in the history of Berkeley Software Distribution UNIX and Open Source software.\", \"score\": 25.66730002}, {\"title\": \"Keith Bostic (American football)\", \"text\": \"William Keith Bostic (born January 17, 1961) is a former professional American football player who played for seven seasons in the National Football League (NFL). During his career he played safety for the Houston Oilers and the Cleveland Browns. Bostic served as the Oiler defensive captain under Jerry Glanville. He earned one Pro Bowl selection and missed another based on a tiebreaker for the last safety chosen. In his Pro Bowl season, he led the American Football Conference in interceptions.\", \"score\": 23.18333857}, {\"title\": \"Keith Richards\", \"text\": \"Keith Richards (born 18 December 1943) is an English guitarist, singer, songwriter, and author, best known as a founder member of the rock band the Rolling Stones. \\\"Rolling Stone\\\" magazine cred"
+      },
+      {
+        "think_s": 0.01876529201399535,
+        "query": "Keith Bostic (American football)",
+        "duration_s": 0.01906408299691975,
+        "candidate_query": "Keith Bostic",
+        "candidate_duration_s": 0.01906408299691975,
+        "result_excerpt": "[{\"title\": \"Keith Bostic (American football)\", \"text\": \"William Keith Bostic (born January 17, 1961) is a former professional American football player who played for seven seasons in the National Football League (NFL). During his career he played safety for the Houston Oilers and the Cleveland Browns. Bostic served as the Oiler defensive captain under Jerry Glanville. He earned one Pro Bowl selection and missed another based on a tiebreaker for the last safety chosen. In his Pro Bowl season, he led the American Football Conference in interceptions.\", \"score\": 34.49916359}, {\"title\": \"Keith Bostic\", \"text\": \"Keith Bostic is an American Software Engineer and one of the key people in the history of Berkeley Software Distribution UNIX and Open Source software.\", \"score\": 27.65532472}, {\"title\": \"Joe Walker (American football)\", \"text\": \"Joe Walker (born December 11, 1992) is an American football linebacker for the Philadelphia Eagles of the National Football League (NFL). He played college football at Oregon.\", \""
+      }
+    ]
+  },
+  {
+    "task_id": "5a85ea095542994775f606a8",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+    "steps": [
+      {
+        "think_s": 0.01712329099245835,
+        "query": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+        "duration_s": 0.026778041996294633,
+        "candidate_query": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+        "candidate_duration_s": 0.026778041996294633,
+        "result_excerpt": "[{\"title\": \"Animorphs\", \"text\": \"Animorphs is a science fantasy series of young adult books written by Katherine Applegate and her husband Michael Grant, writing together under the name K. A. Applegate, and published by Scholastic. It is told in first person, with all six main characters taking turns narrating the books through their own perspectives. Horror, war, dehumanization, sanity, morality, innocence, leadership, freedom and growing up are the core themes of the series.\", \"score\": 49.88740837}, {\"title\": \"List of Square Enix companion books\", \"text\": \"Dozens of Square Enix companion books have been produced since 1998, when video game developer Square began to produce books that focused on artwork, developer interviews, and background information on the fictional worlds and characters in its games rather than on gameplay details. The first series of these books was the \\\"Perfect Works\\\" series, written and published by Square subsidiary DigiCube. They produced three books between 1998 and 1999 before t"
+      },
+      {
+        "think_s": 0.01877325000532437,
+        "query": "Animorphs",
+        "duration_s": 0.014676082995720208,
+        "candidate_query": "Animorphs",
+        "candidate_duration_s": 0.014676082995720208,
+        "result_excerpt": "[{\"title\": \"Animorphs\", \"text\": \"Animorphs is a science fantasy series of young adult books written by Katherine Applegate and her husband Michael Grant, writing together under the name K. A. Applegate, and published by Scholastic. It is told in first person, with all six main characters taking turns narrating the books through their own perspectives. Horror, war, dehumanization, sanity, morality, innocence, leadership, freedom and growing up are the core themes of the series.\", \"score\": 11.94291229}, {\"title\": \"The Hork-Bajir Chronicles\", \"text\": \"The Hork-Bajir Chronicles is the second companion book to the \\\"Animorphs\\\" series, written by K. A. Applegate. With respect to continuity within the series, it takes place before book #23, \\\"The Pretender\\\", although the events told in the story occur between the time of \\\"The Ellimist Chronicles\\\" and \\\"The Andalite Chronicles\\\". The book is introduced by Tobias, who flies to the valley of the free Hork-Bajir, where Jara Hamee tells him the story of how the Yeerk"
+      },
+      {
+        "think_s": 0.01876954099861905,
+        "query": "The Hork-Bajir Chronicles",
+        "duration_s": 0.018734458994003944,
+        "candidate_query": "Animorphs",
+        "candidate_duration_s": 0.018734458994003944,
+        "result_excerpt": "[{\"title\": \"The Hork-Bajir Chronicles\", \"text\": \"The Hork-Bajir Chronicles is the second companion book to the \\\"Animorphs\\\" series, written by K. A. Applegate. With respect to continuity within the series, it takes place before book #23, \\\"The Pretender\\\", although the events told in the story occur between the time of \\\"The Ellimist Chronicles\\\" and \\\"The Andalite Chronicles\\\". The book is introduced by Tobias, who flies to the valley of the free Hork-Bajir, where Jara Hamee tells him the story of how the Yeerks enslaved the Hork-Bajir, and how Aldrea, an Andalite, and her companion, Dak Hamee, a Hork-Bajir, tried to save their world from the invasion. Jara Hamee's story is narrated from the points of view of Aldrea, Dak Hamee, and Esplin 9466, alternating in similar fashion to the \\\"Megamorphs\\\" books.\", \"score\": 42.2635346}, {\"title\": \"The Spiderwick Chronicles (film)\", \"text\": \"The Spiderwick Chronicles is a 2008 American fantasy adventure film based on the bestselling book series of the same name by Hol"
+      }
+    ]
+  },
+  {
+    "task_id": "5a77cb335542997042120b3a",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "What American professional Hawaiian surfer born 18 October 1992 won the Rip Curl Pro Portugal?",
+    "steps": [
+      {
+        "think_s": 0.01842387499345932,
+        "query": "What American professional Hawaiian surfer born 18 October 1992 won the Rip Curl Pro Portugal?",
+        "duration_s": 0.02443308300280478,
+        "candidate_query": "What American professional Hawaiian surfer born 18 October 1992 won the Rip Curl Pro Portugal?",
+        "candidate_duration_s": 0.02443308300280478,
+        "result_excerpt": "[{\"title\": \"MEO Rip Curl Pro Portugal\", \"text\": \"MEO Rip Curl Pro Portugal formerly known as \\\"Moche Rip Curl Pro Portugal\\\" or \\\"Rip Curl Pro Portugal\\\" is a professional surfing competition of the ASP World Tour held every year in October at the Supertubos beach in Peniche, Portugal. The event was first founded in 2009 as \\\"Rip Curl Search Portugal\\\". The defending champion is the 2016 WSL champion, John John Florence who won the event in 2016.\", \"score\": 55.86268387}, {\"title\": \"Moche Rip Curl Pro Portugal 2014\", \"text\": \"The Moche Rip Curl Pro Portugal 2014 is an event of the Association of Surfing Professionals for 2014 ASP World Tour.\", \"score\": 43.43553963}, {\"title\": \"Moche Rip Curl Pro Portugal 2015\", \"text\": \"The Moche Rip Curl Pro Portugal 2015 was an event of the Association of Surfing Professionals for 2015 ASP World Tour.\", \"score\": 43.43553963}, {\"title\": \"MEO Rip Curl Pro Portugal 2016\", \"text\": \"The MEO Rip Curl Pro Portugal 2016 was an event of the World Surf League for 2016 World Surf Leagu"
+      },
+      {
+        "think_s": 0.01877812499878928,
+        "query": "MEO Rip Curl Pro Portugal",
+        "duration_s": 0.017711084001348354,
+        "candidate_query": "MEO Rip Curl Pro Portugal",
+        "candidate_duration_s": 0.017711084001348354,
+        "result_excerpt": "[{\"title\": \"MEO Rip Curl Pro Portugal\", \"text\": \"MEO Rip Curl Pro Portugal formerly known as \\\"Moche Rip Curl Pro Portugal\\\" or \\\"Rip Curl Pro Portugal\\\" is a professional surfing competition of the ASP World Tour held every year in October at the Supertubos beach in Peniche, Portugal. The event was first founded in 2009 as \\\"Rip Curl Search Portugal\\\". The defending champion is the 2016 WSL champion, John John Florence who won the event in 2016.\", \"score\": 56.56476913}, {\"title\": \"MEO Rip Curl Pro Portugal 2016\", \"text\": \"The MEO Rip Curl Pro Portugal 2016 was an event of the World Surf League for 2016 World Surf League Men's Championship Tour.\", \"score\": 55.36384134}, {\"title\": \"MEO Rip Curl Pro Portugal 2017\", \"text\": \"The MEO Rip Curl Pro Portugal 2017 is an event of the World Surf League for the 2017 World Surf League Men's Championship Tour.\", \"score\": 55.19965727}, {\"title\": \"Moche Rip Curl Pro Portugal 2014\", \"text\": \"The Moche Rip Curl Pro Portugal 2014 is an event of the Association of Surfing Profe"
+      },
+      {
+        "think_s": 0.018774334006593563,
+        "query": "MEO Rip Curl Pro Portugal 2016",
+        "duration_s": 0.019167958002071828,
+        "candidate_query": "MEO Rip Curl Pro Portugal",
+        "candidate_duration_s": 0.019167958002071828,
+        "result_excerpt": "[{\"title\": \"MEO Rip Curl Pro Portugal 2016\", \"text\": \"The MEO Rip Curl Pro Portugal 2016 was an event of the World Surf League for 2016 World Surf League Men's Championship Tour.\", \"score\": 62.94298207}, {\"title\": \"MEO Rip Curl Pro Portugal\", \"text\": \"MEO Rip Curl Pro Portugal formerly known as \\\"Moche Rip Curl Pro Portugal\\\" or \\\"Rip Curl Pro Portugal\\\" is a professional surfing competition of the ASP World Tour held every year in October at the Supertubos beach in Peniche, Portugal. The event was first founded in 2009 as \\\"Rip Curl Search Portugal\\\". The defending champion is the 2016 WSL champion, John John Florence who won the event in 2016.\", \"score\": 61.01400845}, {\"title\": \"MEO Rip Curl Pro Portugal 2017\", \"text\": \"The MEO Rip Curl Pro Portugal 2017 is an event of the World Surf League for the 2017 World Surf League Men's Championship Tour.\", \"score\": 55.19965727}, {\"title\": \"Moche Rip Curl Pro Portugal 2014\", \"text\": \"The Moche Rip Curl Pro Portugal 2014 is an event of the Association of Surfing Profe"
+      }
+    ]
+  },
+  {
+    "task_id": "5abd259d55429924427fcf1a",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Are both Dictyosperma, and Huernia described as a genus?",
+    "steps": [
+      {
+        "think_s": 0.018762584004434757,
+        "query": "Are both Dictyosperma, and Huernia described as a genus?",
+        "duration_s": 0.01898691699898336,
+        "candidate_query": "Are both Dictyosperma, and Huernia described as a genus?",
+        "candidate_duration_s": 0.01898691699898336,
+        "result_excerpt": "[{\"title\": \"Huernia\", \"text\": \"The genus Huernia (family Apocynaceae, subfamily Asclepiadoideae) consists of stem succulents from Eastern and Southern Africa, first described as a genus in 1810. The flowers are five-lobed, usually somewhat more funnel- or bell-shaped than in the closely related genus \\\"Stapelia\\\", and often striped vividly in contrasting colours or tones, some glossy, others matt and wrinkled depending on the species concerned. To pollinate, the flowers attract flies by emitting a scent similar to that of carrion. The genus is considered close to the genera \\\"Stapelia\\\" and \\\"Hoodia\\\". The name is in honour of Justin Heurnius (1587\u20131652) a Dutch missionary who is reputed to have been the first collector of South African Cape plants. His name was actually mis-spelt by the collector.\", \"score\": 25.15901389}, {\"title\": \"Dictyosperma\", \"text\": \"Dictyosperma is a monotypic genus of flowering plant in the palm family found in the Mascarene Islands in the Indian Ocean (Mauritius, R\u00e9union and Rodrigu"
+      },
+      {
+        "think_s": 0.018775790988001972,
+        "query": "Huernia",
+        "duration_s": 0.014931707992218435,
+        "candidate_query": "Huernia",
+        "candidate_duration_s": 0.014931707992218435,
+        "result_excerpt": "[{\"title\": \"Huernia\", \"text\": \"The genus Huernia (family Apocynaceae, subfamily Asclepiadoideae) consists of stem succulents from Eastern and Southern Africa, first described as a genus in 1810. The flowers are five-lobed, usually somewhat more funnel- or bell-shaped than in the closely related genus \\\"Stapelia\\\", and often striped vividly in contrasting colours or tones, some glossy, others matt and wrinkled depending on the species concerned. To pollinate, the flowers attract flies by emitting a scent similar to that of carrion. The genus is considered close to the genera \\\"Stapelia\\\" and \\\"Hoodia\\\". The name is in honour of Justin Heurnius (1587\u20131652) a Dutch missionary who is reputed to have been the first collector of South African Cape plants. His name was actually mis-spelt by the collector.\", \"score\": 11.11345604}]"
+      },
+      {
+        "think_s": 0.01877220800088253,
+        "query": "Are both Dictyosperma, and Huernia described as a genus?",
+        "duration_s": 0.021543375012697652,
+        "candidate_query": "Huernia",
+        "candidate_duration_s": 0.021543375012697652,
+        "result_excerpt": "[{\"title\": \"Huernia\", \"text\": \"The genus Huernia (family Apocynaceae, subfamily Asclepiadoideae) consists of stem succulents from Eastern and Southern Africa, first described as a genus in 1810. The flowers are five-lobed, usually somewhat more funnel- or bell-shaped than in the closely related genus \\\"Stapelia\\\", and often striped vividly in contrasting colours or tones, some glossy, others matt and wrinkled depending on the species concerned. To pollinate, the flowers attract flies by emitting a scent similar to that of carrion. The genus is considered close to the genera \\\"Stapelia\\\" and \\\"Hoodia\\\". The name is in honour of Justin Heurnius (1587\u20131652) a Dutch missionary who is reputed to have been the first collector of South African Cape plants. His name was actually mis-spelt by the collector.\", \"score\": 25.15901389}, {\"title\": \"Dictyosperma\", \"text\": \"Dictyosperma is a monotypic genus of flowering plant in the palm family found in the Mascarene Islands in the Indian Ocean (Mauritius, R\u00e9union and Rodrigu"
+      }
+    ]
+  },
+  {
+    "task_id": "5aba5d2e55429901930fa799",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+    "steps": [
+      {
+        "think_s": 0.018769832982798107,
+        "query": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+        "duration_s": 0.02747024998825509,
+        "candidate_query": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+        "candidate_duration_s": 0.02747024998825509,
+        "result_excerpt": "[{\"title\": \"Their Lives\", \"text\": \"Their Lives: The Women Targeted by the Clinton Machine is a book by Candice E. Jackson. Published by conservative publisher World Ahead Publishing on May 31, 2005, it recounts the stories of seven women who crossed paths with Bill Clinton: Monica Lewinsky, Paula Jones, Gennifer Flowers, Kathleen Willey, Elizabeth Gracen, Juanita Broaddrick, and Sally Perdue.\", \"score\": 49.19892168}, {\"title\": \"The White House Doctor\", \"text\": \"The White House Doctor: My Patients Were Presidents \u2013 A Memoir is a book authored by Connie Mariano, the first military woman in the history of the United States to be appointed as Physician to the President, the first female director of the medical unit of the White House, and the first Filipino-American to become a rear admiral in the US Navy. With a foreword from Bill Clinton, the autobiographical book takes a look at the personal lives of three American Presidents (George H.W. Bush, Bill Clinton, and George W. Bush) and three American First Ladies "
+      },
+      {
+        "think_s": 0.01808433298720047,
+        "query": "Their Lives",
+        "duration_s": 0.015582083986373618,
+        "candidate_query": "Their Lives",
+        "candidate_duration_s": 0.015582083986373618,
+        "result_excerpt": "[{\"title\": \"Their Lives\", \"text\": \"Their Lives: The Women Targeted by the Clinton Machine is a book by Candice E. Jackson. Published by conservative publisher World Ahead Publishing on May 31, 2005, it recounts the stories of seven women who crossed paths with Bill Clinton: Monica Lewinsky, Paula Jones, Gennifer Flowers, Kathleen Willey, Elizabeth Gracen, Juanita Broaddrick, and Sally Perdue.\", \"score\": 13.81955636}, {\"title\": \"Coral Gardens and Their Magic\", \"text\": \"Coral Gardens and Their Magic, properly Coral Gardens and Their Magic: A Study of the Methods of Tilling the Soil and of Agricultural Rites in the Trobriand Islands, is the final book in anthropologist Bronis\u0142aw Malinowski's ethnographic trilogy on the lives of the Trobriand Islanders. It concentrates on the cultivation practices the Trobriand Islanders used to grow yams, taro, bananas and palms. It describes the gardens in which the Trobrianders grew food as more than merely utilitarian spaces, even as works of art. In 1988 Alfred Gell called t"
+      },
+      {
+        "think_s": 0.01763275099801831,
+        "query": "Coral Gardens and Their Magic",
+        "duration_s": 0.019598625003709458,
+        "candidate_query": "Their Lives",
+        "candidate_duration_s": 0.019598625003709458,
+        "result_excerpt": "[{\"title\": \"Coral Gardens and Their Magic\", \"text\": \"Coral Gardens and Their Magic, properly Coral Gardens and Their Magic: A Study of the Methods of Tilling the Soil and of Agricultural Rites in the Trobriand Islands, is the final book in anthropologist Bronis\u0142aw Malinowski's ethnographic trilogy on the lives of the Trobriand Islanders. It concentrates on the cultivation practices the Trobriand Islanders used to grow yams, taro, bananas and palms. It describes the gardens in which the Trobrianders grew food as more than merely utilitarian spaces, even as works of art. In 1988 Alfred Gell called the book \\\"still the best account of any primitive technological-cum-magical system, and unlikely ever to be superseded in this respect\\\". The book has been described as Malinowski's \\\"magnum opus\\\".\", \"score\": 39.22147584}, {\"title\": \"Magic in Harry Potter\", \"text\": \"In the \\\"Harry Potter\\\" series created by J. K. Rowling, magic is depicted as a supernatural force that can be used to override the usual laws of nature"
+      }
+    ]
+  },
+  {
+    "task_id": "5abbf698554299114383a0b5",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Which British first-generation jet-powered medium bomber was used in the South West Pacific theatre of World War II?",
+    "steps": [
+      {
+        "think_s": 0.018776208991766907,
+        "query": "Which British first-generation jet-powered medium bomber was used in the South West Pacific theatre of World War II?",
+        "duration_s": 0.027052833000198007,
+        "candidate_query": "Which British first-generation jet-powered medium bomber was used in the South West Pacific theatre of World War II?",
+        "candidate_duration_s": 0.027052833000198007,
+        "result_excerpt": "[{\"title\": \"South West Pacific theatre of World War II\", \"text\": \"The South West Pacific theatre, during World War II, was a major theatre of the war between the Allies and Japan. It included the Philippines, the Dutch East Indies (except for Sumatra), Borneo, Australia and its mandate Territory of New Guinea (including the Bismarck Archipelago) and the western part of the Solomon Islands. This area was defined by the Allied powers' South West Pacific Area (SWPA) command.\", \"score\": 53.8431086}, {\"title\": \"Tupolev Tu-12\", \"text\": \"The Tupolev Tu-12 (development designation Tu-77) was an experimental Soviet jet-powered medium bomber developed from the successful piston-engined Tupolev Tu-2 bomber after the end of World War II. It was designed as a transitional aircraft to familiarize Tupolev and the VVS with the issues involved with jet-engined bombers.\", \"score\": 44.26854189}, {\"title\": \"English Electric Canberra\", \"text\": \"The English Electric Canberra is a British first-generation jet-powered medium bomber "
+      },
+      {
+        "think_s": 0.018770541006233543,
+        "query": "South West Pacific theatre of World War II",
+        "duration_s": 0.019969333996414207,
+        "candidate_query": "South West Pacific theatre of World War II",
+        "candidate_duration_s": 0.019969333996414207,
+        "result_excerpt": "[{\"title\": \"South West Pacific theatre of World War II\", \"text\": \"The South West Pacific theatre, during World War II, was a major theatre of the war between the Allies and Japan. It included the Philippines, the Dutch East Indies (except for Sumatra), Borneo, Australia and its mandate Territory of New Guinea (including the Bismarck Archipelago) and the western part of the Solomon Islands. This area was defined by the Allied powers' South West Pacific Area (SWPA) command.\", \"score\": 52.91615287}, {\"title\": \"South West Pacific Area (command)\", \"text\": \"South West Pacific Area (SWPA) was the name given to the Allied supreme military command in the South West Pacific Theatre of World War II. It was one of four major Allied commands in the Pacific War. SWPA included the Philippines, Borneo, the Dutch East Indies (excluding Sumatra), East Timor, Australia, the Territories of Papua and New Guinea, and the western part of the Solomon Islands. It primarily consisted of United States and Australian forces, although Du"
+      },
+      {
+        "think_s": 0.0187742919952143,
+        "query": "South West Pacific Area (command)",
+        "duration_s": 0.01796179100347217,
+        "candidate_query": "South West Pacific theatre of World War II",
+        "candidate_duration_s": 0.01796179100347217,
+        "result_excerpt": "[{\"title\": \"South West Pacific Area (command)\", \"text\": \"South West Pacific Area (SWPA) was the name given to the Allied supreme military command in the South West Pacific Theatre of World War II. It was one of four major Allied commands in the Pacific War. SWPA included the Philippines, Borneo, the Dutch East Indies (excluding Sumatra), East Timor, Australia, the Territories of Papua and New Guinea, and the western part of the Solomon Islands. It primarily consisted of United States and Australian forces, although Dutch, Filipino, British and other Allied forces also served in the SWPA.\", \"score\": 36.08752139}, {\"title\": \"South West Pacific theatre of World War II\", \"text\": \"The South West Pacific theatre, during World War II, was a major theatre of the war between the Allies and Japan. It included the Philippines, the Dutch East Indies (except for Sumatra), Borneo, Australia and its mandate Territory of New Guinea (including the Bismarck Archipelago) and the western part of the Solomon Islands. This area wa"
+      }
+    ]
+  },
+  {
+    "task_id": "5a79311755429970f5fffe67",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "A Japanese manga series based on a 16 year old high school student Ichitaka Seto, is written and illustrated by someone born in what year?",
+    "steps": [
+      {
+        "think_s": 0.015124917001230642,
+        "query": "A Japanese manga series based on a 16 year old high school student Ichitaka Seto, is written and illustrated by someone born in what year?",
+        "duration_s": 0.0358266669936711,
+        "candidate_query": "A Japanese manga series based on a 16 year old high school student Ichitaka Seto, is written and illustrated by someone born in what year?",
+        "candidate_duration_s": 0.0358266669936711,
+        "result_excerpt": "[{\"title\": \"I&quot;s\", \"text\": \"I\\\"s (\u30a2\u30a4\u30ba , Aizu ) is a Japanese manga series written and illustrated by Masakazu Katsura. The story's main character is 16-year-old high school student Ichitaka Seto who is in love with his classmate Iori Yoshizuki, but too shy to tell her. Again and again he plans to tell her his true feelings, but each time something (usually a misunderstanding of some kind) gets in the way. Things become even more complicated when Itsuki Akiba returns to Japan; she is a girl Ichitaka was friends with in their childhood before she moved to the United States, and who had a huge crush on him.\", \"score\": 56.36821613}, {\"title\": \"The Kindaichi Case Files\", \"text\": \"The Kindaichi Case Files (Japanese: \u91d1\u7530\u4e00\u5c11\u5e74\u306e\u4e8b\u4ef6\u7c3f , Hepburn: Kindaichi Sh\u014dnen no Jikenbo ) is a Japanese mystery manga series based on the crime solving adventures of a high school student, Hajime Kindaichi, the supposed grandson of the famous (fictional) private detective Kosuke Kindaichi. They are written by Y\u014dzabur\u014d Kanari or Seimaru A"
+      },
+      {
+        "think_s": 0.01536387499072589,
+        "query": "I&quot;s",
+        "duration_s": 0.017530167009681463,
+        "candidate_query": "I&quot;s",
+        "candidate_duration_s": 0.017530167009681463,
+        "result_excerpt": "[{\"title\": \"I&quot;s\", \"text\": \"I\\\"s (\u30a2\u30a4\u30ba , Aizu ) is a Japanese manga series written and illustrated by Masakazu Katsura. The story's main character is 16-year-old high school student Ichitaka Seto who is in love with his classmate Iori Yoshizuki, but too shy to tell her. Again and again he plans to tell her his true feelings, but each time something (usually a misunderstanding of some kind) gets in the way. Things become even more complicated when Itsuki Akiba returns to Japan; she is a girl Ichitaka was friends with in their childhood before she moved to the United States, and who had a huge crush on him.\", \"score\": 16.96431261}, {\"title\": \"&quot;Q&quot; Is for Quarry\", \"text\": \"\\\"Q\\\" Is for Quarry is the 17th novel in Sue Grafton's \\\"Alphabet\\\" series of mystery novels and features Kinsey Millhone, a private eye based in Santa Teresa, California.\", \"score\": 14.37801672}, {\"title\": \"She's Got the Rhythm (And I Got the Blues)\", \"text\": \"\\\"She's Got the Rhythm (And I Got the Blues)\\\" is a song co-written by "
+      },
+      {
+        "think_s": 0.015297416990506463,
+        "query": "&quot;Q&quot; Is for Quarry",
+        "duration_s": 0.019725250007468276,
+        "candidate_query": "I&quot;s",
+        "candidate_duration_s": 0.019725250007468276,
+        "result_excerpt": "[{\"title\": \"&quot;Q&quot; Is for Quarry\", \"text\": \"\\\"Q\\\" Is for Quarry is the 17th novel in Sue Grafton's \\\"Alphabet\\\" series of mystery novels and features Kinsey Millhone, a private eye based in Santa Teresa, California.\", \"score\": 45.32771734}, {\"title\": \"Rubislaw quarry\", \"text\": \"Rubislaw Quarry was opened in 1740 and is located at the Hill of Rubislaw in the west end of the Scottish city of Aberdeen. In 1778/9, Aberdeen City Council sold it to a businessman for \u00a313, as it was not thought to be a source of good building material. However, over the next 200 years, an estimated six million tonnes of granite were excavated from the quarry, giving Aberdeen the name of 'The Granite City'. Rubislaw Quarry is one of the biggest man-made holes in Europe.\", \"score\": 13.66667252}, {\"title\": \"I&quot;s\", \"text\": \"I\\\"s (\u30a2\u30a4\u30ba , Aizu ) is a Japanese manga series written and illustrated by Masakazu Katsura. The story's main character is 16-year-old high school student Ichitaka Seto who is in love with his classmate Iori "
+      }
+    ]
+  },
+  {
+    "task_id": "5ae32e125542991a06ce9946",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "According to the 2001 census, what was the population of the city in which Kirton End is located?",
+    "steps": [
+      {
+        "think_s": 0.01877312400029041,
+        "query": "According to the 2001 census, what was the population of the city in which Kirton End is located?",
+        "duration_s": 0.02948324999306351,
+        "candidate_query": "According to the 2001 census, what was the population of the city in which Kirton End is located?",
+        "candidate_duration_s": 0.02948324999306351,
+        "result_excerpt": "[{\"title\": \"Kirton, Nottinghamshire\", \"text\": \"Kirton is a village in Nottinghamshire, England. It is located 3 mi east of Ollerton. According to the United Kingdom Census 2001 it had a population of 273, reducing to 261 at the 2011 census.\", \"score\": 38.10233715}, {\"title\": \"Kirton, Suffolk\", \"text\": \"Kirton is a village and a civil parish in the shire county of Suffolk, England, situated off the A14 road, about 4.5 km from Felixstowe and around 10 km from Ipswich. The closest train station to Kirton is Trimley. According to the 2011 census, Kirton had a population of 1,146. It is located between the River Debben and the River Orwell. The village of Kirton covers a total area of 8.3 km2 . As the county of Suffolk lacks quarries, many of the buildings are made from flint, clay and timber.\", \"score\": 28.20595711}, {\"title\": \"2001 Bangladesh census\", \"text\": \"In 2001, the Bangladesh Bureau of Statistics, conducted a national census in Bangladesh, ten years after the 1991 census. They recorded data from all of t"
+      },
+      {
+        "think_s": 0.018772791998344474,
+        "query": "Kirton, Nottinghamshire",
+        "duration_s": 0.01594254100928083,
+        "candidate_query": "Kirton, Nottinghamshire",
+        "candidate_duration_s": 0.01594254100928083,
+        "result_excerpt": "[{\"title\": \"Kirton, Nottinghamshire\", \"text\": \"Kirton is a village in Nottinghamshire, England. It is located 3 mi east of Ollerton. According to the United Kingdom Census 2001 it had a population of 273, reducing to 261 at the 2011 census.\", \"score\": 26.0824942}, {\"title\": \"Kirton End\", \"text\": \"Kirton End is a hamlet in the civil parish of Kirton in the Boston district of Lincolnshire, England. It lies on the B1391 road, 4 mi south-west from Boston, and 1.5 mi north-east from Kirton.\", \"score\": 13.46870211}, {\"title\": \"Kirton, Suffolk\", \"text\": \"Kirton is a village and a civil parish in the shire county of Suffolk, England, situated off the A14 road, about 4.5 km from Felixstowe and around 10 km from Ipswich. The closest train station to Kirton is Trimley. According to the 2011 census, Kirton had a population of 1,146. It is located between the River Debben and the River Orwell. The village of Kirton covers a total area of 8.3 km2 . As the county of Suffolk lacks quarries, many of the buildings are made fro"
+      },
+      {
+        "think_s": 0.01878508401568979,
+        "query": "Kirton End",
+        "duration_s": 0.016237542004091665,
+        "candidate_query": "Kirton, Nottinghamshire",
+        "candidate_duration_s": 0.016237542004091665,
+        "result_excerpt": "[{\"title\": \"Kirton End\", \"text\": \"Kirton End is a hamlet in the civil parish of Kirton in the Boston district of Lincolnshire, England. It lies on the B1391 road, 4 mi south-west from Boston, and 1.5 mi north-east from Kirton.\", \"score\": 21.13653749}, {\"title\": \"Kirton, Suffolk\", \"text\": \"Kirton is a village and a civil parish in the shire county of Suffolk, England, situated off the A14 road, about 4.5 km from Felixstowe and around 10 km from Ipswich. The closest train station to Kirton is Trimley. According to the 2011 census, Kirton had a population of 1,146. It is located between the River Debben and the River Orwell. The village of Kirton covers a total area of 8.3 km2 . As the county of Suffolk lacks quarries, many of the buildings are made from flint, clay and timber.\", \"score\": 12.82598691}, {\"title\": \"Kirton, Nottinghamshire\", \"text\": \"Kirton is a village in Nottinghamshire, England. It is located 3 mi east of Ollerton. According to the United Kingdom Census 2001 it had a population of 273, reducing "
+      }
+    ]
+  },
+  {
+    "task_id": "5abdf12255429976d4830a2f",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "The Album Against the Wind was the 11th Album of a Rock singer Robert C Seger born may 6 1945. What was the Rock singers stage name ?",
+    "steps": [
+      {
+        "think_s": 0.01877183301257901,
+        "query": "The Album Against the Wind was the 11th Album of a Rock singer Robert C Seger born may 6 1945. What was the Rock singers stage name ?",
+        "duration_s": 0.030105375000857748,
+        "candidate_query": "The Album Against the Wind was the 11th Album of a Rock singer Robert C Seger born may 6 1945. What was the Rock singers stage name ?",
+        "candidate_duration_s": 0.030105375000857748,
+        "result_excerpt": "[{\"title\": \"Against the Wind (album)\", \"text\": \"Against the Wind is the eleventh album by American rock singer Bob Seger and his fourth with the Silver Bullet Band. It was released in February 1980. It is Seger's only number-one album to date, spending six weeks at the top of the \\\"Billboard\\\" Top LPs chart, knocking Pink Floyd's \\\"The Wall\\\" from the top spot.\", \"score\": 43.04161211}, {\"title\": \"Bob Seger\", \"text\": \"Robert Clark Seger ( , born May 6, 1945) is an American singer-songwriter, guitarist and pianist. As a locally successful Detroit-area artist, he performed and recorded as Bob Seger and the Last Heard and Bob Seger System throughout the 1960s. By the early 1970s, he had dropped the 'System' from his recordings and continued to strive for broader success with various other bands. In 1973, he put together the Silver Bullet Band, with a group of Detroit-area musicians, with whom he became most successful on the national level with the album \\\"Live Bullet\\\" (1976), recorded live with the Silver Bulle"
+      },
+      {
+        "think_s": 0.01877624999906402,
+        "query": "Against the Wind (album)",
+        "duration_s": 0.019150166990584694,
+        "candidate_query": "Against the Wind (album)",
+        "candidate_duration_s": 0.019150166990584694,
+        "result_excerpt": "[{\"title\": \"Against the Wind (album)\", \"text\": \"Against the Wind is the eleventh album by American rock singer Bob Seger and his fourth with the Silver Bullet Band. It was released in February 1980. It is Seger's only number-one album to date, spending six weeks at the top of the \\\"Billboard\\\" Top LPs chart, knocking Pink Floyd's \\\"The Wall\\\" from the top spot.\", \"score\": 25.95460564}, {\"title\": \"Left-wing uprisings against the Bolsheviks\", \"text\": \"The left-wing uprisings against the Bolsheviks were a series of rebellions and uprisings against the Bolsheviks by rival left-wing parties that started soon after the October Revolution, continued through the Russian Civil War, and lasted into the first few years of Soviet rule. They were led or supported by left-wing groups such as some factions of the Socialist Revolutionary Party, Left Socialist Revolutionaries, Mensheviks, and anarchists. The uprisings started in 1918 and continued during and after the Civil War until around 1924. The Bolsheviks increasingly a"
+      },
+      {
+        "think_s": 0.01876695899409242,
+        "query": "Left-wing uprisings against the Bolsheviks",
+        "duration_s": 0.02094191699870862,
+        "candidate_query": "Against the Wind (album)",
+        "candidate_duration_s": 0.02094191699870862,
+        "result_excerpt": "[{\"title\": \"Left-wing uprisings against the Bolsheviks\", \"text\": \"The left-wing uprisings against the Bolsheviks were a series of rebellions and uprisings against the Bolsheviks by rival left-wing parties that started soon after the October Revolution, continued through the Russian Civil War, and lasted into the first few years of Soviet rule. They were led or supported by left-wing groups such as some factions of the Socialist Revolutionary Party, Left Socialist Revolutionaries, Mensheviks, and anarchists. The uprisings started in 1918 and continued during and after the Civil War until around 1924. The Bolsheviks increasingly abandoned attempts to invite these groups to join the government and instead suppressed them with force.\", \"score\": 54.27126892}, {\"title\": \"Left Behind: The Kids\", \"text\": \"\\\"Left Behind: The Kids (stylized as LEFT BEHIND >THE KIDS<)\\\" is a series written by Jerry B. Jenkins, Tim LaHaye, and Chris Fabry. The series consists of 40 short novels aimed primarily at the young adult market b"
+      }
+    ]
+  },
+  {
+    "task_id": "5a88658955429938390d3f47",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Rostker v. Goldberg held that the practice of what way of filling armed forces vacancies was consitutional?",
+    "steps": [
+      {
+        "think_s": 0.018770749011309817,
+        "query": "Rostker v. Goldberg held that the practice of what way of filling armed forces vacancies was consitutional?",
+        "duration_s": 0.027149582994752564,
+        "candidate_query": "Rostker v. Goldberg held that the practice of what way of filling armed forces vacancies was consitutional?",
+        "candidate_duration_s": 0.027149582994752564,
+        "result_excerpt": "[{\"title\": \"Rostker v. Goldberg\", \"text\": \"Rostker v. Goldberg, 453 U.S. 57 (1981) , was a decision of the United States Supreme Court holding that the practice of requiring only men to register for the draft was constitutional. After extensive hearings, floor debate and committee sessions on the matter, the United States Congress enacted the law, as it had previously been, to apply to men only. Several attorneys, including Robert L. Goldberg, subsequently challenged the gender distinction as unconstitutional. (The named defendant is Bernard D. Rostker, Director of the Selective Service System.) In a 6-3 decision, the Supreme Court held that this gender distinction was not a violation of the equal protection component of the due process clause, and that the Act would stand as passed.\", \"score\": 42.37843339}, {\"title\": \"Armed Forces Covenant\", \"text\": \"The Military Covenant or Armed Forces Covenant is a term introduced in 2000 into British public life to refer to the mutual obligations between the nation and i"
+      },
+      {
+        "think_s": 0.018770791997667402,
+        "query": "Rostker v. Goldberg",
+        "duration_s": 0.016460624989122152,
+        "candidate_query": "Rostker v. Goldberg",
+        "candidate_duration_s": 0.016460624989122152,
+        "result_excerpt": "[{\"title\": \"Rostker v. Goldberg\", \"text\": \"Rostker v. Goldberg, 453 U.S. 57 (1981) , was a decision of the United States Supreme Court holding that the practice of requiring only men to register for the draft was constitutional. After extensive hearings, floor debate and committee sessions on the matter, the United States Congress enacted the law, as it had previously been, to apply to men only. Several attorneys, including Robert L. Goldberg, subsequently challenged the gender distinction as unconstitutional. (The named defendant is Bernard D. Rostker, Director of the Selective Service System.) In a 6-3 decision, the Supreme Court held that this gender distinction was not a violation of the equal protection component of the due process clause, and that the Act would stand as passed.\", \"score\": 31.6600077}, {\"title\": \"George V\", \"text\": \"George V (George Frederick Ernest Albert; 3 June 1865 \u2013 20 January 1936) was King of the United Kingdom and the British Dominions, and Emperor of India, from 6 May 1910 until"
+      },
+      {
+        "think_s": 0.01878708301228471,
+        "query": "George V",
+        "duration_s": 0.017173250002088025,
+        "candidate_query": "Rostker v. Goldberg",
+        "candidate_duration_s": 0.017173250002088025,
+        "result_excerpt": "[{\"title\": \"George V\", \"text\": \"George V (George Frederick Ernest Albert; 3 June 1865 \u2013 20 January 1936) was King of the United Kingdom and the British Dominions, and Emperor of India, from 6 May 1910 until his death in 1936.\", \"score\": 17.79620815}, {\"title\": \"Thrill of a Lifetime (film)\", \"text\": \"Thrill of a Lifetime is a 1937 American comedy film directed by George Archainbaud and written by Seena Owen, Grant Garett and Paul Girard Smith. The film stars James V. Kern, Charles Adler, George Kelly, Billy Mann -- at the time a musical-comedy act called the Yacht Club Boys -- along with Judy Canova, Ben Blue and Eleanore Whitney.\", \"score\": 10.56226987}, {\"title\": \"1925 Birthday Honours\", \"text\": \"The 1925 Birthday Honours were appointments by King George V to various orders and honours to reward and highlight good works by citizens of the British Empire. The appointments were made to celebrate the official birthday of The King, and were published in \\\"The London Gazette\\\" on 3 June 1925.\", \"score\": 9.7760397"
+      }
+    ]
+  },
+  {
+    "task_id": "5a80071f5542992bc0c4a684",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Alice David is the voice of Lara Croft in a video game developed by which company ?",
+    "steps": [
+      {
+        "think_s": 0.018785209002089687,
+        "query": "Alice David is the voice of Lara Croft in a video game developed by which company ?",
+        "duration_s": 0.02764995800680481,
+        "candidate_query": "Alice David is the voice of Lara Croft in a video game developed by which company ?",
+        "candidate_duration_s": 0.02764995800680481,
+        "result_excerpt": "[{\"title\": \"Alice David\", \"text\": \"Alice David (born 22 March 1987) is a French actress, known for the television series \\\"Bref\\\" (2011) and the film \\\"Babysitting\\\" (2014). She is the voice of the French dub of Lara Croft in the video game \\\"Tomb Raider\\\".\", \"score\": 47.47091517}, {\"title\": \"Lara Croft and the Temple of Osiris\", \"text\": \"Lara Croft and the Temple of Osiris is an action-adventure game developed by Crystal Dynamics and published by Square Enix for Microsoft Windows, PlayStation 4 and Xbox One. It is the sequel to the 2010 video game \\\"Lara Croft and the Guardian of Light\\\", and the second instalment in \\\"Lara Croft\\\" spin-off series of the \\\"Tomb Raider\\\" franchise. The video game was announced at E3 2014 on 9 June. \\\"Temple of Osiris\\\" stars \\\"Tomb Raider\\\" mainstay protagonist Lara Croft, voiced by English actress Keeley Hawes.\", \"score\": 43.13454662}, {\"title\": \"Lara Croft Go\", \"text\": \"Lara Croft Go is a 2015 turn-based puzzle video game in the \\\"Tomb Raider\\\" series. The player moves Lara"
+      },
+      {
+        "think_s": 0.017270374999498017,
+        "query": "Alice David",
+        "duration_s": 0.016243833990301937,
+        "candidate_query": "Alice David",
+        "candidate_duration_s": 0.016243833990301937,
+        "result_excerpt": "[{\"title\": \"Alice David\", \"text\": \"Alice David (born 22 March 1987) is a French actress, known for the television series \\\"Bref\\\" (2011) and the film \\\"Babysitting\\\" (2014). She is the voice of the French dub of Lara Croft in the video game \\\"Tomb Raider\\\".\", \"score\": 17.83490632}, {\"title\": \"Wolf Alice\", \"text\": \"Wolf Alice are a four-piece alternative rock band from North London, formed initially as a two-person band in 2010. Its members since 2012 are Ellie Rowsell (vocals, guitar), Joff Oddie (guitars, vocals), Theo Ellis (bass), and Joel Amey (drums, vocals).\", \"score\": 10.36111384}, {\"title\": \"Susan Alice Buffett\", \"text\": \"Susan Alice Buffett (born July 30, 1953) is the daughter of Warren Buffett. She is also an American philanthropist, her charitable work has focused largely on the Sherwood Foundation, formerly known as the Susan A. Buffett Foundation, an organization in Omaha that provides grants in public education, human services and social justice in the interest of promoting the welfare of childr"
+      },
+      {
+        "think_s": 0.016961583998636343,
+        "query": "Wolf Alice",
+        "duration_s": 0.01677704199391883,
+        "candidate_query": "Alice David",
+        "candidate_duration_s": 0.01677704199391883,
+        "result_excerpt": "[{\"title\": \"Wolf Alice\", \"text\": \"Wolf Alice are a four-piece alternative rock band from North London, formed initially as a two-person band in 2010. Its members since 2012 are Ellie Rowsell (vocals, guitar), Joff Oddie (guitars, vocals), Theo Ellis (bass), and Joel Amey (drums, vocals).\", \"score\": 22.24418076}, {\"title\": \"Alice David\", \"text\": \"Alice David (born 22 March 1987) is a French actress, known for the television series \\\"Bref\\\" (2011) and the film \\\"Babysitting\\\" (2014). She is the voice of the French dub of Lara Croft in the video game \\\"Tomb Raider\\\".\", \"score\": 10.44872634}, {\"title\": \"Susan Alice Buffett\", \"text\": \"Susan Alice Buffett (born July 30, 1953) is the daughter of Warren Buffett. She is also an American philanthropist, her charitable work has focused largely on the Sherwood Foundation, formerly known as the Susan A. Buffett Foundation, an organization in Omaha that provides grants in public education, human services and social justice in the interest of promoting the welfare of childr"
+      }
+    ]
+  },
+  {
+    "task_id": "5a7a0e1e5542990783324e1a",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Which dog's ancestors include Gordon and Irish Setters: the Manchester Terrier or the Scotch Collie?",
+    "steps": [
+      {
+        "think_s": 0.018777499994030222,
+        "query": "Which dog's ancestors include Gordon and Irish Setters: the Manchester Terrier or the Scotch Collie?",
+        "duration_s": 0.028742584006977268,
+        "candidate_query": "Which dog's ancestors include Gordon and Irish Setters: the Manchester Terrier or the Scotch Collie?",
+        "candidate_duration_s": 0.028742584006977268,
+        "result_excerpt": "[{\"title\": \"Scotch Collie\", \"text\": \"The Scotch Collie is a landrace breed of dog which originated from the highland regions of Scotland. The breed consisted of both the long-haired (now known as Rough) Collie and the short-haired (now known as Smooth) Collie. It is generally believed to have descended from a variety of ancient herding dogs, some dating back to the Roman occupation, which may have included Roman Cattle Dogs, Native Celtic Dogs and Viking Herding Spitzes. Other ancestors include the Gordon and Irish Setters.\", \"score\": 61.14494837}, {\"title\": \"Manchester Terrier\", \"text\": \"The Manchester Terrier is a breed of dog of the smooth-haired terrier type.\", \"score\": 30.68203935}, {\"title\": \"English Setter\", \"text\": \"The English Setter is a medium size breed of dog. It is part of the Setter family, which includes the red Irish Setters, Irish Red and White Setters, and black-and-tan Gordon Setters. The mainly white body coat is of medium length with long silky fringes on the back of the legs, under the "
+      },
+      {
+        "think_s": 0.018775874996208586,
+        "query": "Scotch Collie",
+        "duration_s": 0.016238749987678602,
+        "candidate_query": "Scotch Collie",
+        "candidate_duration_s": 0.016238749987678602,
+        "result_excerpt": "[{\"title\": \"Scotch Collie\", \"text\": \"The Scotch Collie is a landrace breed of dog which originated from the highland regions of Scotland. The breed consisted of both the long-haired (now known as Rough) Collie and the short-haired (now known as Smooth) Collie. It is generally believed to have descended from a variety of ancient herding dogs, some dating back to the Roman occupation, which may have included Roman Cattle Dogs, Native Celtic Dogs and Viking Herding Spitzes. Other ancestors include the Gordon and Irish Setters.\", \"score\": 25.80353152}, {\"title\": \"Collie\", \"text\": \"The collie is a distinctive type of herding dog, including many related landraces and standardised breeds. The type originated in Scotland and Northern England. The collie is a medium-sized, fairly lightly built dog, with a pointed snout. Many types have a distinctive white pattern over the shoulders. Collies are very active and agile, and most types of collies have a very strong herding instinct. Collie breeds have spread through many "
+      },
+      {
+        "think_s": 0.01879720798751805,
+        "query": "Collie",
+        "duration_s": 0.016309250000631437,
+        "candidate_query": "Scotch Collie",
+        "candidate_duration_s": 0.016309250000631437,
+        "result_excerpt": "[{\"title\": \"Scotch Collie\", \"text\": \"The Scotch Collie is a landrace breed of dog which originated from the highland regions of Scotland. The breed consisted of both the long-haired (now known as Rough) Collie and the short-haired (now known as Smooth) Collie. It is generally believed to have descended from a variety of ancient herding dogs, some dating back to the Roman occupation, which may have included Roman Cattle Dogs, Native Celtic Dogs and Viking Herding Spitzes. Other ancestors include the Gordon and Irish Setters.\", \"score\": 13.55538614}, {\"title\": \"Collie\", \"text\": \"The collie is a distinctive type of herding dog, including many related landraces and standardised breeds. The type originated in Scotland and Northern England. The collie is a medium-sized, fairly lightly built dog, with a pointed snout. Many types have a distinctive white pattern over the shoulders. Collies are very active and agile, and most types of collies have a very strong herding instinct. Collie breeds have spread through many "
+      }
+    ]
+  },
+  {
+    "task_id": "5abc8d75554299700f9d7900",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Since 2 June 2017, The Leader of Fine Gael had been held by which Irish Fine Gael politician who has served as Taoiseach and Minister for Defence?",
+    "steps": [
+      {
+        "think_s": 0.01877195801353082,
+        "query": "Since 2 June 2017, The Leader of Fine Gael had been held by which Irish Fine Gael politician who has served as Taoiseach and Minister for Defence?",
+        "duration_s": 0.029866541997762397,
+        "candidate_query": "Since 2 June 2017, The Leader of Fine Gael had been held by which Irish Fine Gael politician who has served as Taoiseach and Minister for Defence?",
+        "candidate_duration_s": 0.029866541997762397,
+        "result_excerpt": "[{\"title\": \"Leo Varadkar\", \"text\": \"Leo Eric Varadkar ( ; Irish: \\\"Leo de Varad\\\" ;born 18 January 1979) is an Irish Fine Gael politician who has served as Taoiseach, Minister for Defence and Leader of Fine Gael since June 2017. He has been a Teachta D\u00e1la (TD) since 2007, currently for the Dublin West constituency. He previously served as Minister for Social Protection from 2016 to 2017, Minister for Health from 2014 to 2016 and Minister for Transport, Tourism and Sport from 2011 to 2014.\", \"score\": 75.20407568}, {\"title\": \"Enda Kenny\", \"text\": \"Enda Patrick Kenny (born 24 April 1951) is an Irish Fine Gael politician who served as Taoiseach from 2011 to 2017, Leader of Fine Gael from 2002 to 2017, Minister for Defence from May 2014 to July 2014 and 2016 to 2017, Leader of the Opposition from 2002 to 2011, Minister for Tourism and Trade from 1994 to 1997 and Minister of State for Youth Affairs from 1986 to 1987. He has been a Teachta D\u00e1la (TD) since 1975, currently for the Mayo constituency.\", \"score\": 67.7656"
+      },
+      {
+        "think_s": 0.018776166005409323,
+        "query": "Leader of Fine Gael",
+        "duration_s": 0.0182684579922352,
+        "candidate_query": "Leo Varadkar",
+        "candidate_duration_s": 0.0182684579922352,
+        "result_excerpt": "[{\"title\": \"Leader of Fine Gael\", \"text\": \"The Leader of Fine Gael is the most senior politician within the Fine Gael political party in Ireland. Since 2 June 2017, the office had been held by Leo Varadkar following the resignation of Enda Kenny.\", \"score\": 33.35560946}, {\"title\": \"Fine Gael leadership election, 2017\", \"text\": \"The 2017 Fine Gael leadership election was triggered in May 2017, when Enda Kenny resigned as party leader. Voting began by members of Fine Gael and Young Fine Gael on 29 May 2017. On 2 June Leo Varadkar was announced as the victor, beating rival Simon Coveney 60% to 40%. With Fine Gael being the governing party at the time, this election effectively appointed a new Taoiseach for Ireland.\", \"score\": 27.39041611}, {\"title\": \"Liam Cosgrave\", \"text\": \"William Michael \\\"Liam\\\" Cosgrave (born 13 April 1920) is a former Irish Fine Gael politician who served as Taoiseach from 1973 to 1977 and the Leader of the Fine Gael Party from 1965 to 1977. He served as Leader of the Opposition from 1965 "
+      },
+      {
+        "think_s": 0.018790916001307778,
+        "query": "Fine Gael leadership election, 2017",
+        "duration_s": 0.017727917002048343,
+        "candidate_query": "Leader of Fine Gael",
+        "candidate_duration_s": 0.017727917002048343,
+        "result_excerpt": "[{\"title\": \"Fine Gael leadership election, 2017\", \"text\": \"The 2017 Fine Gael leadership election was triggered in May 2017, when Enda Kenny resigned as party leader. Voting began by members of Fine Gael and Young Fine Gael on 29 May 2017. On 2 June Leo Varadkar was announced as the victor, beating rival Simon Coveney 60% to 40%. With Fine Gael being the governing party at the time, this election effectively appointed a new Taoiseach for Ireland.\", \"score\": 48.94058399}, {\"title\": \"Leader of Fine Gael\", \"text\": \"The Leader of Fine Gael is the most senior politician within the Fine Gael political party in Ireland. Since 2 June 2017, the office had been held by Leo Varadkar following the resignation of Enda Kenny.\", \"score\": 26.65227602}, {\"title\": \"James Reilly (Irish politician)\", \"text\": \"James Reilly (born 16 August 1955) is an Irish Fine Gael politician and medical doctor. Between the February 2016 general election and the 6 May 2016 formation of a new government, he was the Acting Minister for Children an"
+      }
+    ]
+  },
+  {
+    "task_id": "5a7be2595542997c3ec972ac",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Who was born earlier, Emma Bull or Virginia Woolf?",
+    "steps": [
+      {
+        "think_s": 0.018787248991429806,
+        "query": "Who was born earlier, Emma Bull or Virginia Woolf?",
+        "duration_s": 0.023534749998361804,
+        "candidate_query": "Who was born earlier, Emma Bull or Virginia Woolf?",
+        "candidate_duration_s": 0.023534749998361804,
+        "result_excerpt": "[{\"title\": \"Emma Bull\", \"text\": \"Emma Bull (born December 13, 1954) is an American science fiction and fantasy author. Her novels include the Hugo- and Nebula-nominated \\\"Bone Dance\\\" and the urban fantasy \\\"War for the Oaks\\\". She is also known for a series of anthologies set in Liavek, a shared universe that she created with her husband Will Shetterly. As a singer, songwriter, and guitarist, she has been a member of the Minneapolis-based folk/rock bands Cats Laughing and The Flash Girls.\", \"score\": 22.50093254}, {\"title\": \"Virginia Woolf\", \"text\": \"Adeline Virginia Woolf (n\u00e9e Stephen; 25 January 1882 \u2013 28 March 1941) was an English writer who is considered one of the foremost modernists of the twentieth century, and a pioneer in the use of stream of consciousness as a narrative device. Born in an affluent household in Kensington, London, she attended the King's College London and was acquainted with the early reformers of women's higher education.\", \"score\": 22.32629543}, {\"title\": \"Me! I'm Afraid of Virgin"
+      },
+      {
+        "think_s": 0.018773541974951513,
+        "query": "Emma Bull",
+        "duration_s": 0.016585250006755814,
+        "candidate_query": "Emma Bull",
+        "candidate_duration_s": 0.016585250006755814,
+        "result_excerpt": "[{\"title\": \"Emma Bull\", \"text\": \"Emma Bull (born December 13, 1954) is an American science fiction and fantasy author. Her novels include the Hugo- and Nebula-nominated \\\"Bone Dance\\\" and the urban fantasy \\\"War for the Oaks\\\". She is also known for a series of anthologies set in Liavek, a shared universe that she created with her husband Will Shetterly. As a singer, songwriter, and guitarist, she has been a member of the Minneapolis-based folk/rock bands Cats Laughing and The Flash Girls.\", \"score\": 20.50155205}, {\"title\": \"Audition (The Fools Who Dream)\", \"text\": \"\\\"Audition (The Fools Who Dream)\\\" is a song from the film \\\"La La Land\\\" (2016). The music of the song was composed by Justin Hurwitz while the lyrics were provided by Benj Pasek and Justin Paul. In the film, the song is performed by Emma Stone. It received a nomination for Best Original Song at the 89th Academy Awards.\", \"score\": 6.82218087}, {\"title\": \"City of Stars\", \"text\": \"\\\"City of Stars\\\" is a song performed by Ryan Gosling and Emma Stone"
+      },
+      {
+        "think_s": 0.01879737501440104,
+        "query": "Audition (The Fools Who Dream)",
+        "duration_s": 0.019481040988466702,
+        "candidate_query": "Emma Bull",
+        "candidate_duration_s": 0.019481040988466702,
+        "result_excerpt": "[{\"title\": \"Audition (The Fools Who Dream)\", \"text\": \"\\\"Audition (The Fools Who Dream)\\\" is a song from the film \\\"La La Land\\\" (2016). The music of the song was composed by Justin Hurwitz while the lyrics were provided by Benj Pasek and Justin Paul. In the film, the song is performed by Emma Stone. It received a nomination for Best Original Song at the 89th Academy Awards.\", \"score\": 43.29381238}, {\"title\": \"Impossible Dream\", \"text\": \"Impossible Dream is Patty Griffin\u2019s fifth commercially released album, and fourth studio album. It was released on April 20, 2004. The album features an unlisted song \u2013 Griffin\u2019s mother and father singing \u201cThe Impossible Dream\u201d \u2013 at the end of \u201cTop of the World.\u201d\", \"score\": 12.20432886}, {\"title\": \"For Against\", \"text\": \"For Against is a United States post-punk/dream pop band from Lincoln, Nebraska. Despite numerous lineup shuffles and some periods of dormancy, the band has produced material steadily from its 1984 inception to the present.\", \"score\": 7.67361614}, {\"title\": \"De"
+      }
+    ]
+  },
+  {
+    "task_id": "5adf65555542992d7e9f9334",
+    "arrival_s": 0,
+    "deadline_s": null,
+    "task_context": "Which Kentucky Writers Hall of Fame author has had works published by Dim Gray Bar Press?",
+    "steps": [
+      {
+        "think_s": 0.018771082992316224,
+        "query": "Which Kentucky Writers Hall of Fame author has had works published by Dim Gray Bar Press?",
+        "duration_s": 0.02448691699828487,
+        "candidate_query": "Which Kentucky Writers Hall of Fame author has had works published by Dim Gray Bar Press?",
+        "candidate_duration_s": 0.02448691699828487,
+        "result_excerpt": "[{\"title\": \"Dim Gray Bar Press\", \"text\": \"Dim Gray Bar Press was an independent publisher of letterpress limited edition books printed at The Center for Book Arts in New York City. Founded by Barry Magid in 1989, its first title was \\\"Dialogue About A Hidden God,\\\" a translation of a work of Nicholas of Cusa by Thomas Merton. Subsequent works, handprinted in editions of usually 100 copies or less, included work by Martine Bellen, Wendell Berry, Eavan Boland, Guy Davenport, Sharon Dolin, Mark Doty, Jonathan Greene, Rachel Hadas, Andrew Hudgins, Jim Harrison, James Laughlin, William Matthews, Gerald Stern, Robert Stone, Charles Tomlinson, Jonathan Williams and William Carlos Williams. Magid also edited \\\"Father Louie: Photographs of Thomas Merton by Ralph Eugene Meatyard\\\" (Timken 1991) which included an introduction by Guy Davenport. The press ceased publication in 2000. Barry Magid is also a psychoanalyst and a Dharma heir to Charlotte Joko Beck in the Ordinary Mind Zen School.\", \"score\": 41.82507542}, {\"titl"
+      },
+      {
+        "think_s": 0.018768873997032642,
+        "query": "Dim Gray Bar Press",
+        "duration_s": 0.014822583994828165,
+        "candidate_query": "Dim Gray Bar Press",
+        "candidate_duration_s": 0.014822583994828165,
+        "result_excerpt": "[{\"title\": \"Dim Gray Bar Press\", \"text\": \"Dim Gray Bar Press was an independent publisher of letterpress limited edition books printed at The Center for Book Arts in New York City. Founded by Barry Magid in 1989, its first title was \\\"Dialogue About A Hidden God,\\\" a translation of a work of Nicholas of Cusa by Thomas Merton. Subsequent works, handprinted in editions of usually 100 copies or less, included work by Martine Bellen, Wendell Berry, Eavan Boland, Guy Davenport, Sharon Dolin, Mark Doty, Jonathan Greene, Rachel Hadas, Andrew Hudgins, Jim Harrison, James Laughlin, William Matthews, Gerald Stern, Robert Stone, Charles Tomlinson, Jonathan Williams and William Carlos Williams. Magid also edited \\\"Father Louie: Photographs of Thomas Merton by Ralph Eugene Meatyard\\\" (Timken 1991) which included an introduction by Guy Davenport. The press ceased publication in 2000. Barry Magid is also a psychoanalyst and a Dharma heir to Charlotte Joko Beck in the Ordinary Mind Zen School.\", \"score\": 36.05501725}, {\"titl"
+      },
+      {
+        "think_s": 0.0187525410001399,
+        "query": "Ragbi Klub Mornar Bar",
+        "duration_s": 0.016845750011270866,
+        "candidate_query": "Dim Gray Bar Press",
+        "candidate_duration_s": 0.016845750011270866,
+        "result_excerpt": "[{\"title\": \"Ragbi Klub Mornar Bar\", \"text\": \"Ragbi Klub Mornar Bar (Montenegrin:\u0420\u0430\u0433\u0431\u0438 \u043a\u043b\u0443\u0431 \u041c\u043e\u0440\u043d\u0430\u0440 \u0411\u0430\u0440, English: Rugby Club Mornar Bar) is a Montenegrin rugby club based in Bar, Montenegro. It was founded in 2013. The club plays in the Montenegrin national division. During its first match in Bar, Mornar played against Nik\u0161i\u0107 on April 19, 2014.\", \"score\": 52.86850585}, {\"title\": \"Trafford Bar tram stop\", \"text\": \"Trafford Bar is a tram stop on Greater Manchester's light rail system, Metrolink, at the junction of Talbot Road and Seymour Grove in Old Trafford. It opened on 15 June 1992 as part of Phase 1 of Metrolink's expansion, before which it was a railway station.\", \"score\": 10.00451235}, {\"title\": \"Maxine's Tap Room\", \"text\": \"Maxine's Tap Room is a historic bar in Fayetteville, Arkansas, located on 107 N. Block Ave. It is one of the oldest bars in Northwest Arkansas. Marjorie Maxine Miller opened the bar in 1950 when she was 24 years old with money she borrowed from her parents. She managed to pay her paren"
+      }
+    ]
+  }
+]

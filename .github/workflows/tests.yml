@@ -1,0 +1,19 @@
+name: Offline verification
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.13']
+        extras: ['', '[live,analysis]']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e '.${{ matrix.extras }}'
+      - run: python -m unittest discover -s tests -v
+      - run: python -m quota_spec.cli --skip-reference --output results/ci
+      - if: matrix.extras != ''
+        run: python -m quota_spec.qa --backend mock --count 2 --output results/qa-ci
