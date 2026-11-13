@@ -236,6 +236,8 @@ def replay(
     generate_on_reuse=False,
     generation_reserve=None,
     cache_required_results=False,
+    generation_trigger="dispatch",
+    retry_candidates=False,
 ):
     return FrozenReplay(
         tapes,
@@ -249,6 +251,8 @@ def replay(
         generate_on_reuse=generate_on_reuse,
         generation_reserve=generation_reserve,
         cache_required_results=cache_required_results,
+        generation_trigger=generation_trigger,
+        retry_candidates=retry_candidates,
     ).run(policy, forced=forced, generation_windows=generation_windows)
 
 
@@ -264,13 +268,21 @@ def oracle_gate_search(
     exact_limit=9,
     initial=(),
     generate_on_reuse=False,
+    generation_trigger="dispatch",
+    retry_candidates=False,
+    cache_required_results=False,
 ):
     """Exact small gate sets; explicitly NONEXACT feasible search for large sets.
 
     Large sets try none, all, per-task optimum, then forward/reverse additions
     and removals. No claim of globally optimal admission for that branch.
     """
-    keys = useful_keys(tapes, max_candidate_age=age, suppress_known_calls=suppress)
+    keys = useful_keys(
+        tapes,
+        max_candidate_age=age,
+        suppress_known_calls=suppress,
+        generation_trigger=generation_trigger,
+    )
     if len(keys) <= exact_limit:
         solved = exact_gates(
             tapes,
@@ -282,6 +294,9 @@ def oracle_gate_search(
             release_on_answer=release,
             max_bits=exact_limit,
             generate_on_reuse=generate_on_reuse,
+            generation_trigger=generation_trigger,
+            retry_candidates=retry_candidates,
+            cache_required_results=cache_required_results,
         )
         return {
             name: {
@@ -312,6 +327,9 @@ def oracle_gate_search(
                     age=age,
                     suppress=suppress,
                     generate_on_reuse=generate_on_reuse,
+                    generation_trigger=generation_trigger,
+                    retry_candidates=retry_candidates,
+                    cache_required_results=cache_required_results,
                 )
                 m = run["metrics"]
                 memo[selected] = (
@@ -322,12 +340,13 @@ def oracle_gate_search(
 
         starts = [frozenset(), frozenset(keys), frozenset(initial).intersection(keys)]
         best = min(starts, key=lambda s: evaluate(s)[0])
-        for order in [keys, tuple(reversed(keys))]:
-            selected = best
-            for key in order:
-                flipped = selected.symmetric_difference({key})
-                if evaluate(flipped)[0] < evaluate(selected)[0]:
-                    selected = flipped
+        for initial_set in starts:
+            selected = initial_set
+            for order in [keys, tuple(reversed(keys))]:
+                for key in order:
+                    flipped = selected.symmetric_difference({key})
+                    if evaluate(flipped)[0] < evaluate(selected)[0]:
+                        selected = flipped
             if evaluate(selected)[0] < evaluate(best)[0]:
                 best = selected
         winners[stage] = {

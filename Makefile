@@ -12,7 +12,7 @@ SPECULATOR ?= openai/gpt-4.1-nano
 CAPTURE_INTERVAL_S ?= 1.1
 PAID_SOURCE ?= results/hotpot-live-audit/source-snapshot
 
-.PHONY: setup prepare test test-baseline test-extensions lint offline live capture report export reference single-agent-check
+.PHONY: setup prepare test test-baseline test-extensions lint offline live capture report export reference single-agent-check throughput-check
 setup:
 	python3 -m venv .venv
 	$(PYTHON) -m pip install -e '.[paper,analysis,dev]'
@@ -35,6 +35,8 @@ capture:
 	$(PYTHON) -m quota_spec.hotpot_runtime --backend http --purpose capture --actor $(ACTOR) --speculator $(SPECULATOR) --count $(COUNT) --offset $(OFFSET) --max-usd $(MAX_USD) --max-requests 2000 --min-request-interval-s $(CAPTURE_INTERVAL_S) --output $(OUTPUT)
 single-agent-check:
 	$(PYTHON) -m quota_spec.single_agent_reference --output $(OUTPUT)
+throughput-check:
+	$(PYTHON) -m quota_spec.throughput_audit --output $(OUTPUT)
 report:
 	$(PYTHON) scripts/report_hotpot_runtime.py $(EVIDENCE) --output $(REPORT_OUTPUT) --source-snapshot $(PAID_SOURCE)
 export:

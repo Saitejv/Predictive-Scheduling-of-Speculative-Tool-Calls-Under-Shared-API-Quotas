@@ -83,6 +83,7 @@ class FrozenReplay:
         "observation_done": 3,
         "hypothetical_done": 4,
         "decision": 5,
+        "retry_candidates": 5,
     }
 
     def __init__(
@@ -101,6 +102,8 @@ class FrozenReplay:
         generation_reserve=None,
         generate_on_reuse=False,
         cache_required_results=False,
+        generation_trigger="dispatch",
+        retry_candidates=False,
     ):
         self.tapes = {t["task_id"]: t for t in tapes}
         if not self.tapes or len(self.tapes) != len(tapes):
@@ -132,6 +135,10 @@ class FrozenReplay:
         self.generation_reserve = generation_reserve
         self.generate_on_reuse = generate_on_reuse
         self.cache_required_results = cache_required_results
+        if generation_trigger not in ("dispatch", "request"):
+            raise ValueError("generation_trigger must be dispatch or request")
+        self.generation_trigger = generation_trigger
+        self.retry_candidates = retry_candidates
 
     def run(
         self,
@@ -160,6 +167,9 @@ class FrozenReplay:
         answers, finish, waits = {}, {}, []
         agent_waits = {tid: 0.0 for tid in self.tapes}
         recent, decisions = [], []
+        requested = set()
+        deferred = {}
+        retry_scheduled = False
         stats = {
             "cache_hits": 0,
             "inflight_hits": 0,
@@ -172,6 +182,8 @@ class FrozenReplay:
             "post_action_candidates": 0,
             "post_action_launches": 0,
             "generation_windows_suppressed": 0,
+            "candidates_deferred": 0,
+            "deferred_candidates_expired": 0,
         }
         wakeup = None
         now = 0.0
@@ -181,7 +193,13 @@ class FrozenReplay:
         workload = deque(self.tapes)
 
         def owner(kind, data):
-            return None if kind == "refill" else data["task_id"] if kind == "tool_done" else data[0]
+            return (
+                None
+                if kind in ("refill", "retry_candidates")
+                else data["task_id"]
+                if kind == "tool_done"
+                else data[0]
+            )
 
         def push(at, kind, data):
             nonlocal serial
@@ -198,19 +216,24 @@ class FrozenReplay:
         def duration(value):
             return value if self.tool_duration_s is None else self.tool_duration_s
 
-        def active(tid, index):
+        def active(tid, index, at=None):
             return (
                 tid not in finish
                 and index <= current[tid] <= index + self.max_candidate_age
                 and (
-                    self.candidate_ttl_s is None or now - opened[tid, index] <= self.candidate_ttl_s
+                    self.candidate_ttl_s is None
+                    or (now if at is None else at) - opened[tid, index] <= self.candidate_ttl_s
                 )
             )
 
         def known(tid, query):
             return (tid, query) in cache or (
                 self.suppress_known_calls
-                and any(e["task_id"] == tid and e["query"] == query for e in executions)
+                and (
+                    (tid, query) in requested
+                    if self.generation_trigger == "request" or self.retry_candidates
+                    else any(e["task_id"] == tid and e["query"] == query for e in executions)
+                )
             )
 
         def enter(tid, index):
@@ -287,11 +310,23 @@ class FrozenReplay:
             if speculation and row["window"] and allowed:
                 opened[tid, index] = now
                 stats["observation_runs"] += 1
+                log(
+                    "generation_started",
+                    task_id=tid,
+                    step=index + 1,
+                    trigger=self.generation_trigger,
+                )
                 push(
                     now + row["window"]["observation_duration_s"],
                     "observation_done",
                     (tid, index),
                 )
+
+        def schedule_retry():
+            nonlocal retry_scheduled
+            if deferred and not retry_scheduled:
+                retry_scheduled = True
+                push(now, "retry_candidates", None)
 
         def dispatch():
             nonlocal wakeup
@@ -304,10 +339,12 @@ class FrozenReplay:
                 execution = start(tid, row["query"], row["tool_duration_s"], False, index)
                 execution["waiters"].append((tid, index))
                 phases[tid], since[tid] = "running", now
-                generate(tid, index)
+                if self.generation_trigger == "dispatch":
+                    generate(tid, index)
             if queue and wakeup is None:
                 wakeup = quota.next_refill(now)
                 push(wakeup, "refill", None)
+            schedule_retry()
 
         def observed(tid, index, candidate):
             done = [e for e in executions if e["done"]]
@@ -361,10 +398,66 @@ class FrozenReplay:
                 snapshot,
             )
 
+        def decide(tid, index, candidate):
+            eligible = not queue and quota.remaining(now) > 0
+            if forced is not None:
+                admitted = eligible and (tid, index + 1, candidate["rank"]) in forced
+                overhead, details = 0.0, {"offline_forced": True}
+            else:
+                state = observed(tid, index, candidate)
+                admitted = bool(eligible and policy.admit(state))
+                overhead = float(getattr(policy, "overhead_s", 0.0)) if eligible else 0.0
+                details = dict(getattr(policy, "last_decision", {})) if eligible else {}
+            if not math.isfinite(overhead) or overhead < 0:
+                raise ValueError("Invalid predictor overhead")
+            stats["predictor_overhead_s"] += overhead
+            if details.get("reason") == "Uncovered exact predictor context":
+                raise ValueError("Uncovered exact predictor context; extend the frozen bank")
+            decision = (tid, index, candidate, admitted, quota.window_index, details, now)
+            if overhead:
+                push(now + overhead, "decision", decision)
+                return
+            admitted = bool(
+                admitted
+                and active(tid, index)
+                and not queue
+                and quota.remaining(now) > getattr(policy, "dispatch_reserve", 0)
+                and not known(tid, candidate["query"])
+            )
+            if record_decisions:
+                decisions.append(
+                    {
+                        "task_id": tid,
+                        "step": index + 1,
+                        "rank": candidate["rank"],
+                        "admitted": admitted,
+                        "time_s": now,
+                        "forecast": details,
+                        "requested_at_s": now,
+                        "post_action": current[tid] > index,
+                    }
+                )
+            if admitted:
+                stats["post_action_launches"] += current[tid] > index
+                start(tid, candidate["query"], candidate["duration_s"], True, index)
+
         for _ in range(min(self.max_active_agents, len(workload))):
             enter(workload.popleft(), 0)
         while heap:
-            now, _, _, kind, data = heapq.heappop(heap)
+            at, _, _, kind, data = heapq.heappop(heap)
+            if (
+                kind == "refill"
+                and not queue
+                and not any(
+                    active(tid, index, at) and not known(tid, candidate["query"])
+                    for tid, index, candidate in deferred.values()
+                )
+            ):
+                # A previously scheduled retry must not extend resource time
+                # after its question has answered or its candidate was consumed.
+                wakeup = None
+                continue
+            now = at
             task_owner = owner(kind, data)
             if task_owner is not None:
                 pending[task_owner] -= 1
@@ -383,6 +476,7 @@ class FrozenReplay:
                     push(now + row["tool_duration_s"], "local_done", (tid, index))
                     continue
                 recent.append(now)
+                requested.add((tid, row["query"]))
                 execution = cache.get((tid, row["query"]))
                 if execution is not None:
                     execution["used"] = True
@@ -391,15 +485,17 @@ class FrozenReplay:
                     if self.generate_on_reuse:
                         generate(tid, index)
                     if execution["done"]:
-                        log("result_reused", task_id=tid, step=index + 1)
+                        log("result_reused", task_id=tid, step=index + 1, query=row["query"])
                         advance(tid, index)
                     else:
                         stats["inflight_hits"] += 1
                         phases[tid], since[tid] = "running", now
                         execution["waiters"].append((tid, index))
-                        log("inflight_joined", task_id=tid, step=index + 1)
+                        log("inflight_joined", task_id=tid, step=index + 1, query=row["query"])
                 else:
                     phases[tid], since[tid] = "queued", now
+                    if self.generation_trigger == "request":
+                        generate(tid, index)
                     queue.append((tid, index, now))
                     dispatch()
             elif kind == "local_done":
@@ -439,53 +535,36 @@ class FrozenReplay:
                         stats["duplicate_candidates_suppressed"] += 1
                         continue
                     stats["post_action_candidates"] += current[tid] > index
-                    eligible = not queue and quota.remaining(now) > 0
-                    if forced is not None:
-                        admitted = eligible and (tid, index + 1, candidate["rank"]) in forced
-                        overhead, details = 0.0, {"offline_forced": True}
-                    else:
-                        state = observed(tid, index, candidate)
-                        admitted = bool(eligible and policy.admit(state))
-                        overhead = float(getattr(policy, "overhead_s", 0.0)) if eligible else 0.0
-                        details = dict(getattr(policy, "last_decision", {})) if eligible else {}
-                    if not math.isfinite(overhead) or overhead < 0:
-                        raise ValueError("Invalid predictor overhead")
-                    stats["predictor_overhead_s"] += overhead
-                    if details.get("reason") == "Uncovered exact predictor context":
-                        raise ValueError(
-                            "Uncovered exact predictor context; extend the frozen bank"
-                        )
-                    decision = (tid, index, candidate, admitted, quota.window_index, details, now)
-                    if overhead:
-                        push(now + overhead, "decision", decision)
-                    else:
-                        apply_decision = decision
-                        # Same handler as asynchronous predictor completion below.
-                        t, i, c, yes, window_index, details, requested_at = apply_decision
-                        reserve = getattr(policy, "dispatch_reserve", 0)
-                        yes = (
-                            yes
-                            and active(t, i)
-                            and not queue
-                            and quota.remaining(now) > reserve
-                            and not known(t, c["query"])
-                        )
-                        if record_decisions:
-                            decisions.append(
-                                {
-                                    "task_id": t,
-                                    "step": i + 1,
-                                    "rank": c["rank"],
-                                    "admitted": yes,
-                                    "time_s": now,
-                                    "forecast": details,
-                                    "requested_at_s": requested_at,
-                                    "post_action": current[t] > i,
-                                }
+                    selected = forced is None or (tid, index + 1, candidate["rank"]) in forced
+                    if self.retry_candidates and selected:
+                        key = (tid, index, candidate["rank"])
+                        deferred[key] = (tid, index, candidate)
+                        if queue or quota.remaining(now) == 0:
+                            stats["candidates_deferred"] += 1
+                            log(
+                                "candidate_deferred",
+                                task_id=tid,
+                                step=index + 1,
+                                query=candidate["query"],
                             )
-                        if yes:
-                            stats["post_action_launches"] += current[t] > i
-                            start(t, c["query"], c["duration_s"], True, i)
+                        schedule_retry()
+                    else:
+                        decide(tid, index, candidate)
+            elif kind == "retry_candidates":
+                retry_scheduled = False
+                for key, (tid, index, candidate) in list(deferred.items()):
+                    if not active(tid, index) or known(tid, candidate["query"]):
+                        deferred.pop(key)
+                        stats["deferred_candidates_expired"] += 1
+                for key, (tid, index, candidate) in list(deferred.items()):
+                    if queue or quota.remaining(now) == 0:
+                        break
+                    deferred.pop(key)
+                    if not known(tid, candidate["query"]):
+                        decide(tid, index, candidate)
+                if deferred and wakeup is None:
+                    wakeup = quota.next_refill(now)
+                    push(wakeup, "refill", None)
             elif kind == "decision":
                 tid, index, candidate, admitted, window_index, details, requested_at = data
                 remaining = quota.remaining(now)
@@ -574,11 +653,15 @@ def study(
     seed=248,
     tool_duration_s=None,
     candidate_lifetime="recorded",
+    scheduling="overlap",
+    cache_required_results=False,
 ):
     if Path(output).exists():
         raise ValueError("Choose a fresh study directory")
     tapes = list(dataset["tapes"])
     lifetime, replay_options = recorded_candidate_options(tapes, candidate_lifetime)
+    replay_options.update(scheduling_options(scheduling))
+    replay_options["cache_required_results"] = cache_required_results
     random.Random(seed).shuffle(tapes)
     rows = []
     policies = {
@@ -632,11 +715,16 @@ def study(
         "seed": seed,
         "tool_duration_override_s": tool_duration_s,
         "candidate_lifetime": lifetime,
+        "scheduling": scheduling,
         "replay_options": replay_options,
         "assumptions": dataset["assumptions"]
         + [
             "Continuous closed-loop worker pool; one shared quota persists across the entire question stream",
-            "A worker takes its next question only after its previous question drains started work",
+            (
+                "A worker takes its next question at answer readiness; started background work remains charged"
+                if replay_options["release_on_answer"]
+                else "A worker takes its next question after its previous question drains started work"
+            ),
             "Unlimited model concurrency with fixed recorded single-agent durations",
             "Per-agent Search cache, shared Search quota, FIFO required ordering",
             "Answer outputs held fixed; this is not new answer-quality evidence",
@@ -662,6 +750,17 @@ def study(
     return result
 
 
+def scheduling_options(name):
+    """Named, recorded controls keep historical studies reproducible."""
+    if name not in ("legacy", "overlap"):
+        raise ValueError("scheduling must be legacy or overlap")
+    return {
+        "generation_trigger": "request" if name == "overlap" else "dispatch",
+        "retry_candidates": name == "overlap",
+        "release_on_answer": name == "overlap",
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("dataset", type=Path)
@@ -674,6 +773,8 @@ def main():
     parser.add_argument(
         "--candidate-lifetime", choices=("recorded", "episode", "next_action"), default="recorded"
     )
+    parser.add_argument("--scheduling", choices=("legacy", "overlap"), default="overlap")
+    parser.add_argument("--cache-required-results", action="store_true")
     args = parser.parse_args()
     result = study(
         load_dataset(args.dataset),
@@ -684,6 +785,8 @@ def main():
         seed=args.seed,
         tool_duration_s=args.tool_duration_s,
         candidate_lifetime=args.candidate_lifetime,
+        scheduling=args.scheduling,
+        cache_required_results=args.cache_required_results,
     )
     print(
         json.dumps(

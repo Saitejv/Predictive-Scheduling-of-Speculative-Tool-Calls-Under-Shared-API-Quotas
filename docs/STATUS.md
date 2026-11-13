@@ -1,5 +1,11 @@
 # Current implementation status
 
+**Latest throughput repair:** request-triggered generation, candidate retry at
+quota resets and answer-time worker release are now the named `overlap` replay
+profile. Historical controls remain reproducible. The live answer-time delta
+is reconciled separately from same-path overlap and shared-quota throughput.
+See [the repair report](THROUGHPUT_REPAIR_2026-11-13.md).
+
 **November 13 async cleanup:** episode-long prediction windows, reserved actor
 capacity and endpoint/event accounting are active. The fresh 20-question pilot
 measured 7.01 → 6.25 seconds per answer; same-path scheduling accounts for

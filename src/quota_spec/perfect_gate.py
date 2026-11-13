@@ -10,13 +10,25 @@ import time
 from .frozen_replay import FrozenReplay
 
 
-def useful_keys(tapes, *, tool_duration_s=None, max_candidate_age=0, suppress_known_calls=False):
-    """Provably complete candidate universe for the original (one-window) lifetime.
+def useful_keys(
+    tapes,
+    *,
+    tool_duration_s=None,
+    max_candidate_age=0,
+    suppress_known_calls=False,
+    generation_trigger="dispatch",
+):
+    """Conservative useful candidate universe for the selected generation trigger.
 
     An uncached Search starts both its real tool and its prediction window. The
     latter expires when the next actor returns, after real tool + next actor.
-    Quota waiting shifts both equally, so it cannot rescue a later generator.
+    Dispatch-triggered generation shifts with the source tool. Request-triggered
+    generation can finish during source quota wait, so that lateness pruning is
+    invalid and is deliberately disabled. Previously requested queries remain
+    excluded when duplicate suppression is selected.
     """
+    if generation_trigger not in ("dispatch", "request"):
+        raise ValueError("generation_trigger must be dispatch or request")
     keys = []
     for tape in tapes:
         steps = tape["steps"]
@@ -27,7 +39,11 @@ def useful_keys(tapes, *, tool_duration_s=None, max_candidate_age=0, suppress_kn
             real_tool = row["tool_duration_s"] if tool_duration_s is None else tool_duration_s
             ready_delay = window["observation_duration_s"] + window["hypothetical_duration_s"]
             expiry_delay = real_tool + steps[index + 1]["actor_duration_s"]
-            if max_candidate_age == 0 and ready_delay >= expiry_delay:
+            if (
+                generation_trigger == "dispatch"
+                and max_candidate_age == 0
+                and ready_delay >= expiry_delay
+            ):
                 continue
             future = {s["query"] for s in steps[index + 1 :] if s["tool"] == "search"}
             for candidate in window["candidates"]:
@@ -43,7 +59,9 @@ def useful_keys(tapes, *, tool_duration_s=None, max_candidate_age=0, suppress_kn
                             and steps[j]["query"] == candidate["query"]
                         )
                         between = steps[index + 1 : first]
-                        if not any(s["tool"] == "search" for s in between):
+                        if generation_trigger == "dispatch" and not any(
+                            s["tool"] == "search" for s in between
+                        ):
                             first_ready = (
                                 real_tool
                                 + sum(s["actor_duration_s"] + s["tool_duration_s"] for s in between)
@@ -81,6 +99,8 @@ def exact_gates(
     tool_duration_s=None,
     generate_on_reuse=False,
     cache_required_results=False,
+    generation_trigger="dispatch",
+    retry_candidates=False,
 ):
     """Enumerate EVERY useful subset, separately optimizing mean and throughput.
 
@@ -94,6 +114,7 @@ def exact_gates(
             max_candidate_age=max_candidate_age,
             suppress_known_calls=suppress_known_calls,
             tool_duration_s=tool_duration_s,
+            generation_trigger=generation_trigger,
         )
         if keys is None
         else tuple(keys)
@@ -111,6 +132,8 @@ def exact_gates(
         tool_duration_s=tool_duration_s,
         generate_on_reuse=generate_on_reuse,
         cache_required_results=cache_required_results,
+        generation_trigger=generation_trigger,
+        retry_candidates=retry_candidates,
     )
     winners, scores = {}, []
     started = time.perf_counter()

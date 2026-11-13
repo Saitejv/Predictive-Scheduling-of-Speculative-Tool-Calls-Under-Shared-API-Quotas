@@ -6,6 +6,16 @@ unrelated local changes. The detailed earlier handoff is retained in
 
 ## Active implementation
 
+- Latest multi-agent repair: read
+  [the throughput reconciliation](docs/THROUGHPUT_REPAIR_2026-11-13.md).
+  Replay can now generate while its source Search waits for quota and retain
+  ready candidates for admission after resets. The CLI's `overlap` profile also
+  releases main workers at answer while accounting for all background work.
+  Low-level defaults and `--scheduling legacy` retain historical reproduction.
+- The live 7.01 → 6.25 s delta compares different sampled paths; the matched-path
+  scheduling saving is 0.20 s/question. Do not call the live delta an isolated
+  throughput gain. At 6 calls/60 s, 67 distinct required Searches imply a
+  660.23 s batch lower bound even under ideal useful speculation.
 - `src/quota_spec/hotpot_runtime.py`: actual async one-agent benchmark, true actor
   observations, exact-query speculative cache and full background drain.
 - Default observation model: GPT-4.1 nano; actor/hypothetical model: Gemini 2.5 Flash.
@@ -46,6 +56,7 @@ make lint
 make live OUTPUT=results/live-fresh MAX_USD=.50
 .venv/bin/python -m quota_spec.capture_audit results/live-fresh
 make single-agent-check OUTPUT=results/reference-fresh
+make throughput-check OUTPUT=results/throughput-check-fresh
 ```
 
 The live command is paid; other commands above use mocks or saved evidence after

@@ -14,11 +14,14 @@ duplicates. The real actor always uses true observations; it reuses a completed
 prefetch or joins its remaining work. Optional inference leaves one serving slot
 for the real actor. Every started request is drained and recorded.
 
-The fresh 20-question pilot measured **7.01 s → 6.25 s mean answer time**. It is a
-small exploratory result: the paired interval includes zero, and actor paths can
-differ. Answer latency and total time including background work are reported
-separately. See [the validation report](docs/ASYNC_SPECULATION_VALIDATION_2026-11-13.md)
-for the recording checks, exact seconds, budget and fixed-path calculations.
+On identical saved paths, speculation reduces mean answer time by **0.20 s**.
+The separate live pilot observed **7.01 s → 6.25 s**, but its actor paths and
+service times differ and its paired interval includes zero. That observed delta
+does not establish an isolated throughput improvement. Read
+[the throughput reconciliation](docs/THROUGHPUT_REPAIR_2026-11-13.md) for the
+common-work comparison, quota limits and scheduler repairs; the earlier
+[live validation](docs/ASYNC_SPECULATION_VALIDATION_2026-11-13.md) retains the
+original recordings, costs and endpoint checks.
 
 ## Setup and offline checks
 
@@ -70,7 +73,12 @@ unused work and failures remain in the recording; credentials are excluded.
   completion is a separate paid operation with its own explicit budget.
 - [`frozen_replay.py`](src/quota_spec/frozen_replay.py) compares multiple agents
   under one shared Search quota. Its CLI follows recorded candidate lifetimes by
-  default. Legacy recordings retain legacy expiry; new ones retain episode windows.
+  default. The `overlap` scheduling profile generates during required quota wait,
+  retries ready candidates after reset, and releases workers at answer while
+  counting all background work. `--scheduling legacy` retains dispatch-triggered
+  generation, one-shot admission and release after drain. Use
+  `--cache-required-results` to give both conditions the same ordinary cache.
+  Legacy recordings retain legacy expiry; new ones retain episode windows.
 - Jev/quota studies are scheduling extensions, separate from the single-agent
   speed benchmark. Kev remains deferred. Historical drivers are retained for
   reproducibility and are not imported by the active runtime.
@@ -84,3 +92,8 @@ agreement and is a separate experiment.
 `results/`, `.env`, downloaded upstream data and temporary checkouts are Git-ignored.
 Keep paid evidence bundles separately from a code checkout. Existing recordings
 are never overwritten by reports, replay or a new benchmark.
+
+`make throughput-check OUTPUT=results/throughput-check-fresh` reconciles the
+retained live pilot with fixed-path playback, checks a separate quota lower
+bound, and runs paired legacy/overlap and finite/repeated-workload controls.
+It makes no paid calls and requires the retained pilot evidence locally.
