@@ -1,3 +1,6 @@
+> Preserved reference/extension documentation. The active concurrent baseline and
+> current work order are [README](../README.md) and [next_steps.md](../next_steps.md).
+
 # Experimental design
 
 Use [RUNBOOK.md](RUNBOOK.md) for commands. Historical numerical artifacts under
@@ -13,8 +16,15 @@ facts are validated before any paid requests and used only for scoring after col
 including no-search answers and wrong answers, enter evaluation. A failed task
 stops collection, is recorded, and must be retried; it is never silently dropped.
 
-One fixed question/top-observed-title generator proposes at most one candidate
-per step. Generation time is recorded. Incorrect-candidate execution durations
+A separately configured small-model Speculator proposes at most one exact search
+per step or abstains, using only the question and observed search history. Main QA
+and proposal inference overlap. Generation time is recorded; required readiness
+follows the main action without waiting for optional work. Late proposals are
+cancelled and discarded. All policies share frozen on-time candidates and main
+timings to isolate admission effects. The original question/top-title
+heuristic remains available with `--candidate-backend heuristic` as an explicit
+candidate-source ablation; mock proposals are synthetic fixtures. Proposal tokens,
+costs and failures are audited independently of QA and demand inference. Incorrect-candidate execution durations
 are benchmarked after the trajectory; their results never enter agent state.
 Exact matches use the required call's recorded duration. Final model generation
 and final unused candidates are retained. Quota waiting is excluded from recorded

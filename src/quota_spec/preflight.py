@@ -39,7 +39,7 @@ def inspect(output, *, online=False):
             "status": "configured_not_probed"
             if os.environ.get("TYPESAFE_API_KEY")
             else "unavailable_missing_credential",
-            "contract": "POST https://api.typesafe.ai/v1/systemone; Bearer auth; state/model/questions; answers.*.noul",
+            "contract": "POST base/v1/systemone (base ending /v1: /systemone; base ending /alpha: /decisions); Bearer auth; state/model/questions; answers.*.noul",
             "inference_latency_s": None,
             "cost_usd": None,
             "source": "https://docs.typesafe.ai/api/system-one",
@@ -57,6 +57,16 @@ def inspect(output, *, online=False):
             else "Set KEV_BASE_URL to a separately configured serving endpoint.",
             "contract": "Same System One endpoint; adapter URL must target a server loaded with the selected pinned artifact",
             "source": "https://github.com/jaredpalmer/kev",
+        },
+        "speculator": {
+            "endpoint_configured": bool(os.environ.get("SPECULATOR_CHAT_URL")),
+            "model_configured": bool(os.environ.get("SPECULATOR_MODEL")),
+            "credential_present": bool(os.environ.get("SPECULATOR_API_KEY")),
+            "status": "configured_not_probed"
+            if os.environ.get("SPECULATOR_CHAT_URL") and os.environ.get("SPECULATOR_MODEL")
+            else "unavailable_missing_endpoint_or_model",
+            "inference_latency_s": None,
+            "cost_usd": None,
         },
         "qa": {
             "endpoint_configured": bool(os.environ.get("QA_CHAT_URL")),

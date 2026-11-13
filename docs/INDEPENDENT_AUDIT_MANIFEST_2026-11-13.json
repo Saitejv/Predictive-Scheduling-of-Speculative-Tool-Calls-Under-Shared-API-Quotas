@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "date": "2026-11-13",
+  "report": "docs/INDEPENDENT_SPECULATION_AUDIT_2026-11-13.md",
+  "tables": "docs/INDEPENDENT_LATENCY_TABLES_2026-11-13.md",
+  "results": "results/independent-speculation-audit-2026-11-13",
+  "archive": {
+    "path": "results/independent-speculation-audit-bundle-2026-11-13.tar.gz",
+    "bytes": 4641421,
+    "sha256": "63c890ecefe2892647f5843f5e1ef4a5d95c2848283e127e795a7f1ab6247c45",
+    "verified_file_count": 113
+  },
+  "inventory": {
+    "path": "results/independent-speculation-audit-2026-11-13/bundle-manifest.json",
+    "sha256": "1100232a0b0c334528ddda293a7cb09a425b57141f37ff48d6a138fab4508554"
+  },
+  "verification": {
+    "lint": "passed",
+    "format": "passed",
+    "tests": 216,
+    "tests_passed": true,
+    "tests_log": "tests-final.log",
+    "independent_recorded_recurrence_checks": 100,
+    "perfect_recurrence_executions": 1600,
+    "unique_perfect_recurrence_cases": 800,
+    "max_residual_s": 0,
+    "source_equivalence": {
+      "compared_schedules": 384,
+      "all_metrics_events_decisions_identical": true,
+      "final_replay_sha256": "4bee261f28405aec7ab65d03fa307a4f959c494d9bc2f68e0a891630229a837e",
+      "new_model_calls": 0
+    },
+    "protected": {
+      "protected_files": 7239,
+      "changed_files": [],
+      "all_unchanged": true
+    },
+    "compact_policy_parity": {
+      "comparisons": [
+        {
+          "scale": 1,
+          "capacity": 12,
+          "window_s": 30,
+          "workers": 2,
+          "identical": true
+        },
+        {
+          "scale": 1,
+          "capacity": 12,
+          "window_s": 30,
+          "workers": 8,
+          "identical": true
+        },
+        {
+          "scale": 1,
+          "capacity": 6,
+          "window_s": 60,
+          "workers": 2,
+          "identical": true
+        },
+        {
+          "scale": 1,
+          "capacity": 6,
+          "window_s": 60,
+          "workers": 8,
+          "identical": true
+        },
+        {
+          "scale": 10,
+          "capacity": 12,
+          "window_s": 30,
+          "workers": 2,
+          "identical": true
+        },
+        {
+          "scale": 10,
+          "capacity": 12,
+          "window_s": 30,
+          "workers": 8,
+          "identical": true
+        },
+        {
+          "scale": 10,
+          "capacity": 6,
+          "window_s": 60,
+          "workers": 2,
+          "identical": true
+        },
+        {
+          "scale": 10,
+          "capacity": 6,
+          "window_s": 60,
+          "workers": 8,
+          "identical": true
+        }
+      ],
+      "all_metrics_events_forecast_decisions_identical": true,
+      "ignored_field": "diagnostic CPU wall time only; declared 1 ms scheduler budget unchanged"
+    },
+    "new_model_calls": 0
+  },
+  "completion": {
+    "complete": true,
+    "date": "2026-11-13",
+    "main_policy_executions": 19200,
+    "aggregate_main_rows": 6400,
+    "completed_stream_policy_rows": 1728,
+    "cache_control_batch_rows": 216,
+    "cache_control_per_task_rows": 800,
+    "new_model_calls": 0,
+    "new_model_spend_usd": 0,
+    "tests": 216,
+    "protected_files": 7239,
+    "all_protected_unchanged": true,
+    "global_synthetic_gate_exact": false,
+    "report": "docs/INDEPENDENT_SPECULATION_AUDIT_2026-11-13.md"
+  }
+}

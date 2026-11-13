@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "questions": 50,
+  "paired_episodes": 100,
+  "complete_prediction_windows": 151,
+  "ranked_candidates": 441,
+  "eligible_search_candidates": 247,
+  "missing_eligible_search_results": 0,
+  "archive": {
+    "path": "results/hotpot-capture-50-bundle.tar.gz",
+    "sha256": "a4442fbeafbfc771445e3e23055f4f0d93cdca3accbc85210c2583335b97efaf",
+    "bytes": 44048849
+  },
+  "inventory": {
+    "path": "results/hotpot-capture-50-bundle-manifest.json",
+    "sha256": "d40198b2b86949dadd0c2f6745472fbe303a0edf3e27848f415c592832cb9973",
+    "files": 14926,
+    "uncompressed_bytes": 173383361,
+    "inside_archive": "bundle-manifest.json"
+  },
+  "roots": [
+    "src",
+    "tests",
+    "scripts",
+    "docs",
+    ".github",
+    "results/hotpot-capture-pilot-20",
+    "results/hotpot-capture-pilot-20-retry",
+    "results/hotpot-capture-pilot-remaining-13",
+    "results/hotpot-capture-expansion-30",
+    "results/hotpot-dataset-50",
+    "results/hotpot-predictor-inputs-50",
+    "results/hotpot-capture-report-50",
+    "results/hotpot-shared-quota-50",
+    "data/raw/speculative-action/dc938b9ef7474caf07fe4ad16549c1fa8c7d268c"
+  ],
+  "credentials_included": false,
+  "verification": {
+    "tests": 170,
+    "lint_and_format": true,
+    "socket_blocked_policy_checks": 12,
+    "protected_old_files_unchanged": 118
+  },
+  "note": "Archive is local and Git-ignored. Transfer/retain separately. Verify SHA-256 before extracting into an empty directory."
+}

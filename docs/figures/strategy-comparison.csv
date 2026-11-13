@@ -1,0 +1,25 @@
+study,scenario,quota_calls,reset_s,workers,order_seeds,variant,method,mean_completion_s,throughput_questions_s
+hotpot-async-native-50,Frozen replay: recorded service times,12,5,4,5,no_speculation,Prefetch off: fixed actor path,10.544801688222991,0.17913444075487525
+hotpot-async-native-50,Frozen replay: recorded service times,12,5,4,5,current_capacity,Speculation: capacity only,10.456097432079648,0.17752691785815347
+hotpot-async-native-50,Frozen replay: recorded service times,12,5,4,5,classic_reserve,Tuned reserve,10.424148864899957,0.17814473645618178
+hotpot-async-native-50,Frozen replay: recorded service times,12,5,4,5,legacy_jev_full,Jev: conservative gate,10.54349930267005,0.17774410205084798
+hotpot-async-native-50,Frozen replay: recorded service times,12,5,4,5,persistent_jev_full,Jev: async + late candidates,10.700994354800624,0.17678476621444567
+hotpot-async-native-50,Frozen replay: recorded service times,12,5,4,5,hybrid_jev_full,Jev + tuned reserve,10.563321983349866,0.17701560226978136
+hotpot-async-native-50,Frozen replay: recorded service times,12,30,4,5,no_speculation,Prefetch off: fixed actor path,28.397148317785273,0.13024763260297395
+hotpot-async-native-50,Frozen replay: recorded service times,12,30,4,5,current_capacity,Speculation: capacity only,31.90245729891913,0.11519077876838871
+hotpot-async-native-50,Frozen replay: recorded service times,12,30,4,5,classic_reserve,Tuned reserve,28.25364913478513,0.13061848722677788
+hotpot-async-native-50,Frozen replay: recorded service times,12,30,4,5,legacy_jev_full,Jev: conservative gate,28.25125979228552,0.13061848722677788
+hotpot-async-native-50,Frozen replay: recorded service times,12,30,4,5,persistent_jev_full,Jev: async + late candidates,28.35209793670586,0.12968900231629105
+hotpot-async-native-50,Frozen replay: recorded service times,12,30,4,5,hybrid_jev_full,Jev + tuned reserve,28.25364913478513,0.13061848722677788
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,5,4,3,no_speculation,Prefetch off: fixed actor path,23.56004233303732,0.14969509211031476
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,5,4,3,current_capacity,Speculation: capacity only,20.605120406735416,0.15793053248862707
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,5,4,3,classic_reserve,Tuned reserve,20.60235838543578,0.15793053248862707
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,5,4,3,legacy_jev_full,Jev: conservative gate,21.39501339848009,0.15452346235710587
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,5,4,3,persistent_jev_full,Jev: async + late candidates,20.95287760815727,0.15701121395534434
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,5,4,3,hybrid_jev_full,Jev + tuned reserve,20.95283793636779,0.15701119241672387
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,30,4,3,no_speculation,Prefetch off: fixed actor path,29.549475290310994,0.13099205883468354
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,30,4,3,current_capacity,Speculation: capacity only,47.33771867772318,0.08031330859153722
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,30,4,3,classic_reserve,Tuned reserve,30.153456937967633,0.12964451996050427
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,30,4,3,legacy_jev_full,Jev: conservative gate,33.18769799445622,0.11601645620766653
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,30,4,3,persistent_jev_full,Jev: async + late candidates,36.43322744575624,0.10432734183687183
+hotpot-async-slow-search-50,Frozen replay: simulated 5-second Searches,12,30,4,3,hybrid_jev_full,Jev + tuned reserve,30.156914910634764,0.12932246733299027

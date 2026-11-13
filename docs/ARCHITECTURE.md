@@ -1,146 +1,93 @@
-# Architecture
+# Active baseline architecture
 
-## Implemented system
+Version 2 capture is now active by default. `capture.py` stores immutable blobs
+and exact per-stage dependencies/timing; `capture_audit.py` restores/re-executes
+states with sockets blocked. `capture_bank.py` completes skipped alternatives
+outside live timing. `capture_cohort.py` assembles disjoint banks.
+`frozen_replay.py` reuses the quota/policy/model interfaces for all candidate
+ranks and continuous worker pools, and `frozen_forecasts.py` prepares existing
+bounded-context inputs. These offline extensions are separate from live runtime
+imports. See [the current workflow](CAPTURE_REPLAY.md).
 
-The proposal asks whether agents' observed progress helps estimate the harm of
-spending shared quota before other agents submit their required calls. Quota is
-spent on dispatch, with no completion/cancellation refund.
+`hotpot_runtime.py` is the single live orchestration path. Required actions use
+real observations. Each speculative Search uses an isolated upstream WikiEnv;
+only exact case-sensitive Search arguments can reuse or join that work.
+Lookup and Finish execute locally on authoritative state. Late predictions
+cannot block required work; all started model/tool work drains before the next
+episode. Windows now remain open until answer readiness; exact required or
+cached queries suppress duplicate speculation. Optional model requests occupy
+at most three of four serving slots, leaving actor capacity. Historical
+next-action expiry remains explicitly selectable. See
+[the validation report](ASYNC_SPECULATION_VALIDATION_2026-11-13.md). Extraction retained these semantics and the original upstream parser.
 
 ```mermaid
-flowchart LR
-    A[Observed agent progress] --> P[History / Jev / Kev adapter]
-    C[One observed candidate per step] --> P
-    P --> S[Bounded paired demand rollouts]
-    Q[Observed quota and registry] --> S
-    S --> G[Replay or asyncio gateway]
-    G --> T[Frozen HotpotQA search]
-    G --> L[Events and outcomes]
-    L --> E[Paired experiments and report]
+flowchart TD
+    R[hotpot_runtime] --> U[upstream]
+    R --> T[transport]
+    R --> A[artifacts]
+    R --> M[telemetry]
+    U --> A
+    U --> P[Pinned authors' runner / prompts / WikiEnv]
+    T --> A
+    T --> M
+    S[Offline report script] --> R
+    E[stage_export] --> A
 ```
 
-| Module | Responsibility |
+`artifacts.py` and `telemetry.py` use only the standard library. `upstream.py`
+imports HTTP tooling when preparing files and loads pinned authors' code when
+requested. Authors' imports need `gymnasium`, `requests`, `beautifulsoup4` and
+`pandas`; async transport uses `httpx`. Install the `paper` extra.
+
+Before cleanup, `hotpot_runtime` imported `collect_qa.write_json`, which loaded
+local-BM25 QA, speculation, workload and model modules. It also imported upstream
+utilities from the serial `paper` experiment and loaded `experiments.source_hashes`,
+which pulled in replay, admission and prediction. These helpers now live in
+small modules. Historical imports in `collect_qa`, `experiments`, `paper` and
+`hotpot_runtime.LiveChat` remain compatibility exports. There is one implementation
+of each extracted helper.
+
+## Provenance
+
+Source: `https://github.com/naimengye/speculative-action`, revision
+`dc938b9ef7474caf07fe4ad16549c1fa8c7d268c`.
+
+| Responsibility | Source |
 | --- | --- |
-| `models.py` | Ground truth traces and separate immutable observed snapshots |
-| `quota.py` | Aligned fixed windows, monotonic ledger advancement, spend at dispatch |
-| `replay.py` | Dependency-aware events, exact reuse, FIFO/progress dispatch and privileged reference |
-| `policies.py` | No speculation, current capacity, fixed and observed-usage reserves |
-| `prediction.py` | Bounded forecast schema, development-only history and calibration |
-| `admission.py` | Shared-scenario bounded counterfactuals and estimated deadline risk |
-| `adapters.py` | Total-timeout Jev/Kev System One contracts and inference telemetry |
-| `gateway.py` | Single-process atomic live registry/reservation and HTTP factory |
-| `search.py`, `collect.py` | Checksummed BM25 corpus and observed scripted trace collection |
-| `collect_qa.py`, `forecast_bank.py`, `pipeline.py` | Resumable LLM traces, frozen probabilities and complete experiment workflow |
-| `telemetry.py` | Actual-call/token/cost summaries including retained failed attempts |
-| `experiments.py`, `live.py` | Tuning, held-out sweeps, bootstrap and live fidelity checks |
+| ReAct instructions, six-shot examples, observation/action prompts | Pinned authors' files |
+| Thought/action extraction and retry parsing | Authors' `HotPotQARun` methods |
+| Search, local Lookup/Finish, normalization/F1 | Authors' WikiEnv/wrappers |
+| Seeded question order | Authors' convention via `upstream.paper_indices` |
+| Async episode loop, branch isolation, exact reuse, accounting | Our runtime/transport |
+| Future quotas, admission and demand forecasts | Preserved project extensions |
 
-Jev/Kev adapters have mock contract tests; real inference is unavailable. The
-frozen traces use scripted retrieval, not a main LLM. `qa.py` provides a bounded
-main-model HTTP integration and a synthetic mock. Real measurements remain
-outstanding; see `API_SETUP.md` and `MODEL_ACCESS.md`.
+Pinned files and their license live under `data/raw/speculative-action/<revision>`.
+`upstream.json` records Git blob and SHA-256 hashes. No GitHub fork is required.
+The original paid source snapshot is immutable; refactored active source has new
+hashes. The offline report reports both identities without rewriting paid evidence.
 
-## Online boundary
+## Export and next capture boundary
 
-`Observation` contains current time, candidate, task ID/progress, remaining quota,
-and queued required count. Its `Snapshot` contains only arrived active agents,
-observed deadlines/context, phase/timestamps, eight recent calls, bounded prior
-result excerpts, current registry and required queue. Running executions expose estimates based on already completed calls, or the
-configured initial duration estimate; true uncompleted durations remain hidden.
-The simulator owns hidden
-future arrivals, required identities, durations and dependencies. Online policies
-never receive the ground-truth `Task` or `Step` objects.
+`stage_export.py` consumes only local JSON files. It emits model-attempt nodes,
+required action boundaries, Search executions, candidate/launch events, tool
+application records and answer/drain nodes. Edges never cross episodes.
+Candidate ranks and exact arguments are preserved. Every raw request and event
+is accounted for; all absent full tool state/results remain explicit gaps.
+[The schema and coverage guide](STAGE_EXPORT.md) explains these limits.
 
-A result excerpt stored in a trace step becomes visible only after that step
-completes. Candidates become available after their recorded generation delay and generated from the question
-and previous observed search results. No gold answer or supporting-fact label
-is passed to the generator/predictor. History fitting uses development labels;
-held-out labels are inspected only by evaluation/calibration code.
+## Preserved extension map
 
-`bounded_context` validates observation times and supports nested task, history
-and progress context plus history/progress removal modes. It caps task text at
-2,048 characters and result excerpts at 1,024. HTTP request bodies are bounded.
-The history baseline conditions on completed-call count; it does not interpret
-question semantics. Jev/Kev supply probabilities using the same timing samples.
+| Modules | Status |
+| --- | --- |
+| `quota`, `policies`, `admission`, `prediction`, `adapters` | Shared-quota/forecast components for future integration |
+| `replay`, `models`, `workload` | Existing one-candidate replay; needs a faithful multi-candidate extension |
+| `forecast_bank`, `experiments` | Frozen forecasts and sweeps; phase-entry `elapsed=0` assumption |
+| `paper`, `paper_collect`, `paper_reproduction` | Serial agreement/reference measurement |
+| `paper_pipeline` | Earlier top-one upstream quota adaptation |
+| `collect`, `collect_qa`, `qa`, `pipeline`, `cli`, `live`, `gateway`, `search`, `preflight`, `configuration` | Historical BM25/integration harness |
 
-## Forecast and paired objective
-
-Each `Forecast` holds reuse, next-call and continuation probabilities, plus at
-most 128 nonnegative finite timing samples. Admission bounds samples to 256 and
-predicted calls per active agent to 16. The current experiment uses eight samples
-and four calls. Predictions represent currently observed agents only; unannounced
-future arrivals are not modeled.
-
-For each candidate, a stable identity/seed generates K demand scenarios once.
-Each scenario is replayed twice with identical required demand: admit now or
-reject. Both branches preserve current spent quota, fixed-window refills,
-observed queued/running executions, exact cached reuse, and dependency-shifted
-readiness. Quota waiters keep FIFO priority even over new arrivals at a refill.
-Hypothetical unmatched calls have distinct per-agent/step identities.
-
-The gain is the sum across agents of reject-branch projected chain completion
-minus admit-branch completion, with both endpoints censored at horizon H.
-The owner-only ablation changes only that gain sum; scenarios and the global
-risk guard stay the same. A decision cost is subtracted. History/mock runs use a fixed cost; external
-predictors charge measured decision wall time, including failed inference. The frozen
-study cost is the development p95 scheduler wall time, rounded up to milliseconds
-with a 1 ms minimum. Actual decision wall time is also logged separately.
-
-For each observed deadline at or before now+H, count a newly introduced miss
-(admit misses, reject meets). Risk divides this count by K times the number of
-those deadlines. When none fall in the horizon, risk is zero. Admit only on
-strictly positive gain after the overhead charge and risk <= epsilon. Forecast,
-schema or timeout failure rejects; fallbacks record the failure type. This
-conservative newly-missed metric does not offset harm with rescued deadlines.
-
-Projected chain endpoints are approximations, and censored/incomplete demand
-can misestimate true task completion and deadline risk. H must be long enough
-for relevant contention. Unknown arrivals, prediction error, timing variance,
-finite samples and registry estimates prevent arbitrary-arrival guarantees.
-
-## Execution invariants and timing
-
-Required FIFO priority stays fixed across admission comparisons. Progress-aware
-required ordering has separate no-speculation and current-capacity controls that prioritize larger
-observed completed-call counts; readiness and stable order break ties.
-
-The registry key is exactly `(task_id, tool, canonical_arguments)`. Casing and
-spacing matter. A matching in-flight call is joined; a completed matching result
-is reused without another charge. Optional callers receive admission status
-only; result contents are delivered upon a matching required request. No
-cross-agent sharing, semantic matching or eviction is assumed.
-
-Replay considers each candidate after its recorded generation delay. It serializes
-prediction independently from tool execution, then revalidates the observed state
-revision, quota window, owner phase and required queue before dispatch. Quota is
-charged in the dispatch window, after inference. Main-model thinking overlaps
-admission; the owner's action waits for both. The live QA harness follows the
-same overlap convention. Actual scheduler and event-loop timing still vary by
-host; frozen modeled costs make saved replay outcomes reproducible.
-
-The future-informed reference uses a separate privileged callback. It compares
-full remaining ground-truth admit/reject rollouts, fixes prior decisions, disables
-undecided later speculation, requires strict mean improvement, and disallows an
-increase in deadline misses. It is a greedy heuristic, not a global optimum.
-
-## Live gateway
-
-One asyncio lock protects registry insertion, required FIFO and quota spending.
-Concurrent identical required waiters advance progress once, from worker
-completion even if clients disconnect. Distinct simultaneous calls within a
-task are rejected because task progress models serial chains. Task completion
-explicitly releases registry entries and progress via `finish_task`.
-Required requests create or join futures atomically. Model inference runs in a
-worker thread outside that lock; its policy state is serialized separately.
-After prediction, optional admission rechecks registry, queue, capacity, window
-and state revision under the ledger lock. Stale forecasts are rejected. Required requests can proceed while a prediction runs.
-
-Waiters await shielded futures: a disconnected/cancelled client cannot cancel
-shared execution. A failed execution is removed from the registry and cannot
-be reused as success. Retrying spends another unit. An execution cancelled after
-dispatch retains its charge. Shutdown cancels outstanding futures/workers and
-the refill wakeup. The monotonic clock is anchored at gateway construction.
-
-Use one FastAPI worker. Multiple workers would require a shared atomic ledger
-and registry. The current gateway has no persistent store or cross-process
-coordination. The replay models serial task chains, not arbitrary dependency
-DAGs, failures/retries, tool concurrency limits or continuous refill. The live
-gateway tests failures and cancellation independently of the replay workload.
+These modules remain in the package to preserve tested interfaces, outside the
+baseline dependency chain. Their tests are in `tests/extensions/`; baseline tests
+are in `tests/baseline/`. [Historical architecture](LEGACY_ARCHITECTURE.md) retains
+implementation details and earlier claims in context. The ordered integration
+plan remains [next_steps.md](../next_steps.md).

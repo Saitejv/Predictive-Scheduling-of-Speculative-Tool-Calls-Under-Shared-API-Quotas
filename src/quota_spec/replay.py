@@ -34,6 +34,7 @@ class Execution:
     done: bool = False
     started_s: float = 0.0
     waiters: list[tuple[str, int, float]] = field(default_factory=list)
+    quota_required: bool = True
 
 
 def percentile(values: list[float], fraction: float) -> float:
@@ -54,8 +55,8 @@ class Replay:
     # quota wakeup, then optional admission. Required work wins same-time ties.
     PRIORITY = {
         "finish": 0,
-        "decision": 1,
-        "candidate_resume": 1,
+        "decision": 6,
+        "candidate_resume": 5,
         "required": 2,
         "enter": 3,
         "refill": 4,
@@ -109,10 +110,30 @@ class Replay:
         agents: dict[str, AgentState] = {}
         histories: dict[str, list[Call]] = {tid: [] for tid in self.tasks}
         recent_required: list[float] = []
-        blocked_until: dict[str, float] = {}
         modeled_overhead = 0.0
         prediction_available = 0.0
         revision = 0
+
+        def proposal_active(tid, index):
+            agent = agents.get(tid)
+            if agent is None:
+                return False
+            if agent.phase == "thinking" and completed[tid] == index:
+                return True
+            return (
+                step_at(tid, index).candidate_trigger == "previous_tool_start"
+                and agent.phase == "running"
+                and completed[tid] == index - 1
+            )
+
+        def schedule_following(tid, index):
+            if index + 1 < len(self.tasks[tid].steps):
+                next_step = self.tasks[tid].steps[index + 1]
+                if (
+                    next_step.candidate is not None
+                    and next_step.candidate_trigger == "previous_tool_start"
+                ):
+                    push(now + next_step.candidate_delay_s, "candidate", (tid, index + 1))
 
         def step_at(tid, index):
             task = self.tasks[tid]
@@ -148,15 +169,20 @@ class Replay:
             else:
                 push(now, "enter", (tid, index + 1))
 
-        def start(tid: str, call: Call, duration: float, speculative: bool) -> Execution:
-            if not quota.consume(now):
+        def start(
+            tid: str, call: Call, duration: float, speculative: bool, quota_required=True
+        ) -> Execution:
+            if quota_required and not quota.consume(now):
                 raise RuntimeError("Execution started without quota")
-            ex = Execution(tid, call, now + duration, speculative, started_s=now)
-            cache[(tid, call)] = ex
+            ex = Execution(
+                tid, call, now + duration, speculative, started_s=now, quota_required=quota_required
+            )
+            if quota_required:
+                cache[(tid, call)] = ex
             executions.append(ex)
             push(ex.finish_s, "finish", ex)
             log(
-                "call_started",
+                "call_started" if quota_required else "local_action_started",
                 task_id=tid,
                 speculative=speculative,
                 tool=call.tool,
@@ -180,6 +206,7 @@ class Replay:
                 ex = start(tid, step.required, step.duration_s, False)
                 ex.used = True
                 ex.waiters.append((tid, index, ready))
+                schedule_following(tid, index)
                 agents[tid] = replace(
                     agents[tid],
                     observed_at_s=now,
@@ -214,7 +241,7 @@ class Replay:
                 )
                 log("step_entered", task_id=tid, step=index)
                 push(now + step.think_s, "required", payload)
-                if step.candidate is not None:
+                if step.candidate is not None and step.candidate_trigger == "phase_entry":
                     push(now + step.candidate_delay_s, "candidate", payload)
             elif kind in ("candidate", "candidate_resume"):
                 tid, index = payload
@@ -222,10 +249,9 @@ class Replay:
                 key = (tid, index)
                 if now < prediction_available:
                     # The live gateway serializes prediction while tools keep running.
-                    blocked_until[tid] = max(blocked_until.get(tid, now), prediction_available)
                     push(prediction_available, "candidate_resume", payload)
                     continue
-                completed_executions = [ex for ex in executions if ex.done]
+                completed_executions = [ex for ex in executions if ex.done and ex.quota_required]
                 observed_duration = (
                     sum(ex.finish_s - ex.started_s for ex in completed_executions)
                     / len(completed_executions)
@@ -243,6 +269,7 @@ class Replay:
                             ex.finish_s if ex.done else max(now, ex.started_s + observed_duration),
                         )
                         for ex in executions
+                        if ex.quota_required or not ex.done
                     ),
                     tuple(
                         QueuedCall(t, self.tasks[t].steps[i].required, ready)
@@ -262,8 +289,7 @@ class Replay:
                 # Do not issue duplicate work for a call already ready or in flight.
                 eligible = (
                     tid in agents
-                    and agents[tid].phase == "thinking"
-                    and completed[tid] == index
+                    and proposal_active(tid, index)
                     and not queue
                     and state.quota_remaining > 0
                     and (tid, step.candidate) not in cache
@@ -283,7 +309,6 @@ class Replay:
                 )
                 overhead = getattr(policy, "overhead_s", 0.0) if details else 0.0
                 modeled_overhead += overhead
-                blocked_until[tid] = now + overhead
                 prediction_available = now + overhead
                 decision = (tid, index, admitted, eligible, details, revision, quota.window_index)
                 if overhead:
@@ -309,8 +334,7 @@ class Replay:
                     revision != old_revision
                     or quota.window_index != window
                     or tid not in agents
-                    or agents[tid].phase != "thinking"
-                    or completed[tid] != index
+                    or not proposal_active(tid, index)
                     or bool(queue)
                     or remaining < 1
                 )
@@ -331,19 +355,31 @@ class Replay:
                     revision += 1
             elif kind == "required":
                 tid, index = payload
-                if now < blocked_until.get(tid, now):
-                    push(blocked_until[tid], "required", payload)
-                    continue
                 revision += 1
                 if index == len(self.tasks[tid].steps):
                     finish_task(tid)
                     continue
                 step = self.tasks[tid].steps[index]
                 histories[tid].append(step.required)
-                recent_required.append(now)
+                if step.quota_required:
+                    recent_required.append(now)
                 log("required_ready", task_id=tid, step=index)
+                if not step.quota_required:
+                    ex = start(tid, step.required, step.duration_s, False, quota_required=False)
+                    ex.used = True
+                    ex.waiters.append((tid, index, now))
+                    agents[tid] = replace(
+                        agents[tid],
+                        observed_at_s=now,
+                        phase="running",
+                        phase_since_s=now,
+                        history=tuple(histories[tid][-8:]),
+                    )
+                    schedule_following(tid, index)
+                    continue
                 ex = cache.get((tid, step.required))
                 if ex is not None:
+                    schedule_following(tid, index)
                     reuse_hits += 1
                     ex.used = True
                     waits.append(0.0)
@@ -372,7 +408,11 @@ class Replay:
             elif kind == "finish":
                 ex = payload
                 ex.done = True
-                log("call_finished", task_id=ex.task_id, speculative=ex.speculative)
+                log(
+                    "call_finished" if ex.quota_required else "local_action_finished",
+                    task_id=ex.task_id,
+                    speculative=ex.speculative,
+                )
                 for tid, index, _ in ex.waiters:
                     advance(tid, index)
             elif kind == "refill":
@@ -397,7 +437,8 @@ class Replay:
             "deadline_completion_rate": 1 - deadline_misses / len(deadline_tasks)
             if deadline_tasks
             else None,
-            "calls_started": len(executions),
+            "calls_started": sum(ex.quota_required for ex in executions),
+            "local_actions_started": sum(not ex.quota_required for ex in executions),
             "speculative_calls": len(spec),
             "unused_speculative_calls": sum(not ex.used for ex in spec),
             "reuse_hits": reuse_hits,

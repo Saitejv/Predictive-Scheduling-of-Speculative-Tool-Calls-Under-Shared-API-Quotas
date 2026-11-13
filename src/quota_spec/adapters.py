@@ -82,7 +82,11 @@ class SystemOnePredictor:
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
         async with httpx.AsyncClient(timeout=self.timeout_s, transport=self.transport) as client:
             endpoint = self.base_url + (
-                "/systemone" if self.base_url.endswith("/v1") else "/v1/systemone"
+                "/decisions"
+                if self.base_url.endswith("/alpha")
+                else "/systemone"
+                if self.base_url.endswith("/v1")
+                else "/v1/systemone"
             )
             async with client.stream("POST", endpoint, json=payload, headers=headers) as response:
                 response.raise_for_status()
@@ -137,29 +141,27 @@ class SystemOnePredictor:
             if len(json.dumps(payload).encode()) > 65536:
                 raise ValueError("Prediction request exceeds 64 KiB")
             response = asyncio.run(self._bounded_request(payload))
-            if not isinstance(response, dict) or not isinstance(response.get("answers"), dict):
-                raise ValueError("Prediction response must contain an answers object")
-            usage = response.get("usage", {})
-            if not isinstance(usage, dict):
-                raise ValueError("usage must be an object")
-            for count in usage.values():
-                if isinstance(count, bool) or not isinstance(count, int) or count < 0:
-                    raise ValueError("Token usage must be nonnegative integers")
+            if not isinstance(response, dict):
+                raise ValueError("Prediction response must be an object")
+            # Retain the complete bounded provider result for frozen replay audits.
+            record["response"] = response
+            from .telemetry import record_usage
+
+            record_usage(
+                record,
+                response.get("usage", {}),
+                "input_tokens",
+                "output_tokens",
+                self.input_price,
+                self.output_price,
+            )
             record.update(
                 model_returned=response.get("model"),
-                input_tokens=usage.get("input_tokens"),
-                output_tokens=usage.get("output_tokens"),
+                generation_id=response.get("id"),
+                provider=response.get("provider"),
             )
-            if (
-                record["input_tokens"] is not None
-                and record["output_tokens"] is not None
-                and self.input_price is not None
-                and self.output_price is not None
-            ):
-                record["cost_usd"] = (
-                    record["input_tokens"] * self.input_price
-                    + record["output_tokens"] * self.output_price
-                ) / 1e6
+            if not isinstance(response.get("answers"), dict):
+                raise ValueError("Prediction response must contain an answers object")
             answers = response["answers"]
             base = self.history.predict(state, agent)
             prediction = replace(
@@ -243,3 +245,58 @@ class MockSystemOnePredictor(SystemOnePredictor):
             transport=httpx.MockTransport(handler),
             **kwargs,
         )
+
+
+class KevSpacePredictor(KevPredictor):
+    """Explicit public-demo backend. Retain queue/network AND GPU service timing.
+
+    The Space revision identifies its code, not a guaranteed loaded weight hash.
+    This exploratory route must not be reported as the pinned local server.
+    """
+
+    def __init__(self, history, **kwargs):
+        super().__init__(
+            history,
+            base_url="https://jaredpalmer-kev.hf.space",
+            model="jaredpalmer/kev-0.8b",
+            **kwargs,
+        )
+        self.model_revision = "unverified-loaded-weights; public Space"
+
+    async def _request(self, payload):
+        import httpx
+
+        async with httpx.AsyncClient(timeout=self.timeout_s, transport=self.transport) as client:
+            base = self.base_url + "/gradio_api/call/decide"
+            response = await client.post(
+                base,
+                json={
+                    "data": [
+                        json.dumps(payload["state"]),
+                        json.dumps(payload["questions"]),
+                        "Kev-0.8B",
+                        True,
+                        False,
+                        False,
+                        4,
+                    ]
+                },
+            )
+            response.raise_for_status()
+            event = response.json()["event_id"]
+            async with client.stream("GET", base + "/" + event) as response:
+                response.raise_for_status()
+                event_type = None
+                async for line in response.aiter_lines():
+                    if line.startswith("event: "):
+                        event_type = line[7:]
+                    elif line.startswith("data: "):
+                        data = json.loads(line[6:])
+                        if event_type == "error":
+                            raise ValueError("Kev Space rejected inference: " + str(data)[:300])
+                        if event_type == "complete":
+                            result = data[1]
+                            if not isinstance(result, dict):
+                                raise ValueError("Invalid Kev Space response")
+                            return result
+            raise ValueError("Kev Space ended without a prediction")

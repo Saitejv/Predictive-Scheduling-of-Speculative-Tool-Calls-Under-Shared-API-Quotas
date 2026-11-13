@@ -18,7 +18,7 @@ from urllib.parse import urlsplit
 from .gateway import Gateway
 from .models import AgentState, Call, positive_int
 from .policies import CurrentCapacity, FixedReserve, NoSpeculation
-from .search import SearchCorpus, candidate_query
+from .search import SearchCorpus
 
 
 def normalize_answer(value):
@@ -59,6 +59,8 @@ class MockQA:
         self.records = []
 
     async def decide(self, question, history, final=False):
+        # Synthetic inference latency leaves an actual opportunity for mock proposals.
+        await asyncio.sleep(0.001)
         if not history and not final:
             return {"action": "search", "query": question}
         return {"action": "answer", "answer": "mock answer"}
@@ -66,6 +68,9 @@ class MockQA:
 
 class HTTPQA:
     mock = False
+    env_prefix = "QA"
+    default_max_tokens = 512
+    default_timeout_s = 30
 
     def __init__(
         self,
@@ -73,7 +78,7 @@ class HTTPQA:
         url=None,
         model=None,
         api_key=None,
-        timeout_s=30,
+        timeout_s=None,
         input_price=None,
         output_price=None,
         transport=None,
@@ -85,13 +90,16 @@ class HTTPQA:
         except ImportError as exc:
             raise ValueError("HTTP QA requires pip install -e '.[live]'") from exc
 
-        self.url = url or os.environ.get("QA_CHAT_URL", "")
-        self.model = model or os.environ.get("QA_MODEL", "")
-        self.key = api_key or os.environ.get("QA_API_KEY")
-        if input_price is None and os.environ.get("QA_INPUT_USD_PER_MILLION"):
-            input_price = float(os.environ["QA_INPUT_USD_PER_MILLION"])
-        if output_price is None and os.environ.get("QA_OUTPUT_USD_PER_MILLION"):
-            output_price = float(os.environ["QA_OUTPUT_USD_PER_MILLION"])
+        prefix = self.env_prefix
+        if timeout_s is None:
+            timeout_s = float(os.environ.get(f"{prefix}_TIMEOUT_S", self.default_timeout_s))
+        self.url = url or os.environ.get(f"{prefix}_CHAT_URL", "")
+        self.model = model or os.environ.get(f"{prefix}_MODEL", "")
+        self.key = api_key or os.environ.get(f"{prefix}_API_KEY")
+        if input_price is None and os.environ.get(f"{prefix}_INPUT_USD_PER_MILLION"):
+            input_price = float(os.environ[f"{prefix}_INPUT_USD_PER_MILLION"])
+        if output_price is None and os.environ.get(f"{prefix}_OUTPUT_USD_PER_MILLION"):
+            output_price = float(os.environ[f"{prefix}_OUTPUT_USD_PER_MILLION"])
         parsed = urlsplit(self.url)
         if (
             parsed.scheme not in ("http", "https")
@@ -102,27 +110,49 @@ class HTTPQA:
             or parsed.fragment
             or not self.model.strip()
         ):
-            raise ValueError("Set QA_CHAT_URL to a complete chat-completions URL and QA_MODEL")
+            raise ValueError(
+                f"Set {prefix}_CHAT_URL to a complete chat-completions URL and {prefix}_MODEL"
+            )
         nonnegative(timeout_s, "timeout_s")
         if not 0 < timeout_s <= 120:
-            raise ValueError("QA timeout must be in (0, 120]")
+            raise ValueError(f"{prefix} timeout must be in (0, 120]")
         for price in (input_price, output_price):
             if price is not None:
                 nonnegative(price, "token price")
         self.timeout_s, self.transport = timeout_s, transport
         self.input_price, self.output_price = input_price, output_price
         self.records = []
-        self.token_parameter = os.environ.get("QA_TOKEN_PARAMETER", "max_tokens")
+        self.token_parameter = os.environ.get(f"{prefix}_TOKEN_PARAMETER", "max_tokens")
         if self.token_parameter not in ("max_tokens", "max_completion_tokens"):
-            raise ValueError("QA_TOKEN_PARAMETER must be max_tokens or max_completion_tokens")
-        self.max_tokens = int(os.environ.get("QA_MAX_OUTPUT_TOKENS", "512"))
-        positive_int(self.max_tokens, "QA_MAX_OUTPUT_TOKENS")
+            raise ValueError(
+                f"{prefix}_TOKEN_PARAMETER must be max_tokens or max_completion_tokens"
+            )
+        self.max_tokens = int(
+            os.environ.get(f"{prefix}_MAX_OUTPUT_TOKENS", self.default_max_tokens)
+        )
+        positive_int(self.max_tokens, f"{prefix}_MAX_OUTPUT_TOKENS")
         if self.max_tokens > 16384:
-            raise ValueError("QA_MAX_OUTPUT_TOKENS must be <= 16384")
+            raise ValueError(f"{prefix}_MAX_OUTPUT_TOKENS must be <= 16384")
+        self.reasoning_effort = os.environ.get(f"{prefix}_REASONING_EFFORT") or None
+        if self.reasoning_effort not in (
+            None,
+            "none",
+            "minimal",
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max",
+        ):
+            raise ValueError(f"Invalid {prefix}_REASONING_EFFORT")
+        self.response_format = os.environ.get(f"{prefix}_RESPONSE_FORMAT") or None
+        if self.response_format not in (None, "json_object"):
+            raise ValueError(f"{prefix}_RESPONSE_FORMAT must be json_object or empty")
+        self.provider_sort = os.environ.get(f"{prefix}_PROVIDER_SORT") or None
+        if self.provider_sort not in (None, "latency", "throughput", "price"):
+            raise ValueError(f"Invalid {prefix}_PROVIDER_SORT")
 
     async def decide(self, question, history, final=False):
-        import httpx
-
         # A fixed total evidence budget prevents growing contexts with every turn.
         evidence = [
             {
@@ -142,6 +172,13 @@ class HTTPQA:
         )
         if final:
             instructions += "The search budget is exhausted. Return an answer action now."
+        elif not history:
+            instructions += "There is no observed evidence yet. Search before answering. "
+        return await self._complete(instructions, question, evidence, final=final)
+
+    async def _complete(self, instructions, question, evidence, *, final=False):
+        import httpx
+
         payload = {
             "model": self.model,
             "messages": [
@@ -153,6 +190,12 @@ class HTTPQA:
             ],
             self.token_parameter: self.max_tokens,
         }
+        if self.reasoning_effort:
+            payload["reasoning"] = {"effort": self.reasoning_effort}
+        if self.response_format:
+            payload["response_format"] = {"type": self.response_format}
+        if self.provider_sort:
+            payload["provider"] = {"sort": self.provider_sort}
         record = {
             "model": self.model,
             "latency_s": None,
@@ -176,50 +219,62 @@ class HTTPQA:
                         async for chunk in response.aiter_bytes():
                             content.extend(chunk)
                             if len(content) > 262144:
-                                raise ValueError("QA response exceeds 256 KiB")
+                                raise ValueError(f"{self.env_prefix} response exceeds 256 KiB")
                         body = json.loads(content)
-            usage = body.get("usage", {})
+            from .telemetry import record_usage
+
             record["model_returned"] = body.get("model")
-            for field in ("prompt_tokens", "completion_tokens"):
-                value = usage.get(field)
-                if value is not None and (type(value) is not int or value < 0):
-                    raise ValueError("Invalid token usage")
-            record.update(
-                input_tokens=usage.get("prompt_tokens"),
-                output_tokens=usage.get("completion_tokens"),
+            record["generation_id"] = body.get("id")
+            record["provider"] = body.get("provider")
+            record_usage(
+                record,
+                body.get("usage", {}),
+                "prompt_tokens",
+                "completion_tokens",
+                self.input_price,
+                self.output_price,
             )
-            if all(
-                x is not None
-                for x in (
-                    record["input_tokens"],
-                    record["output_tokens"],
-                    self.input_price,
-                    self.output_price,
-                )
-            ):
-                record["cost_usd"] = (
-                    record["input_tokens"] * self.input_price
-                    + record["output_tokens"] * self.output_price
-                ) / 1e6
-            return parse_action(json.loads(body["choices"][0]["message"]["content"]), final)
+            record.update(
+                finish_reason=body["choices"][0].get("finish_reason"),
+            )
+            return self._parse_response(json.loads(body["choices"][0]["message"]["content"]), final)
+        except asyncio.CancelledError:
+            record["cancelled"] = True
+            raise
         except Exception as exc:
             record["failure"] = type(exc).__name__
             record["http_status"] = getattr(getattr(exc, "response", None), "status_code", None)
             # Do not persist response bodies, headers or credential-bearing exception text.
-            raise ValueError(f"QA inference failed: {type(exc).__name__}") from exc
+            raise ValueError(f"{self.env_prefix} inference failed: {type(exc).__name__}") from exc
         finally:
             record["latency_s"] = time.perf_counter() - started
             self.records.append(record)
 
+    def _parse_response(self, value, final=False):
+        return parse_action(value, final)
 
-async def run_agent(task, gateway, model, max_calls=3, *, deadline_s=None):
+
+async def run_agent(task, gateway, model, max_calls=3, *, deadline_s=None, speculator=None):
     positive_int(max_calls, "max_calls")
     if max_calls > 16:
         raise ValueError("max_calls must be at most 16")
+    from .speculation import make_speculator, speculative_phase
+
+    speculator = (
+        speculator
+        if speculator is not None
+        else make_speculator(backend="http" if isinstance(model, HTTPQA) else "mock")
+    )
     history, answer = [], None
     started = gateway.now()
     candidate_wall = 0.0
-    model_task = None
+    admissions = []
+
+    def schedule_candidate(candidate):
+        admissions.append(
+            asyncio.create_task(gateway.speculate(task["task_id"], Call.search(candidate)))
+        )
+
     try:
         for index in range(max_calls + 1):
             now = gateway.now()
@@ -236,22 +291,21 @@ async def run_agent(task, gateway, model, max_calls=3, *, deadline_s=None):
                     result_excerpt=json.dumps(history[-1]["results"])[:1024] if history else "",
                 )
             )
-            if index < max_calls:
-                before = time.perf_counter()
-                candidate = candidate_query(
-                    task["task_context"], history[-1]["results"] if history else [], index
-                )
-                candidate_wall += time.perf_counter() - before
-            else:
-                candidate = None
-            # Main inference and candidate admission overlap. Await admission before
-            # publishing the action, matching replay's max(think, decision) barrier.
-            model_task = asyncio.create_task(
-                model.decide(task["task_context"], history, final=index == max_calls)
+            action, candidate, generation = await speculative_phase(
+                model,
+                speculator,
+                task["task_context"],
+                history,
+                final=index == max_calls,
+                on_candidate=schedule_candidate,
             )
-            if candidate:
-                await gateway.speculate(task["task_id"], Call.search(candidate))
-            action = await model_task
+            if index < max_calls:
+                candidate_wall += generation
+            # A proposal belongs to this phase only. In particular, one queued on
+            # the predictor lock must not be evaluated against the next phase.
+            for admission in admissions:
+                if not admission.done() and not admission.cancelling():
+                    admission.cancel()
             action = parse_action(action, final=index == max_calls)
             if action["action"] == "answer":
                 answer = action["answer"]
@@ -269,11 +323,13 @@ async def run_agent(task, gateway, model, max_calls=3, *, deadline_s=None):
             "failure": None,
         }
     finally:
-        if model_task is not None:
-            if not model_task.done():
-                model_task.cancel()
-            await asyncio.gather(model_task, return_exceptions=True)
+        for admission in admissions:
+            if not admission.done() and not admission.cancelling():
+                admission.cancel()
         await gateway.finish_task(task["task_id"])
+        # Threads doing prediction cannot be interrupted. Finish invalidates their
+        # snapshot before draining, so they can never launch after the task ends.
+        await asyncio.gather(*admissions, return_exceptions=True)
 
 
 async def evaluate(
@@ -289,6 +345,8 @@ async def evaluate(
     policies=None,
     model_options=None,
     expected_duration_s=0.01,
+    candidate_backend="auto",
+    speculator_options=None,
 ):
     positive_int(count, "count")
     positive_int(agents, "agents")
@@ -299,6 +357,11 @@ async def evaluate(
         raise ValueError("backend must be mock or http")
     if backend == "http":
         HTTPQA(**(model_options or {}))
+    from .speculation import make_speculator, model_identity
+
+    speculator_probe = make_speculator(
+        candidate_backend, backend=backend, options=speculator_options
+    )
     from .quota import FixedWindowQuota
 
     FixedWindowQuota(capacity, window_s)
@@ -330,14 +393,22 @@ async def evaluate(
             required_order="progress" if name.startswith("progress_") else "fifo",
         )
         semaphore = asyncio.Semaphore(agents)
-        records = []
+        records, speculator_records = [], []
 
         async def one(task):
             async with semaphore:
                 model = MockQA() if backend == "mock" else HTTPQA(**(model_options or {}))
+                speculator = make_speculator(
+                    candidate_backend, backend=backend, options=speculator_options
+                )
                 try:
                     outcome = await run_agent(
-                        task, gateway, model, max_calls, deadline_s=gateway.now() + 4 * window_s
+                        task,
+                        gateway,
+                        model,
+                        max_calls,
+                        deadline_s=gateway.now() + 4 * window_s,
+                        speculator=speculator,
                     )
                 except Exception as exc:
                     outcome = {
@@ -345,6 +416,9 @@ async def evaluate(
                         "answer": None,
                         "failure": type(exc).__name__,
                     }
+                speculator_records.extend(
+                    {"task_id": task["task_id"], **r} for r in speculator.records
+                )
                 for record in model.records:
                     records.append({"task_id": task["task_id"], **record})
                 return outcome
@@ -413,6 +487,15 @@ async def evaluate(
             predictor_records = getattr(getattr(policy, "predictor", None), "records", [])
             from .telemetry import summarize_inference
 
+            summary[name]["speculator_usage"] = summarize_inference(speculator_records)
+            summary[name]["speculator"] = model_identity(speculator_probe)
+            summary[name]["candidate_generator"] = speculator_probe.identity
+            summary[name]["speculator_failures"] = sum(
+                bool(r.get("failure")) for r in speculator_records
+            )
+            (output / f"{name}-speculator-inference.jsonl").write_text(
+                "".join(json.dumps(r) + "\n" for r in speculator_records)
+            )
             summary[name]["predictor_usage"] = summarize_inference(predictor_records)
             (output / f"{name}-predictor-inference.jsonl").write_text(
                 "".join(json.dumps(r) + "\n" for r in predictor_records)
@@ -455,6 +538,9 @@ def main():
     parser.add_argument("--timeout-s", type=float, default=30)
     parser.add_argument("--input-usd-per-million", type=float)
     parser.add_argument("--output-usd-per-million", type=float)
+    from .speculation import add_speculator_arguments
+
+    add_speculator_arguments(parser)
     args = parser.parse_args()
     options = dict(
         timeout_s=args.timeout_s,
@@ -490,14 +576,18 @@ def main():
                 capacity=args.capacity,
                 window_s=args.window_s,
                 model_options=options,
+                candidate_backend=args.candidate_backend,
                 policies=policies,
             )
         )
     except (ValueError, OSError, KeyError, ImportError) as exc:
         parser.error(str(exc))
     print(json.dumps(result, indent=2))
-    if any(row["failures"] or row["predictor_failures"] for row in result.values()):
-        parser.exit(1, "QA or predictor failures occurred; inspect saved telemetry.\n")
+    if any(
+        row["failures"] or row["predictor_failures"] or row["speculator_failures"]
+        for row in result.values()
+    ):
+        parser.exit(1, "QA, Speculator or predictor failures occurred; inspect saved telemetry.\n")
 
 
 if __name__ == "__main__":

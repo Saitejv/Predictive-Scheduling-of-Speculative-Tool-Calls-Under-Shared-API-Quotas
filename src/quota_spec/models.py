@@ -65,6 +65,8 @@ class Step:
     candidate_duration_s: float = 1.0
     result_excerpt: str = ""
     candidate_delay_s: float = 0.0
+    quota_required: bool = True
+    candidate_trigger: str = "phase_entry"
 
     def __post_init__(self) -> None:
         for name in ("think_s", "duration_s", "candidate_duration_s", "candidate_delay_s"):
@@ -75,6 +77,10 @@ class Step:
             raise ValueError("Step calls must be Call objects")
         if not isinstance(self.result_excerpt, str):
             raise ValueError("result_excerpt must be a string")
+        if type(self.quota_required) is not bool:
+            raise ValueError("quota_required must be boolean")
+        if self.candidate_trigger not in ("phase_entry", "previous_tool_start"):
+            raise ValueError("Unknown candidate trigger")
         if self.candidate == self.required and self.candidate_duration_s != self.duration_s:
             raise ValueError("Exact-match calls must have the same recorded duration")
 
@@ -101,6 +107,12 @@ class Task:
             not isinstance(step, Step) for step in self.steps
         ):
             raise ValueError("steps must be a tuple of Step objects")
+        if (
+            self.steps
+            and self.steps[0].candidate is not None
+            and self.steps[0].candidate_trigger == "previous_tool_start"
+        ):
+            raise ValueError("First step has no preceding tool to trigger a candidate")
         for name in ("final_think_s", "final_candidate_duration_s", "final_candidate_delay_s"):
             nonnegative(getattr(self, name), name)
         if self.final_candidate is not None and not isinstance(self.final_candidate, Call):
@@ -192,7 +204,9 @@ def load_tasks(data: list[dict[str, Any]]) -> tuple[Task, ...]:
             steps=tuple(
                 Step(
                     think_s=s["think_s"],
-                    required=Call.search(s["query"]),
+                    required=Call(**s["required_call"])
+                    if "required_call" in s
+                    else Call.search(s["query"]),
                     duration_s=s["duration_s"],
                     candidate=Call.search(s["candidate_query"])
                     if s.get("candidate_query") is not None
@@ -200,6 +214,8 @@ def load_tasks(data: list[dict[str, Any]]) -> tuple[Task, ...]:
                     candidate_duration_s=s.get("candidate_duration_s", s["duration_s"]),
                     result_excerpt=s.get("result_excerpt", ""),
                     candidate_delay_s=s.get("candidate_delay_s", 0),
+                    quota_required=s.get("quota_required", True),
+                    candidate_trigger=s.get("candidate_trigger", "phase_entry"),
                 )
                 for s in row["steps"]
             ),

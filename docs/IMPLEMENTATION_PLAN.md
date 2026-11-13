@@ -1,6 +1,9 @@
+> Preserved reference/extension documentation. The active concurrent baseline and
+> current work order are [README](../README.md) and [next_steps.md](../next_steps.md).
+
 # Proposal implementation checklist
 
-Updated October 29, 2026. Software readiness and empirical measurements are
+Updated November 5, 2026. Software readiness and empirical measurements are
 separate: no real model inference was performed during this credential-free work.
 
 ## Implemented and ready to run
@@ -16,6 +19,7 @@ separate: no real model inference was performed during this credential-free work
 - [x] Five predictor/context configurations and frozen-response policy comparisons.
 - [x] Held-out reuse/next/continuation calibration and token/cost recording.
 - [x] Checksummed local corpus and source dataset attribution.
+- [x] Separate small-model Speculator, parallel proposal generation, abstention and usage auditing.
 - [x] Main QA integration and resumable, checksummed LLM trajectory collection.
 - [x] Final answer generation, no-search answers and terminal candidates in replay.
 - [x] Candidate timing, inference timing and stale-dispatch revalidation.
@@ -26,16 +30,17 @@ separate: no real model inference was performed during this credential-free work
 
 ## Empirical work that starts after access is configured
 
-- [ ] Authenticate the chosen QA endpoint, Jev account and pretrained Kev server.
+- [ ] Authenticate the chosen QA and small Speculator endpoints, Jev account and pretrained Kev server.
 - [ ] Run the real 10–20-task pilot and choose the experiment timescale on development.
 - [ ] Collect 100–200 successful LLM task traces and actual inference costs.
 - [ ] Freeze Jev/Kev forecasts and run held-out context/scheduling comparisons.
 - [ ] Inspect real live answer accuracy and replay/live discrepancies.
 - [ ] Write the final course paper from those measurements, including negative results.
 
-The question/top-title candidate generator is an explicit heuristic substitution
-for a learned generator. The core contribution is the cross-agent admission rule,
-not reproduction of an external candidate-generation system. Forecast-bank
+HTTP collection/live QA default to the small-model Speculator. The question/top-title
+heuristic remains an explicit ablation, and mock proposals remain synthetic.
+The core contribution is the cross-agent admission rule; the proposer uses inference
+with a small model rather than training the external paper's candidate generator. Forecast-bank
 contexts freeze phase-entry elapsed time; adaptive elapsed-state behavior is
 covered separately by the live gateway and CLI. The fixed-window, serial-chain,
 single-process scope remains intentional.

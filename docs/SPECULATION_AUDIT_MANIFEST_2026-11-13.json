@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "purpose": "Audit and reporting corrections for live-versus-frozen speculation discrepancy",
+  "archive": {
+    "path": "results/speculation-discrepancy-audit-2026-11-13.tar.gz",
+    "sha256": "39428794852f0131611b7323d3ab93ebb80bccc1d77e0ea3be5c5cf98a45c761",
+    "bytes": 1543076
+  },
+  "files": {
+    "README.md": {
+      "sha256": "a550f91fb2b7dd42b879ee46e1c1e6ac77e69e6644ec33497ae586c37a0919d0",
+      "bytes": 7522
+    },
+    "docs/SPECULATION_DISCREPANCY_2026-11-13.md": {
+      "sha256": "5591cb0a5ff6b15cbcc47b9d74c644c67dea2b1b6cd1b50f15df6841b0496707",
+      "bytes": 10945
+    },
+    "docs/figures/speculation-reconciliation.png": {
+      "sha256": "3bcaf04f90e6b1e59bb888f1a4e9cc95def70389ecdec1d17c12c589973728d4",
+      "bytes": 182403
+    },
+    "docs/figures/strategy-comparison-sources.json": {
+      "sha256": "778ce1a7f8b98c756cf42a85ee8493c1834233eb26321563c757d26204951227",
+      "bytes": 745
+    },
+    "docs/figures/strategy-comparison-throughput.png": {
+      "sha256": "bd63f31edf043b480cba56b5139e552b226954a1a29ca610ba70b9a3f11f2977",
+      "bytes": 389012
+    },
+    "docs/figures/strategy-comparison-time.png": {
+      "sha256": "157df93fd27d984eb008500dc85b4f6c5d4d99d9eb0cc9feedc07a9fbea5693c",
+      "bytes": 368637
+    },
+    "next_steps.md": {
+      "sha256": "f7e2889ea96be6afe7837a1e2b2171b25a1e722076675fa0634e70392edc8b5d",
+      "bytes": 30099
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/AUDIT.json": {
+      "sha256": "18fe28d3de54927d5eb231107222643e10b4bb8ec67c6c390e2ad4fd91dbe136",
+      "bytes": 7412
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/chart-before/plot_strategy_comparison.py": {
+      "sha256": "a51789f32022da4de0338ada1b397ba5a6cb38c91bf0a9c9cf01494751adf24b",
+      "bytes": 7248
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/chart-before/strategy-comparison-sources.json": {
+      "sha256": "c87912b07ca868a0a9678e41afad094eb3051791ea3193882526de9eb3770ff5",
+      "bytes": 653
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/chart-before/strategy-comparison-throughput.png": {
+      "sha256": "5d8e531014baa9fd0bab52874d5033b42e32ff954d62c6c454b616449abd8ab3",
+      "bytes": 335259
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/chart-before/strategy-comparison-time.png": {
+      "sha256": "af038a8beb1dad4924df5139cbc21e13b4dec5ddae3b659e271dba5ca31370dd",
+      "bytes": 313894
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/matched-tasks.json": {
+      "sha256": "c54907dbe308857313966d301ed56e524c13d638b61892fbea81f23e2bb7d17b",
+      "bytes": 60841
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/original-report-regeneration/REPORT.md": {
+      "sha256": "73a788b88c336e37d7ba7efc04cc13cab729e047b2e63c5cfdedd82d2d1dc830",
+      "bytes": 2224
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/original-report-regeneration/audit.json": {
+      "sha256": "b4c0cdf21a0e8780b212ef9a90d502801f1f0540d23b446c250777dffce1261a",
+      "bytes": 2293
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/original-report-regeneration/summary.json": {
+      "sha256": "a36bd000ed74d1e19c0027fcd0b6e01ac48869a73811cd67f16a4c5c44e52150",
+      "bytes": 7050
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/paced-report-regeneration/REPORT.md": {
+      "sha256": "9d7195a8498f0edf379f1502a05c64d4044a60ab873c70cab72caaef65d9433d",
+      "bytes": 2478
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/paced-report-regeneration/audit.json": {
+      "sha256": "240d9a2c66e9480df5f236811a28faf9963c2d47ebebc06b94a0425057f1b175",
+      "bytes": 2325
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/paced-report-regeneration/summary.json": {
+      "sha256": "379a7a3a31f6ab7836debed4769eb03cfa6de3a606a80a3e6afa113b4deafb98",
+      "bytes": 9140
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/schedules.json": {
+      "sha256": "6b0e7e6ef8fa823c067d979ec27e7dbbb1bb7c5e0cda34dae93c801f245afc51",
+      "bytes": 115868
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/tests-196.log": {
+      "sha256": "1d376838a1bd58fba646f6b7b1129b3d36b531930dd95db8a1ccc32e6b005681",
+      "bytes": 13143
+    },
+    "results/speculation-discrepancy-audit-2026-11-13/validation.json": {
+      "sha256": "dbe2502150cb92d473360d7545ebb470e261c77771653b84b2069f0c00fb8f12",
+      "bytes": 463
+    },
+    "scripts/plot_speculation_reconciliation.py": {
+      "sha256": "be54b1aaaab9995324a0d83b8ad8e292b74e49323eb346260c4cd3ccba63a034",
+      "bytes": 3694
+    },
+    "scripts/plot_strategy_comparison.py": {
+      "sha256": "088b16a6ba9a37ac84681c9689fa51338d3fad067bad257bd1e341ac8f8d5a44",
+      "bytes": 7502
+    },
+    "scripts/report_hotpot_runtime.py": {
+      "sha256": "57c204205add863aa113857debb6d50a75a2b81ca6de56ed5f0373f7310bb445",
+      "bytes": 12829
+    },
+    "src/quota_spec/capture_cohort.py": {
+      "sha256": "06a6afb6bcefb54e6790c1b293f91c97820056178abf85dd637ab149e7436a57",
+      "bytes": 8661
+    },
+    "src/quota_spec/frozen_replay.py": {
+      "sha256": "91306d0fa7d60a103bdcaa7dbe27af0039ff506b5e6f80111e211f2a8b5fef86",
+      "bytes": 27228
+    },
+    "src/quota_spec/hotpot_runtime.py": {
+      "sha256": "b06ba1aeb363cd8c75ccca4c4db5db24b75ddd71bf21699e2e99ebde801619f2",
+      "bytes": 30535
+    },
+    "src/quota_spec/speculation_audit.py": {
+      "sha256": "e74b1123ee0e3fdc424e69f52e5552fbbcf8469aa0b28d6c58625aeff1a594c1",
+      "bytes": 12110
+    },
+    "tests/baseline/test_speculation_audit.py": {
+      "sha256": "9d3114862e2dfc1318709453d8b838d9df8c8a5ca5288c0aa8a45c31470f9184",
+      "bytes": 2866
+    }
+  },
+  "paid_requests_made": 0,
+  "validation": {
+    "tests": 196,
+    "lint_and_format": true,
+    "independent_task_mode_checks": 100,
+    "independent_max_error_s": 0,
+    "policy_runs": 270,
+    "paid_requests_made": 0,
+    "original_and_paced_summaries_regenerated_exactly": true,
+    "old_protected_evidence_counts": {
+      "results/hotpot-capture-50-bundle-manifest.json": 14815,
+      "results/jev-study-bundle-inventory.json": 40,
+      "results/jev-async-bundle-inventory.json": 27
+    },
+    "old_evidence_changed": false
+  },
+  "note": "Large results and archive are Git-ignored; retain with original capture bundles."
+}

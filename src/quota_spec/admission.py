@@ -27,8 +27,11 @@ class AdmissionConfig:
     epsilon: float = 0.05
     overhead_s: float = 0.001
     seed: int = 7
+    nonblocking: bool = False
 
     def __post_init__(self):
+        if type(self.nonblocking) is not bool:
+            raise ValueError("nonblocking must be boolean")
         positive_int(self.samples, "samples")
         positive_int(self.max_calls, "max_calls")
         for name in ("horizon_s", "overhead_s", "epsilon"):
@@ -86,7 +89,15 @@ def sample_scenarios(state, predictor, config):
     return scenarios, forecasts
 
 
-def rollout(state: Observation, scenario: dict, admit: bool, overhead_s: float, horizon_s: float):
+def rollout(
+    state: Observation,
+    scenario: dict,
+    admit: bool,
+    overhead_s: float,
+    horizon_s: float,
+    *,
+    block_owner=True,
+):
     """Censored projected chain completion; retain spent quota until actual refill.
 
     Known queued/running required work is inserted before sampled continuations.
@@ -166,7 +177,7 @@ def rollout(state: Observation, scenario: dict, admit: bool, overhead_s: float, 
         elif chain:
             d = chain[0]
             ready = state.now_s + d.delay_s
-            if agent.task_id == state.task_id:
+            if block_owner and agent.task_id == state.task_id:
                 ready = max(ready, state.now_s + overhead_s)
             push(ready, agent.task_id, d.call, d.duration_s, 0)
     while queue:
@@ -240,10 +251,20 @@ class PredictiveAdmission:
             }
             for scenario in scenarios:
                 rejected = rollout(
-                    state, scenario, False, simulation_overhead, self.config.horizon_s
+                    state,
+                    scenario,
+                    False,
+                    simulation_overhead,
+                    self.config.horizon_s,
+                    block_owner=not self.config.nonblocking,
                 )
                 admitted = rollout(
-                    state, scenario, True, simulation_overhead, self.config.horizon_s
+                    state,
+                    scenario,
+                    True,
+                    simulation_overhead,
+                    self.config.horizon_s,
+                    block_owner=not self.config.nonblocking,
                 )
                 owner_gains.append(rejected[state.task_id] - admitted[state.task_id])
                 gains.append(
@@ -266,7 +287,11 @@ class PredictiveAdmission:
             )
             self.overhead_s += getattr(self.predictor, "decision_overhead_s", 0.0)
             # Own-only ablation changes only the gain objective, retaining global risk.
-            result = gain > self.overhead_s and risk <= self.config.epsilon
+            # Background inference delays speculative launch, not authoritative
+            # progress. Its latency is already present in the paired rollout;
+            # subtracting it again treats an overlapping request as a barrier.
+            threshold = self.config.overhead_s if self.config.nonblocking else self.overhead_s
+            result = gain > threshold and risk <= self.config.epsilon
             self.last_decision = {
                 "estimated_gain_s": gain,
                 "owner_gain_s": sum(owner_gains) / len(gains),
@@ -276,6 +301,8 @@ class PredictiveAdmission:
                 "horizon_s": self.config.horizon_s,
                 "max_calls": self.config.max_calls,
                 "own_only": self.own_only,
+                "nonblocking": self.config.nonblocking,
+                "gain_threshold_s": threshold,
                 "reuse_probability": forecasts[state.task_id].reuse_probability,
                 "overhead_s": self.overhead_s,
                 "decision_wall_s": decision_wall_s,

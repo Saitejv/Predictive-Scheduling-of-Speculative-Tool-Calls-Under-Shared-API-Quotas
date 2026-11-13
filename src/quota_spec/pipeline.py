@@ -16,6 +16,8 @@ from .prediction import HistoryPredictor
 from .qa import HTTPQA, evaluate
 from .replay import Replay, offline_reference
 from .search import sha256_json
+from .speculation import make_speculator
+from .speculation import model_identity as speculator_identity
 
 
 def report(output):
@@ -79,8 +81,10 @@ def report(output):
         "modeled use. Timing distributions come only from development. Contexts use elapsed=0 in "
         "banks; adaptive live inference uses actual elapsed progress.",
         "",
-        "The fixed candidate generator proposes the question and then the top observed title. "
-        "It is a documented heuristic, not a reproduction of a learned speculative-action generator. "
+        "Candidate source: "
+        + json.loads((output / "traces/manifest.json").read_text())["candidate_generator"]
+        + ". The Speculator proposes concrete searches separately from Jev/Kev demand forecasts. "
+        "All replay policies use the same frozen proposals and measured availability delays. "
         "The bounded rollout approximates completion by the end of the predicted tool chain; "
         "observed final answer-generation time is included in replay outcomes.",
         "",
@@ -144,6 +148,8 @@ def run(args):
         if args.backend == "http"
         else None
     )
+    candidate_backend = getattr(args, "candidate_backend", "auto")
+    speculator = make_speculator(candidate_backend, backend=args.backend)
     from .adapters import JevPredictor, KevPredictor, MockSystemOnePredictor
 
     constructors = {"jev": JevPredictor, "kev": KevPredictor, "mock": MockSystemOnePredictor}
@@ -177,6 +183,9 @@ def run(args):
                     "output_price",
                     "token_parameter",
                     "max_tokens",
+                    "reasoning_effort",
+                    "response_format",
+                    "provider_sort",
                 )
             }
             if model is not None
@@ -184,8 +193,9 @@ def run(args):
         )
 
     config = {
-        "version": 2,
+        "version": 3,
         "qa_model": model_identity(qa_model),
+        "speculator": speculator_identity(speculator),
         "predictor_models": {name: model_identity(model) for name, model in providers.items()},
         "plots": not args.no_plots,
         "data": str(args.data.resolve()),
@@ -261,6 +271,7 @@ def run(args):
                 max_calls=args.max_calls,
                 resume=args.resume and (data / "collection_config.json").exists(),
                 model_options=qa_options,
+                candidate_backend=candidate_backend,
             )
         )
         finished(stage)
@@ -368,12 +379,17 @@ def run(args):
                     window_s=args.window_s,
                     policies=policies,
                     model_options=qa_options,
+                    candidate_backend=candidate_backend,
                     expected_duration_s=frozen["expected_duration_s"],
                 )
             )
-            if any(row["failures"] or row["predictor_failures"] for row in summary.values()):
+            if any(
+                row["failures"] or row["predictor_failures"] or row["speculator_failures"]
+                for row in summary.values()
+            ):
                 raise ValueError(
-                    "Live QA failures recorded; fix access and resume. Partial live run retained"
+                    "Live QA, Speculator or predictor failures recorded; fix access and resume. "
+                    "Partial live run retained"
                 )
             finished(stage)
         report(output)
@@ -414,6 +430,9 @@ def main():
     parser.add_argument("--predictor-output-price", type=float)
     parser.add_argument("--no-plots", action="store_true")
     parser.add_argument("--resume", action="store_true")
+    from .speculation import add_speculator_arguments
+
+    add_speculator_arguments(parser)
     args = parser.parse_args()
     try:
         result = run(args)

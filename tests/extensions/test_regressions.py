@@ -318,7 +318,8 @@ class HTTPRegressionTests(unittest.TestCase):
         task = Task("a", 0, (Step(0.001, Call.search("q"), 0.001, Call.search("q"), 0.001),))
         result = Replay((task,), 1, 10).run(policy)
         self.assertGreater(result.metrics["modeled_decision_overhead_s"], 0.015)
-        self.assertGreater(result.metrics["mean_completion_s"], 0.015)
+        # A failed optional forecast must not stall the required action.
+        self.assertAlmostEqual(result.metrics["mean_completion_s"], 0.002)
         self.assertIsNotNone(predictor.records[0]["failure"])
 
     def test_invalid_api_responses_fail_closed(self):

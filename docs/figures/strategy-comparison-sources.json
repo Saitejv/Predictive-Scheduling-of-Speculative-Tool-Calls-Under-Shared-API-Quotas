@@ -1,0 +1,9 @@
+{
+  "sources": {
+    "results/hotpot-async-native-50/summary.json": "cf9848ad8fb8568fbd6c87ea8a42aa51259516087a77a493400d5852f7c145f6",
+    "results/hotpot-async-slow-search-50/summary.json": "7c7fbb7221058d659a1b42dbd53ce19d8f749496888c6ae243fb5a1d1c06652e"
+  },
+  "selection": "4 workers; capacity 12; reset 5 or 30 seconds; six implemented strategy packages",
+  "cohort": "Same 30 exploratory evaluation questions; five native order seeds, three simulated order seeds",
+  "warning": "Prefetch-off is a counterfactual on speculative actor paths, not the live sequential run. Local collection pacing is excluded. Quota labels specify parameters without assuming they are nonbinding. Packages differ in candidate lifetime and admission rule."
+}

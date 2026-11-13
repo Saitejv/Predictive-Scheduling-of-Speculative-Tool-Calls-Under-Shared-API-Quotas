@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-13",
+  "report": "docs/SINGLE_AGENT_BASELINE_REPAIR_2026-11-13.md",
+  "evidence": "results/upstream-speculation-repair-2026-11-13",
+  "archive": "results/upstream-speculation-repair-bundle-2026-11-13.tar.gz",
+  "archive_sha256": "0559afdb34b86babe6765a97a31ddde30903d7a478ff4101255fc1f5207c7eac",
+  "verified_bundle_files": 381,
+  "verification": {
+    "complete": true,
+    "real_defect": "make live shared 1.1-second submission pacing between actor and speculative calls",
+    "fixed": "unpaced default live benchmark; separate capture purpose and command; reject paced benchmark before any requests",
+    "tests": 228,
+    "new_regression_tests": 12,
+    "lint": "passed",
+    "format": "passed",
+    "upstream_revision": "dc938b9ef7474caf07fe4ad16549c1fa8c7d268c",
+    "original_chess_cases": 5,
+    "reproduced_chess_mean_saving_percent": 19.541599412600164,
+    "actual_runtime_saved_episode_checks": 100,
+    "all_model_prompts_and_authoritative_actions_match": true,
+    "max_timing_residual_s": 0,
+    "protected_files_unchanged": 7362,
+    "new_model_calls": 0,
+    "new_model_spend_usd": 0,
+    "live_remeasurement_performed": false,
+    "source_sha256": {
+      "next_steps.md": "d41da6492f3199c44928153ea1a84537fc843b8f95d2428231b54e38ddc5f96c",
+      "Makefile": "2a2d43c419ade2a12b949188a381bd767de01da339221d21b34181d2a299f9bf",
+      "README.md": "89c1b32a92f51242a51a8daccf0a15df468b4d945c97d409d0301f4be07fc3e9",
+      "docs/SINGLE_AGENT_BASELINE_REPAIR_2026-11-13.md": "9b1e2d8de56497e86860bcb4e00e99ad30613cf26a166ed86c8ac2c0afea0e1f",
+      "docs/RUNBOOK.md": "1ad6797502f80164042c39aa06579b66fbd01f6ad3c353ca2e43dc1894cd7696",
+      "docs/HOTPOT_RUNTIME.md": "9ab0201dde7e50773ad523ad49077609d82b6e70ff1449c73b77fd17b131cd3e",
+      "src/quota_spec/hotpot_runtime.py": "758fd72d7a104cea92ab8ecc0f92e7b87abc308a557e9ea066b44c2753e860bb",
+      "src/quota_spec/single_agent_reference.py": "09412c53c94c94cdd44b72bfee524f937317c79175e278684de6404d19fbf4ae",
+      "tests/baseline/test_single_agent_reference.py": "75ebf30ebd2806591eb3e9e3e1aa2676b317cf57b097062ebdbe976ca89ee346"
+    }
+  }
+}

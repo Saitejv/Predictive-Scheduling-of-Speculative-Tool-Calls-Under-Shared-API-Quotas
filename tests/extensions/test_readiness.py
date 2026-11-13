@@ -140,7 +140,7 @@ class CollectionTests(unittest.IsolatedAsyncioTestCase):
         trace = load_tasks([result["trace"]])[0]
         self.assertFalse(trace.steps)
         self.assertGreater(trace.final_think_s, 0)
-        self.assertEqual(trace.final_candidate, Call.search("Who?"))
+        self.assertIsNone(trace.final_candidate)  # Immediate main answer wins the race.
         self.assertEqual(result["answer"], "Ada")
 
     async def test_resume_does_not_repeat_successful_model_calls_and_exports_split(self):
@@ -324,7 +324,14 @@ class HTTPWorkflowTests(unittest.IsolatedAsyncioTestCase):
                 )
 
             with patch("builtins.print"):
-                result = await collect(data, output, count=2, backend="http", model_factory=factory)
+                result = await collect(
+                    data,
+                    output,
+                    count=2,
+                    backend="http",
+                    model_factory=factory,
+                    candidate_backend="heuristic",
+                )
             self.assertEqual(result["exact_match"], 1)
             self.assertEqual(len(requests), 4)
             self.assertNotIn("DO_NOT_SEND", json.dumps(requests))

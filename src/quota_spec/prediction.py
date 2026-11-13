@@ -47,13 +47,24 @@ class HistoryPredictor:
         rows: dict[int, list[dict]] = {}
         for task in tasks:
             for index, step in enumerate(task.steps):
+                future = [
+                    (i, s) for i, s in enumerate(task.steps[index:], index) if s.quota_required
+                ]
+                first = future[0] if future else None
+                delay = (
+                    sum(s.think_s + s.duration_s for s in task.steps[index : first[0]])
+                    + first[1].think_s
+                    if first
+                    else sum(s.think_s + s.duration_s for s in task.steps[index:])
+                    + task.final_think_s
+                )
                 rows.setdefault(index, []).append(
                     {
-                        "delay": step.think_s,
-                        "duration": step.duration_s,
-                        "reuse": step.candidate == step.required,
-                        "continues": index + 1 < len(task.steps),
-                        "has_next": True,
+                        "delay": delay,
+                        "duration": first[1].duration_s if first else 0,
+                        "reuse": bool(first and step.candidate == first[1].required),
+                        "continues": len(future) > 1,
+                        "has_next": first is not None,
                     }
                 )
             if task.final_think_s or task.final_candidate or not task.steps:
@@ -76,6 +87,10 @@ class HistoryPredictor:
         if pending:
             current = self.rows.get(agent.completed_calls, [])
             next_probability = (sum(x["continues"] for x in current) + 1) / (len(current) + 2)
+            if agent.history and agent.history[-1].tool in ("lookup", "finish") and examples:
+                next_probability = (sum(x.get("has_next", True) for x in examples) + 1) / (
+                    len(examples) + 2
+                )
         if not examples:
             # Beyond observed development support: conservatively predict another call.
             examples = [row for rows in self.rows.values() for row in rows]

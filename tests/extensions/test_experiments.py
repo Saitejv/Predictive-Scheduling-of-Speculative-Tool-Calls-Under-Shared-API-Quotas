@@ -66,7 +66,7 @@ class ExperimentTests(unittest.TestCase):
         self.assertEqual(groups, list(batches(tasks, 2, 7, "burst", 0.1)))
 
     def test_frozen_data_provenance_and_no_answer_labels_in_tasks(self):
-        data = Path(__file__).resolve().parents[1] / "data"
+        data = Path(__file__).resolve().parents[2] / "data"
         if not (data / "manifest.json").exists():
             self.skipTest("Run quota_spec.collect for dataset checks")
         manifest = json.loads((data / "manifest.json").read_text())

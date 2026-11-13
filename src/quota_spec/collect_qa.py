@@ -7,36 +7,37 @@ import shutil
 import time
 from pathlib import Path
 
+from .artifacts import write_json  # compatibility export
 from .models import Call, Step, Task, positive_int
 from .provenance import git_state
 from .qa import HTTPQA, MockQA, answer_scores, parse_action
-from .search import SearchCorpus, candidate_query, sha256_json
+from .search import SearchCorpus, sha256_json
+from .speculation import make_speculator, model_identity, speculative_phase
 from .workload import dump_tasks
 
 
-def write_json(path, value):
-    """Atomic checkpoint replacement; a killed process cannot truncate the prior file."""
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n")
-    temporary.replace(path)
-
-
-async def trajectory(task, corpus, model, max_calls):
+async def trajectory(task, corpus, model, max_calls, speculator=None):
+    speculator = (
+        speculator
+        if speculator is not None
+        else make_speculator(backend="http" if isinstance(model, HTTPQA) else "mock")
+    )
     history, steps, observations = [], [], []
     started = time.perf_counter()
     for index in range(max_calls + 1):
         before = time.perf_counter()
-        candidate = candidate_query(
-            task["task_context"], history[-1]["results"] if history else [], index
+        observed_at = before - started
+        action, candidate, generation = await speculative_phase(
+            model, speculator, task["task_context"], history, final=index == max_calls
         )
-        if index == max_calls:
-            candidate = None  # The shared, observed search budget is exhausted.
-        generation = time.perf_counter() - before
+        action = parse_action(action, final=index == max_calls)
+        # Late proposals are discarded; required actions never await optional inference.
+        think = time.perf_counter() - before
         observations.append(
             {
                 "task_id": task["task_id"],
                 "step": index,
-                "observed_at_s": time.perf_counter() - started,
+                "observed_at_s": observed_at,
                 "task_context": task["task_context"],
                 "history": [h["query"] for h in history[-8:]],
                 "result_excerpt": json.dumps(history[-1]["results"])[:1024] if history else "",
@@ -44,11 +45,6 @@ async def trajectory(task, corpus, model, max_calls):
                 "candidate_generation_s": generation,
             }
         )
-        action = parse_action(
-            await model.decide(task["task_context"], history, index == max_calls),
-            final=index == max_calls,
-        )
-        think = time.perf_counter() - before
         if action["action"] == "answer":
             final_think, final_candidate, final_delay = think, candidate, generation
             break
@@ -100,6 +96,7 @@ async def trajectory(task, corpus, model, max_calls):
         "completion_s": completion,
         "observations": observations,
         "inference": list(model.records),
+        "speculator_inference": list(speculator.records),
         "failure": None,
     }
 
@@ -114,6 +111,9 @@ async def collect(
     resume=False,
     model_options=None,
     model_factory=None,
+    candidate_backend="auto",
+    speculator_options=None,
+    speculator_factory=None,
 ):
     positive_int(count, "count", 2)
     positive_int(max_calls, "max_calls")
@@ -124,6 +124,10 @@ async def collect(
 
     factory = model_factory or (lambda: MockQA() if backend == "mock" else HTTPQA(**options))
     probe = factory()  # Validate configuration before writing anything or issuing requests.
+    draft_factory = speculator_factory or (
+        lambda: make_speculator(candidate_backend, backend=backend, options=speculator_options)
+    )
+    draft_probe = draft_factory()
     corpus = SearchCorpus.load(data / "corpus.json")
     splits = {
         name: json.loads((data / f"{name}.json").read_text())
@@ -157,8 +161,9 @@ async def collect(
             "Labels must contain unique task IDs and an answer for every selected task"
         )
     config = {
-        "version": 2,
+        "version": 3,
         "backend": backend,
+        "speculator": model_identity(draft_probe),
         "max_calls": max_calls,
         "corpus_sha256": corpus.digest,
         "selected_tasks_sha256": sha256_json(selected),
@@ -171,6 +176,9 @@ async def collect(
         "output_price": getattr(probe, "output_price", None),
         "token_parameter": getattr(probe, "token_parameter", None),
         "max_output_tokens": getattr(probe, "max_tokens", None),
+        "reasoning_effort": getattr(probe, "reasoning_effort", None),
+        "response_format": getattr(probe, "response_format", None),
+        "provider_sort": getattr(probe, "provider_sort", None),
         "source_sha256": source_hashes(),
     }
     # Credentials and injected transports are deliberately absent from artifacts.
@@ -199,6 +207,7 @@ async def collect(
                 completed[task["task_id"]] = prior
                 continue
             model = factory()
+            speculator = draft_factory()
             if prior:
                 # Retain earlier paid failures, even when a retry subsequently succeeds.
                 attempts = output / "failed_attempts"
@@ -210,7 +219,7 @@ async def collect(
                     saved = attempts / f"{path.stem}-{index}.json"
                 write_json(saved, prior)
             try:
-                result = await trajectory(task, corpus, model, max_calls)
+                result = await trajectory(task, corpus, model, max_calls, speculator)
             except Exception as exc:
                 write_json(
                     path,
@@ -218,6 +227,7 @@ async def collect(
                         "task_id": task["task_id"],
                         "failure": type(exc).__name__,
                         "inference": list(model.records),
+                        "speculator_inference": list(speculator.records),
                     },
                 )
                 raise ValueError(
@@ -255,6 +265,7 @@ async def collect(
     for filename, field in (
         ("observations.jsonl", "observations"),
         ("inference.jsonl", "inference"),
+        ("speculator-inference.jsonl", "speculator_inference"),
     ):
         with (output / filename).open("w") as stream:
             for tid, result in completed.items():
@@ -269,7 +280,9 @@ async def collect(
             "task_count": count,
             "agent": "mock-qa-v1 (synthetic)" if backend == "mock" else "http-qa-v1",
             "mock": backend == "mock",
-            "candidate_generator": "observed-top-title-v1",
+            "candidate_generator": draft_probe.identity,
+            "speculator": model_identity(draft_probe),
+            "proposal_timing": "Parallel with main QA; measured availability delay and barrier",
             "candidate_timing": "Measured after trajectory; exact matches share required timing",
             "split_method": "Preserved source development/evaluation assignments before collection",
             "development_ids": [r["task_id"] for r in selected["development"]],
@@ -287,6 +300,12 @@ async def collect(
         "tasks": count,
         "mock": backend == "mock",
         "output": str(output),
+        "candidate_generator": draft_probe.identity,
+        "speculator_failures": sum(
+            bool(r.get("failure"))
+            for result in completed.values()
+            for r in result["speculator_inference"]
+        ),
         "exact_match": sum(r["exact_match"] for r in outcomes) / count
         if backend == "http"
         else None,
@@ -304,6 +323,9 @@ def main():
     parser.add_argument("--timeout-s", type=float, default=30)
     parser.add_argument("--input-usd-per-million", type=float)
     parser.add_argument("--output-usd-per-million", type=float)
+    from .speculation import add_speculator_arguments
+
+    add_speculator_arguments(parser)
     args = parser.parse_args()
     try:
         summary = asyncio.run(
@@ -311,6 +333,7 @@ def main():
                 args.data,
                 args.output,
                 backend=args.backend,
+                candidate_backend=args.candidate_backend,
                 count=args.count,
                 max_calls=args.max_calls,
                 resume=args.resume,

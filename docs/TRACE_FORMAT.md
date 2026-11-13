@@ -1,4 +1,29 @@
+> Preserved reference/extension documentation. The active concurrent baseline and
+> current work order are [README](../README.md) and [next_steps.md](../next_steps.md).
+
 # Trace format and replay semantics
+
+## Canonical ReAct additions
+
+Search steps keep the existing `query` field. Lookup/Finish steps use
+`required_call: {"tool":"lookup", "arguments_json":"{\"keyword\":\"...\"}"}`
+(or `finish` with `answer`) and `quota_required: false`. These actions advance
+dependencies and contribute latency but do not use quota or cached tool results.
+Legacy steps default to `quota_required: true`.
+
+`candidate_trigger` defaults to `phase_entry`. For canonical paper traces it can
+be `previous_tool_start`: `candidate_delay_s` then means time since the preceding
+**required tool dispatch**, including observation-model generation and the
+speculative actor's next-action inference. It can release work before that
+preceding tool finishes; it is not a negative phase-entry delay. A cache hit or
+join starts that dependency at the required request's readiness. The first step
+cannot have a predecessor-triggered proposal. Late proposals are discarded and
+same-time required work takes priority over optional decisions.
+
+Only a top-one Search prediction becomes a quota candidate. Raw Lookup/Finish
+predictions remain in collected branches. Actual actor timings and stateful
+actions are retained, including forced finalization time at the search/step limit.
+See [PAPER_PIPELINE.md](PAPER_PIPELINE.md) for the canonical artifact schema.
 
 The CLI accepts a JSON list of tasks via `--trace`. Times are seconds
 relative to experiment start. This is a serial-chain schema; its extensions
@@ -31,7 +56,10 @@ recorded tool execution time, excluding quota wait.
 
 An optional `candidate_query` is an observed hint made available after
 `candidate_delay_s` seconds from step entry (default zero). New collectors record
-its generation time and include that time in `think_s`.
+its generation time. `think_s` follows completion of main QA inference; optional
+work never extends readiness. Drafts still pending at main completion are
+cancelled and leave `candidate_query` null. Cancellation is retained separately
+in inference telemetry; unknown provider charges remain null.
 Omit it or set it to null to provide no candidate. `candidate_duration_s` defaults
 to the required duration; exact-match candidates must have the same tool duration
 as their required invocation. An incorrect candidate can have its own duration.
@@ -112,10 +140,18 @@ can consume quota but cannot be reused by a search that never occurs.
 Prediction runs are serialized independently of tool execution. Replay dispatches
 optional work only after inference finishes, rechecking the observed state revision,
 quota window, registry and required queue. Stale decisions reject. Required
-readiness of the candidate owner waits for inference as needed; unrelated tasks
-continue. Admission inference overlaps main-model thinking, matching the QA live
+actions of the candidate owner proceed without waiting for inference; stale
+admissions are discarded. Admission overlaps main-model thinking, matching the QA live
 harness. API latency is never implemented by spending quota in an earlier window.
 
 Frozen configurations are version 2 and fingerprint source, normalized traces and
 forecast banks. Old trace JSON remains readable; old frozen study configurations
 are rejected because their execution semantics differ.
+
+
+Collection and pipeline checkpoints are version 3 and include the independent
+Speculator model/endpoint/token/timeout/pricing configuration (without credentials).
+The manifest identifies HTTP, heuristic or synthetic candidate sources. Per-task
+checkpoints retain `speculator_inference` separately from main QA `inference`,
+including failed attempts; successful checkpoints do not repeat either model on
+resume. Frozen study configurations retain their existing version and trace hashes.

@@ -8,6 +8,7 @@ from dataclasses import asdict, replace
 from pathlib import Path
 
 from .admission import AdmissionConfig, PredictiveAdmission
+from .artifacts import source_hashes  # compatibility export
 from .models import load_tasks, nonnegative, positive_int
 from .policies import CurrentCapacity, FixedReserve, NoSpeculation, UsageForecastReserve
 from .prediction import HistoryPredictor, PerturbedPredictor, calibration
@@ -15,13 +16,6 @@ from .provenance import git_state
 from .replay import Replay, percentile
 from .search import sha256_json
 from .workload import dump_tasks
-
-
-def source_hashes():
-    import hashlib
-
-    root = Path(__file__).resolve().parent
-    return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.glob("*.py"))}
 
 
 def bootstrap_ci(values, seed=7, samples=2000):
@@ -128,10 +122,16 @@ def run_study(
     AdmissionConfig(samples=samples)
     from .search import SearchCorpus
 
-    corpus_digest = SearchCorpus.load(data / "corpus.json").digest
     manifest = json.loads((data / "manifest.json").read_text())
-    if corpus_digest != manifest["corpus_sha256"]:
-        raise ValueError("Manifest does not match corpus")
+    if manifest.get("environment") == "paper_wikipedia":
+        environment = json.loads((data / "environment.json").read_text())
+        corpus_digest = sha256_json(environment)
+        if corpus_digest != manifest["environment_sha256"]:
+            raise ValueError("Manifest does not match upstream environment")
+    else:
+        corpus_digest = SearchCorpus.load(data / "corpus.json").digest
+        if corpus_digest != manifest["corpus_sha256"]:
+            raise ValueError("Manifest does not match corpus")
     for name in ("development", "evaluation"):
         raw = json.loads((data / f"{name}.json").read_text())
         expected = manifest.get("artifacts", {}).get(f"{name}.json")
@@ -146,7 +146,7 @@ def run_study(
     for bank in banks:
         if bank.bank["config"]["development_sha256"] != sha256_json(dump_tasks(development)):
             raise ValueError("Forecast bank does not match development traces")
-    durations = [s.duration_s for t in development for s in t.steps]
+    durations = [s.duration_s for t in development for s in t.steps if s.quota_required]
     expected_duration = sum(durations) / len(durations) if durations else 0.0
     calibration_costs = []
     if frozen_path:
@@ -227,7 +227,8 @@ def run_study(
         "seeds": seeds,
         "development_sha256": sha256_json(dump_tasks(development)),
         "evaluation_sha256": sha256_json(dump_tasks(evaluation)),
-        "corpus_sha256": json.loads((data / "manifest.json").read_text())["corpus_sha256"],
+        "corpus_sha256": corpus_digest,  # Legacy key; environment identity for Wikipedia traces.
+        "environment": manifest.get("environment", "local_bm25"),
         "tuning": tuning,
         "python": sys.version,
         "configuration_reused_from": str(frozen_path) if frozen_path else None,
@@ -343,6 +344,7 @@ def run_study(
                     summary = summarize(results)
                     summary.update(
                         agents=agents,
+                        max_active_agents=max(len(group) for group in groups),
                         capacity=capacity,
                         window_s=window,
                         arrival=arrival,

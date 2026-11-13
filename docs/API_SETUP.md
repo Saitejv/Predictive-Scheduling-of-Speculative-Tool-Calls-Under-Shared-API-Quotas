@@ -1,13 +1,30 @@
+> Preserved reference/extension documentation. The active concurrent baseline and
+> current work order are [README](../README.md) and [next_steps.md](../next_steps.md).
+
 # API setup
 
 Use the [complete runbook](RUNBOOK.md) for the tested installation, no-key pilot,
 credential setup, real-data collection, Jev/Kev context study and resume commands.
 
 The main QA model (`QA_CHAT_URL`, `QA_MODEL`, `QA_API_KEY`) generates searches and
-answers. Jev (`TYPESAFE_API_KEY`) and Kev (`KEV_BASE_URL`, optional `KEV_API_KEY`)
-forecast demand. They are separate integrations. A Kev server must already be
+answers. The small Speculator (`SPECULATOR_CHAT_URL`, `SPECULATOR_MODEL`,
+`SPECULATOR_API_KEY` if required) proposes exact searches alongside QA inference.
+Jev (`TYPESAFE_API_KEY`) and Kev (`KEV_BASE_URL`, optional `KEV_API_KEY`)
+forecast demand/reuse for admission. These are separate integrations. A Kev server must already be
 running. `.env.example` lists optional token limits, model revision and prices.
 Export `.env` explicitly; the application does not load it implicitly.
+
+OpenRouter can supply all three hosted roles with one key. See the
+[OpenRouter setup in the runbook](RUNBOOK.md). Jev uses
+`JEV_BASE_URL=https://openrouter.ai/api/alpha` and `JEV_MODEL=typesafe/jev-1.14`;
+put the OpenRouter credential in `TYPESAFE_API_KEY`. Its
+[Decisions API](https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request)
+uses the same state/questions/answers contract. The provider's fractional
+`usage.cost` is accepted as billed USD, independently of integer token counts.
+QA and Speculator reasoning effort, JSON mode and provider sorting are optional
+environment settings. Pending proposals are cancelled at main-action completion;
+required actions do not wait for optional admission. Unknown cancellation charges
+remain unknown, rather than being counted as free.
 
 `python -m quota_spec.preflight` reports configuration without inference or
 network calls. `--online` only fetches public Kev metadata. `--backend mock` and

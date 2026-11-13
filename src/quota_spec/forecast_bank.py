@@ -51,10 +51,11 @@ def bank_cases(tasks):
                     0,
                     Snapshot(3, 1, (agent,)),
                 )
+                future = [s for s in task.steps[index:] if s.quota_required]
                 labels = {
-                    "reuse": bool(step and candidate == step.required) if own else None,
-                    "next": step is not None,
-                    "continues": index + 1 < len(task.steps),
+                    "reuse": bool(future and candidate == future[0].required) if own else None,
+                    "next": bool(future),
+                    "continues": len(future) > 1,
                 }
                 yield (task.task_id, index, "thinking", own), state, agent, labels
             if step:
@@ -76,10 +77,33 @@ def bank_cases(tasks):
                         pending,
                         {
                             "reuse": None,
-                            "next": index + 1 < len(task.steps),
-                            "continues": index + 2 < len(task.steps),
+                            "next": sum(s.quota_required for s in task.steps[index + 1 :]) > 0,
+                            "continues": sum(s.quota_required for s in task.steps[index + 1 :]) > 1,
                         },
                     )
+                    # A paper proposal is available while the preceding real tool
+                    # is running. Its forecast must not see that tool's response.
+                    following = task.steps[index + 1] if index + 1 < len(task.steps) else None
+                    if (
+                        phase == "running"
+                        and following is not None
+                        and following.candidate is not None
+                        and following.candidate_trigger == "previous_tool_start"
+                    ):
+                        own_state = replace(
+                            state, task_id=task.task_id, candidate=following.candidate
+                        )
+                        future = [s for s in task.steps[index + 1 :] if s.quota_required]
+                        yield (
+                            (task.task_id, index, phase, True),
+                            own_state,
+                            pending,
+                            {
+                                "reuse": bool(future and following.candidate == future[0].required),
+                                "next": bool(future),
+                                "continues": len(future) > 1,
+                            },
+                        )
                 excerpt = step.result_excerpt
 
 

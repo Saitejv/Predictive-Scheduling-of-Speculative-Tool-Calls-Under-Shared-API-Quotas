@@ -48,7 +48,16 @@ def dump_tasks(tasks: tuple[Task, ...]) -> list[dict]:
             "steps": [
                 {
                     "think_s": s.think_s,
-                    "query": json.loads(s.required.arguments_json)["query"],
+                    **(
+                        {"query": json.loads(s.required.arguments_json)["query"]}
+                        if s.required.tool == "search"
+                        else {
+                            "required_call": {
+                                "tool": s.required.tool,
+                                "arguments_json": s.required.arguments_json,
+                            }
+                        }
+                    ),
                     "duration_s": s.duration_s,
                     "candidate_query": json.loads(s.candidate.arguments_json)["query"]
                     if s.candidate
@@ -56,6 +65,12 @@ def dump_tasks(tasks: tuple[Task, ...]) -> list[dict]:
                     "candidate_duration_s": s.candidate_duration_s,
                     "result_excerpt": s.result_excerpt,
                     "candidate_delay_s": s.candidate_delay_s,
+                    **({"quota_required": False} if not s.quota_required else {}),
+                    **(
+                        {"candidate_trigger": s.candidate_trigger}
+                        if s.candidate_trigger != "phase_entry"
+                        else {}
+                    ),
                 }
                 for s in t.steps
             ],

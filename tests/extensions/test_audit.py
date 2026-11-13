@@ -113,13 +113,18 @@ class GatewayAuditTests(unittest.IsolatedAsyncioTestCase):
                 observed.extend(a.deadline_s for a in state.snapshot.agents)
                 return False
 
+        class Main(MockQA):
+            async def decide(self, *args, **kwargs):
+                await asyncio.sleep(0.005)
+                return await super().decide(*args, **kwargs)
+
         async def tool(call):
             return []
 
         gateway = Gateway(tool, policy=Policy())
         try:
             result = await run_agent(
-                {"task_id": "a", "task_context": "Who?"}, gateway, MockQA(), deadline_s=10
+                {"task_id": "a", "task_context": "Who?"}, gateway, Main(), deadline_s=10
             )
             self.assertEqual(observed, [10])
             self.assertTrue(result["deadline_met"])

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "purpose": "Jev forecasts and final quota studies; separate capture bundle required for full tape inputs",
+  "archive": {
+    "path": "results/jev-study-2026-11-12.tar.gz",
+    "sha256": "a3d84c006f5915238398cf3277cc1f308997bee45e76be1d3b759ae08916b7f9",
+    "bytes": 6369278
+  },
+  "inventory": {
+    "path": "results/jev-study-bundle-inventory.json",
+    "sha256": "0148793dbbab01561cd2379273ea7ad19bced3e7039218ae4a064b1261a3dcf8",
+    "files": 155,
+    "uncompressed_bytes": 63378698,
+    "inside_archive": "bundle-manifest.json"
+  },
+  "capture_manifest_sha256": "c8ba7ac60a6118a615624f1a97a76e00940479a3d82eedc1baa5172a2daa2db6",
+  "source_roots": [
+    "src",
+    "tests",
+    "scripts",
+    "docs",
+    "README.md",
+    "next_steps.md",
+    "pyproject.toml",
+    "Makefile",
+    "requirements-lock.txt",
+    ".env.example",
+    "results/hotpot-jev-progress-50",
+    "results/hotpot-forecast-quota-native-full-reserves",
+    "results/hotpot-forecast-quota-slow-search-full-reserves",
+    "results/hotpot-forecast-quota-native-latency-final",
+    "results/hotpot-forecast-quota-horizon90",
+    "results/jev-study-analysis",
+    "results/jev-kev-access",
+    "results/hotpot-kev-space-progress-50",
+    "results/jev-collection-adapter-source"
+  ],
+  "credentials_included": false,
+  "verification": {
+    "tests": 180,
+    "lint_and_format": true,
+    "protected_prior_files_unchanged": 14815,
+    "primary_replay_runs": 4000,
+    "sensitivity_replay_runs": 1284
+  },
+  "jev": {
+    "unique_forecasts": 1186,
+    "cost_usd_including_probe": 0.030114672,
+    "model": "typesafe/jev-1.14-20261014"
+  },
+  "kev": "Deferred per user; incomplete public-demo access evidence only",
+  "note": "Large results are Git-ignored; keep bundle and original capture bundle separately. Verify archive checksum before extraction into an empty directory."
+}

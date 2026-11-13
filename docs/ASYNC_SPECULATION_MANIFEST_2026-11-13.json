@@ -1,0 +1,369 @@
+{
+  "date": "2026-11-13",
+  "evidence_root": "results/async-agent-cleanup-2026-11-13",
+  "publication_note": "Raw recordings remain local and Git-ignored; hashes identify the retained immutable evidence. Derived verification files may be regenerated.",
+  "authorized_budget_usd": 0.5,
+  "verification": {
+    "complete": true,
+    "questions": 20,
+    "episodes": 40,
+    "blocks": [
+      {
+        "block": "live-block-1",
+        "audit": {
+          "capture_version": 2,
+          "passed": true,
+          "episodes": 20,
+          "nodes": 712,
+          "by_kind": {
+            "episode_start": 20,
+            "model": 166,
+            "generation": 133,
+            "boundary": 101,
+            "search": 112,
+            "application": 101,
+            "answer": 20,
+            "drain": 20,
+            "candidates": 32,
+            "forced_finish": 7
+          },
+          "state_transitions_reexecuted": 101,
+          "authoritative_prompts_checked": 101,
+          "recorded_schedule_max_residual_s": 0.0,
+          "schedule_tolerance_s": 1e-06,
+          "prefetch_hits": 4,
+          "unused_prefetches": 31,
+          "bank_complete": false,
+          "scope": "Observed schedule DAG with measured lags and pinned state transitions; alternatives require completed tapes",
+          "episode_endpoint_checks": 20,
+          "prefetches_during_actor_thinking_verified": 21
+        },
+        "model_requests": 166,
+        "observed_reused_service_minus_wait_s": 2.916868375032209,
+        "interpretation": "Local cache benefit diagnostic, not the causal explanation of independent live paths"
+      },
+      {
+        "block": "live-block-2",
+        "audit": {
+          "capture_version": 2,
+          "passed": true,
+          "episodes": 20,
+          "nodes": 629,
+          "by_kind": {
+            "episode_start": 20,
+            "model": 145,
+            "generation": 116,
+            "boundary": 88,
+            "search": 98,
+            "application": 88,
+            "answer": 20,
+            "drain": 20,
+            "candidates": 28,
+            "forced_finish": 6
+          },
+          "state_transitions_reexecuted": 88,
+          "authoritative_prompts_checked": 88,
+          "recorded_schedule_max_residual_s": 0.0,
+          "schedule_tolerance_s": 1e-06,
+          "prefetch_hits": 2,
+          "unused_prefetches": 31,
+          "bank_complete": false,
+          "scope": "Observed schedule DAG with measured lags and pinned state transitions; alternatives require completed tapes",
+          "episode_endpoint_checks": 20,
+          "prefetches_during_actor_thinking_verified": 14
+        },
+        "model_requests": 145,
+        "observed_reused_service_minus_wait_s": 1.1189906249928754,
+        "interpretation": "Local cache benefit diagnostic, not the causal explanation of independent live paths"
+      }
+    ],
+    "new_live_cost_usd": 0.14256645,
+    "new_completion_cost_usd": 0.00508721,
+    "new_inference_total_usd": 0.14765366000000002,
+    "authorized_cap_usd": 0.5,
+    "all_costs_known": true,
+    "independent_endpoint_sums_match": true,
+    "actual_prefetches_during_actor_thinking": 35,
+    "quality_and_path_warning": "Independent actor paths and provider times; the paired interval, quality and matched-path counts must accompany the point estimate."
+  },
+  "live_results": {
+    "episodes": 40,
+    "by_mode": {
+      "sequential": {
+        "complete": 20,
+        "failures": 0,
+        "mean_s": 7.010762595699634,
+        "median_s": 5.876527229003841,
+        "p95_s": 12.21016333301668,
+        "answer_time_total_s": 140.2152519139927,
+        "resource_time_total_s": 140.23724595693056,
+        "mean_actions": 4.8,
+        "em": 0.25,
+        "f1": 0.33690476190476193,
+        "cache_hits": 0,
+        "inflight_hits": 0,
+        "prefetches": 0,
+        "unused_prefetches": 0,
+        "late_windows": 0,
+        "optional_failures": 0,
+        "usage": {
+          "requests": 96,
+          "failures": 0,
+          "cancelled": 0,
+          "input_tokens": 220582,
+          "known_input_tokens": 220582,
+          "unknown_input_tokens_requests": 0,
+          "output_tokens": 7548,
+          "known_output_tokens": 7548,
+          "unknown_output_tokens_requests": 0,
+          "cost_usd": 0.05394519,
+          "known_cost_usd": 0.05394519,
+          "unknown_cost_usd_requests": 0
+        }
+      },
+      "speculative": {
+        "complete": 20,
+        "failures": 0,
+        "mean_s": 6.246970670793962,
+        "median_s": 5.143596270499984,
+        "p95_s": 11.267292542004725,
+        "answer_time_total_s": 124.93941341587924,
+        "resource_time_total_s": 136.32537237598444,
+        "mean_actions": 4.65,
+        "em": 0.4,
+        "f1": 0.4869047619047619,
+        "cache_hits": 6,
+        "inflight_hits": 0,
+        "prefetches": 68,
+        "unused_prefetches": 62,
+        "late_windows": 15,
+        "optional_failures": 0,
+        "usage": {
+          "requests": 215,
+          "failures": 0,
+          "cancelled": 0,
+          "input_tokens": 353840,
+          "known_input_tokens": 353840,
+          "unknown_input_tokens_requests": 0,
+          "output_tokens": 18611,
+          "known_output_tokens": 18611,
+          "unknown_output_tokens_requests": 0,
+          "cost_usd": 0.08862126,
+          "known_cost_usd": 0.08862126,
+          "unknown_cost_usd_requests": 0
+        }
+      }
+    },
+    "live_execution": true,
+    "no_quotas_or_jev": true,
+    "limitations": [
+      "Independent stochastic actor trajectories; paired by question, not identical action tapes",
+      "One 20-question pass; timing includes provider/network variation",
+      "Search-only speculation; stateful Lookup/Finish are authoritative local actions"
+    ],
+    "paired": {
+      "questions": 20,
+      "pairs": [
+        {
+          "question_index": 7107,
+          "sequential_s": 5.361710625002161,
+          "speculative_s": 3.593204999982845,
+          "saving_s": 1.7685056250193156,
+          "same_actions": true
+        },
+        {
+          "question_index": 5619,
+          "sequential_s": 11.662699000007706,
+          "speculative_s": 7.618801375007024,
+          "saving_s": 4.043897625000682,
+          "same_actions": false
+        },
+        {
+          "question_index": 373,
+          "sequential_s": 2.218775249988539,
+          "speculative_s": 5.051313540985575,
+          "saving_s": -2.832538290997036,
+          "same_actions": false
+        },
+        {
+          "question_index": 6904,
+          "sequential_s": 9.101259165996453,
+          "speculative_s": 9.90370854199864,
+          "saving_s": -0.8024493760021869,
+          "same_actions": false
+        },
+        {
+          "question_index": 1267,
+          "sequential_s": 3.2603205410123337,
+          "speculative_s": 5.308548582979711,
+          "saving_s": -2.048228041967377,
+          "same_actions": false
+        },
+        {
+          "question_index": 4202,
+          "sequential_s": 9.050159666978288,
+          "speculative_s": 8.757180165994214,
+          "saving_s": 0.29297950098407455,
+          "same_actions": false
+        },
+        {
+          "question_index": 2316,
+          "sequential_s": 11.286090667010285,
+          "speculative_s": 2.82288341599633,
+          "saving_s": 8.463207251013955,
+          "same_actions": false
+        },
+        {
+          "question_index": 6,
+          "sequential_s": 12.21016333301668,
+          "speculative_s": 14.459888750017853,
+          "saving_s": -2.249725417001173,
+          "same_actions": false
+        },
+        {
+          "question_index": 1248,
+          "sequential_s": 1.7115066250262316,
+          "speculative_s": 2.8281616249878425,
+          "saving_s": -1.1166549999616109,
+          "same_actions": true
+        },
+        {
+          "question_index": 7356,
+          "sequential_s": 9.43128695798805,
+          "speculative_s": 5.235879000014393,
+          "saving_s": 4.195407957973657,
+          "same_actions": false
+        },
+        {
+          "question_index": 1477,
+          "sequential_s": 3.154406374989776,
+          "speculative_s": 4.03714074997697,
+          "saving_s": -0.8827343749871943,
+          "same_actions": true
+        },
+        {
+          "question_index": 1354,
+          "sequential_s": 6.022380957991118,
+          "speculative_s": 6.9269639159902,
+          "saving_s": -0.9045829579990823,
+          "same_actions": false
+        },
+        {
+          "question_index": 7090,
+          "sequential_s": 11.649092957988614,
+          "speculative_s": 10.64501629199367,
+          "saving_s": 1.004076665994944,
+          "same_actions": false
+        },
+        {
+          "question_index": 3021,
+          "sequential_s": 2.7334513329842594,
+          "speculative_s": 3.7288257079781033,
+          "saving_s": -0.995374374993844,
+          "same_actions": true
+        },
+        {
+          "question_index": 2038,
+          "sequential_s": 11.513424333010335,
+          "speculative_s": 9.44290799999726,
+          "saving_s": 2.0705163330130745,
+          "same_actions": false
+        },
+        {
+          "question_index": 4349,
+          "sequential_s": 2.7253836250165477,
+          "speculative_s": 3.8011621669866145,
+          "saving_s": -1.0757785419700667,
+          "same_actions": true
+        },
+        {
+          "question_index": 2885,
+          "sequential_s": 5.7306735000165645,
+          "speculative_s": 3.720887083996786,
+          "saving_s": 2.0097864160197787,
+          "same_actions": true
+        },
+        {
+          "question_index": 2861,
+          "sequential_s": 4.206369499996072,
+          "speculative_s": 1.8009599169890862,
+          "saving_s": 2.4054095830069855,
+          "same_actions": false
+        },
+        {
+          "question_index": 4948,
+          "sequential_s": 4.810743124980945,
+          "speculative_s": 3.988687042001402,
+          "saving_s": 0.8220560829795431,
+          "same_actions": true
+        },
+        {
+          "question_index": 2527,
+          "sequential_s": 12.37535437499173,
+          "speculative_s": 11.267292542004725,
+          "saving_s": 1.108061832987005,
+          "same_actions": false
+        }
+      ],
+      "mean_saving_s": 0.7637919249056722,
+      "bootstrap_95_mean_saving_s": [
+        -0.27783432293799704,
+        2.0020454790035727
+      ],
+      "relative_total_time_saved": 0.10894562673883412,
+      "identical_action_pairs": 7
+    },
+    "usage": {
+      "requests": 311,
+      "failures": 0,
+      "cancelled": 0,
+      "input_tokens": 574422,
+      "known_input_tokens": 574422,
+      "unknown_input_tokens_requests": 0,
+      "output_tokens": 26159,
+      "known_output_tokens": 26159,
+      "unknown_output_tokens_requests": 0,
+      "cost_usd": 0.14256645,
+      "known_cost_usd": 0.14256645,
+      "unknown_cost_usd_requests": 0
+    },
+    "measurement_protocol": {
+      "backend": "http",
+      "shared_model_submission_interval_s": 0,
+      "kind": "unpaced_model_submission",
+      "actor_and_optional_requests_share_pacing": false,
+      "wall_time_note": "No artificial local model submission pacing; provider/network variability remains",
+      "purpose": "benchmark",
+      "candidate_lifetime": "episode",
+      "inference_slots": {
+        "total": 4,
+        "reserved_for_actor": 1
+      }
+    }
+  },
+  "protected_evidence": {
+    "files_checked": 7743,
+    "changed": [],
+    "all_unchanged": true
+  },
+  "sha256": {
+    "live-combined-summary.json": "572c42939d02031a26f2ca1d7fd0308f86e4262aaa7fc4604a2a622023d7fef6",
+    "live-verification.json": "18fc0c590d7835793ccc3a4dc3b63efb67904cbfd448e55f99b4e535186d30ab",
+    "protected-before.json": "950c9a10c015fea3ccdb4eff4e6694631af98dbdadf346f63cbf96a297231c98",
+    "protected-verification.json": "2874abff403812f144bc5839f8e492ced927ce416f8df7b8e20d0c4016e0e467",
+    "new-paid-evidence-sha256.json": "59d55453904125ad5472acd5299d1796f50558b5bb35f06d206a60b0949cba28",
+    "pilot-reference/comparison.json": "1a5dcab7dec0d827a35b3272ddf0d6daa2171a2dcffe8b5c47bb0ff67d5132e6",
+    "native-reference/comparison.json": "2c7f0f57b401d8e0c943a4fb8e2b7218e721e2d6cc69d475cc67d1166e90085a",
+    "search-5x-reference/comparison.json": "ba16c83c0d944f5cb8162233c4121f08d4f4c668ea7a61ba662adacc1a706b51",
+    "live-block-1/config.json": "16bce518b3493eedf13a0619dacf88864eccde03bf907688f4db46d1f7a15894",
+    "live-block-1/summary.json": "8e66945ca3ca013dbded7260a5842ff57ebad279965bad5f313a11d1dc818d72",
+    "live-block-1/events.jsonl": "0b25693ef4caa0348515f1b03d46227ad00e93baa6eda1260a4e53480748d525",
+    "live-block-1/inference.jsonl": "d38c3df0eea0b2d6fc0de02e090d3d7ead0933187e9ed71792814120850d75b4",
+    "live-block-1/requests.jsonl": "069dfc498a621f9b3237d5c0e3b48d5c2d65593d040b87b514bd717b008e66f6",
+    "live-block-2/config.json": "6b5665a8289110164202d2a50683e77a5b862a0cd21a9f7366719675570a544c",
+    "live-block-2/summary.json": "9ee802faec369914fa7310f0c18efb594e16d0a41c6d7429d688a55531805587",
+    "live-block-2/events.jsonl": "88584a76240aebc23303235abccc0c093e3eeee32063ae8c4c046cf1644cc0ec",
+    "live-block-2/inference.jsonl": "f1841d5dd8194a1fcdf66a969266d7fb97f508599bc8e12f0aa4a687e840d911",
+    "live-block-2/requests.jsonl": "10a868cbfa0033600f55d44497abd1a981a45f9213980e5cccbb349baf7e5711"
+  }
+}

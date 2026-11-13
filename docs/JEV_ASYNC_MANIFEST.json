@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "purpose": "Asynchronous Jev objective, one-step persistence, generation budgets and longer-stream diagnostics",
+  "archive": {
+    "path": "results/jev-async-2026-11-12.tar.gz",
+    "sha256": "7a5e0211fa7b361122302ac1e3b20ea8f7448ed06eca932d2580c0edc9200a73",
+    "bytes": 14917356
+  },
+  "inventory": {
+    "path": "results/jev-async-bundle-inventory.json",
+    "sha256": "ae53d5650621632d5411b4eec9559047764068a646167f2d1a8b7b963c01a9fd",
+    "files": 147,
+    "inside_archive": "bundle-manifest.json"
+  },
+  "prior_manifests": {
+    "docs/CAPTURE_50_MANIFEST.json": "c8ba7ac60a6118a615624f1a97a76e00940479a3d82eedc1baa5172a2daa2db6",
+    "docs/JEV_STUDY_MANIFEST.json": "3d221205088262d6b8fb61fa64057ed24095c74f70425a566b812cf5713d7205"
+  },
+  "roots": [
+    "src",
+    "tests",
+    "scripts",
+    "docs",
+    "README.md",
+    "next_steps.md",
+    "pyproject.toml",
+    "Makefile",
+    "requirements-lock.txt",
+    "results/hotpot-jev-persistent-progress-50",
+    "results/hotpot-async-native-50",
+    "results/hotpot-async-slow-search-50",
+    "results/hotpot-async-budget-native-50",
+    "results/hotpot-async-long-stream-300",
+    "results/jev-async-analysis"
+  ],
+  "credentials_included": false,
+  "verification": {
+    "tests": 191,
+    "lint_and_format": true,
+    "new_replay_runs": 7098,
+    "new_jev_contexts": 699,
+    "new_jev_cost_usd": 0.019654908,
+    "prior_evidence_changed": false
+  },
+  "assumptions": [
+    "Same exploratory 20/30 question cohort",
+    "Long stream repeats saved evaluation tapes, not new independent tasks",
+    "Measured predictor latency retained; fixed provider service times and unlimited serving concurrency",
+    "Live capture runtime unchanged; no live multi-agent claim"
+  ],
+  "note": "Results and archive are Git-ignored; retain alongside both prior bundles. Verify checksum before extracting into an empty directory."
+}

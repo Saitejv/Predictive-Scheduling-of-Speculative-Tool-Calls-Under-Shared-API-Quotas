@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "date": "2026-11-13",
+  "archive": {
+    "path": "results/full-gate-analysis-bundle-2026-11-13.tar.gz",
+    "bytes": 6654020,
+    "sha256": "5f84ef2107d033bd9e163c06f3ca1d4d4f643e1398d309ff92ea87ae470a9103",
+    "verified_file_count": 159
+  },
+  "inventory": {
+    "path": "results/full-gate-analysis-inventory-2026-11-13.json",
+    "sha256": "dae08f3145102005e353522b12a257a201120d912549b1385aab2b8d611fed9e",
+    "inside_archive": "bundle-manifest.json"
+  },
+  "main_completion": {
+    "complete": true,
+    "rows": 3528,
+    "aggregate_rows": 1176,
+    "elapsed_wall_s": 295.3177675420011,
+    "oracle": {
+      "settings": 252,
+      "subsets": 129024,
+      "evaluated_schedules": 258048
+    },
+    "new_model_calls": 0,
+    "validated_network_blocked": true
+  },
+  "extended_completion": {
+    "complete": true,
+    "rows": 720,
+    "aggregate_rows": 240,
+    "oracle": {
+      "settings": 60,
+      "subsets": 245760,
+      "evaluated_schedules": 491520
+    },
+    "new_model_calls": 0,
+    "elapsed_wall_s": 653.4017554169986
+  },
+  "dependencies": {
+    "results/hotpot-dataset-50/dataset-manifest.json": "b0e967ceb41fc43a835ac6b146e3b9d8d60c3b267834538063c52e70d54e4462",
+    "results/hotpot-jev-progress-50/bank.json": "fb25171c0fa19ab27ca9bae3db21deec4dfb053e78fd35d75b9089fbdbd65cfd",
+    "results/hotpot-jev-persistent-progress-50/bank.json": "e19487083b612e408734e973d7d0188e4f5de3a509c2467e124b610acd842bd1",
+    "docs/CAPTURE_50_MANIFEST.json": "c8ba7ac60a6118a615624f1a97a76e00940479a3d82eedc1baa5172a2daa2db6",
+    "docs/JEV_STUDY_MANIFEST.json": "3d221205088262d6b8fb61fa64057ed24095c74f70425a566b812cf5713d7205",
+    "docs/JEV_ASYNC_MANIFEST.json": "f9d6b41941f5d26677b44b54108a585f592a85b56bcb267f9d48538fbdbc435b"
+  },
+  "verification": {
+    "tests": 203,
+    "tests_passed": true,
+    "ruff_check": "passed",
+    "ruff_format_check": "82 files already formatted",
+    "independent_audit": {
+      "independent_serial_recurrence_checks": 100,
+      "max_completion_residual_s": 0.0,
+      "all_cache_hit_counts_match": true,
+      "lifetime_task_cases": 150,
+      "representative_full_event_schedules": 3,
+      "prior_evidence_files_unchanged": {
+        "results/hotpot-capture-50-bundle-manifest.json": 14816,
+        "results/jev-study-bundle-inventory.json": 40,
+        "results/jev-async-bundle-inventory.json": 27
+      },
+      "new_inference_calls": 0,
+      "network_blocked": true
+    },
+    "no_new_inference": true
+  }
+}
