@@ -25,6 +25,7 @@ class PaperSelectionTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 paper_indices(count)
 
+    @unittest.skipUnless(importlib.util.find_spec("httpx"), "Requires paper or live extras")
     def test_malformed_paid_response_keeps_usage_before_choices_validation(self):
         import httpx
 
@@ -44,6 +45,7 @@ class PaperSelectionTests(unittest.TestCase):
         self.assertEqual(records[0]["cost_usd"], 0.012)
         self.assertEqual(records[0]["failure"], "KeyError")
 
+    @unittest.skipUnless(importlib.util.find_spec("httpx"), "Requires paper or live extras")
     def test_paper_transport_preserves_pinned_openrouter_parameters(self):
         import httpx
 
@@ -78,6 +80,7 @@ class PaperSelectionTests(unittest.TestCase):
         )
         self.assertTrue(all("reasoning" not in p and "response_format" not in p for p in payloads))
 
+    @unittest.skipUnless(importlib.util.find_spec("httpx"), "Requires paper or live extras")
     def test_reasoning_only_truncation_is_explicit_and_keeps_billed_cost(self):
         import httpx
 
