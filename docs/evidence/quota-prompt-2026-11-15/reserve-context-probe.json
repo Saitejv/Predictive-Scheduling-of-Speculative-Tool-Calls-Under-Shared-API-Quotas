@@ -1,0 +1,15 @@
+{
+  "pairs": 16,
+  "requests": 32,
+  "invalid_outputs": 0,
+  "cost_usd": 0.010514269999999997,
+  "mean_queries": {
+    "wide": 1.8125,
+    "scarce": 0.25
+  },
+  "skips": {
+    "wide": 1,
+    "scarce": 14
+  },
+  "limitations": "Development sensitivity probe with artificial scheduler states; not an end-to-end speed comparison"
+}

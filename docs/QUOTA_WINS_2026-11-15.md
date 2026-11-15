@@ -101,15 +101,15 @@ four workers, 24 calls / 10 seconds loses 17.23% mean time to no speculation,
 while still beating allow-all. Capacity divided by refill period does not fully
 characterize burst behavior.
 
-![Four-worker quota/refill map](../results/quota-win-2026-11-15-replication-surface/quota-surface-4-workers.png)
+![Four-worker quota/refill map](evidence/quota-wins-2026-11-15/quota-surface-4-workers.png)
 
-[Two-worker map](../results/quota-win-2026-11-15-replication-surface/quota-surface-2-workers.png)
-· [Eight-worker map](../results/quota-win-2026-11-15-replication-surface/quota-surface-8-workers.png)
+[Two-worker map](evidence/quota-wins-2026-11-15/quota-surface-2-workers.png)
+· [Eight-worker map](evidence/quota-wins-2026-11-15/quota-surface-8-workers.png)
 
 ## Evidence, cost and reproduction
 
-[Locked protocol](../results/quota-win-2026-11-15-replication-protocol.json),
-[confirmation result](../results/quota-win-2026-11-15-replication-confirmation/result.json),
+[Locked protocol](evidence/quota-wins-2026-11-15/protocol.json),
+[confirmation result](evidence/quota-wins-2026-11-15/result.json),
 [independent schedule/split audit](../results/quota-win-2026-11-15-final-report/audit.json),
 [complete quota rows](../results/quota-win-2026-11-15-replication-surface/rows.json).
 The confirmation directory preserves the exact executed source snapshot.

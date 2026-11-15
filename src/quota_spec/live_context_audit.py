@@ -1,6 +1,8 @@
 """Independent offline audit of live multi-agent quota and forecast observations."""
 
 import argparse
+import ast
+import hashlib
 import json
 import math
 from collections import Counter
@@ -11,6 +13,73 @@ from .capture_audit import audit as audit_capture
 from .hotpot_runtime import split_action
 from .models import Call
 from .telemetry import summarize_inference
+
+
+def frozen_prompt_builder(source):
+    """Interpret the archived string template without executing captured code."""
+    tree = ast.parse(source)
+    marker = next(
+        ast.literal_eval(n.value)
+        for n in tree.body
+        if isinstance(n, ast.Assign)
+        and any(isinstance(t, ast.Name) and t.id == "MARKER" for t in n.targets)
+    )
+    definition = next(
+        n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "planner_prompt"
+    )
+
+    def evaluate(node, values):
+        if isinstance(node, ast.Constant):
+            return node.value
+        if isinstance(node, ast.Name) and node.id in values:
+            return values[node.id]
+        if isinstance(node, ast.Tuple):
+            return tuple(evaluate(n, values) for n in node.elts)
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+            return evaluate(node.left, values) + evaluate(node.right, values)
+        if isinstance(node, ast.JoinedStr):
+            return "".join(str(evaluate(n, values)) for n in node.values)
+        if isinstance(node, ast.FormattedValue) and node.format_spec is None:
+            return str(evaluate(node.value, values))
+        if isinstance(node, ast.IfExp):
+            return evaluate(node.body if evaluate(node.test, values) else node.orelse, values)
+        if (
+            isinstance(node, ast.Compare)
+            and len(node.ops) == 1
+            and isinstance(node.ops[0], ast.IsNot)
+        ):
+            return evaluate(node.left, values) is not evaluate(node.comparators[0], values)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "json"
+            and node.func.attr == "dumps"
+            and len(node.args) == 1
+            and all(k.arg in {"sort_keys", "separators"} for k in node.keywords)
+        ):
+            return json.dumps(
+                evaluate(node.args[0], values),
+                **{k.arg: evaluate(k.value, values) for k in node.keywords},
+            )
+        raise ValueError("Unsupported frozen planner expression")
+
+    def build(prefix, step, width, quota):
+        values = {"prefix": prefix, "step": step, "width": width, "quota": quota, "MARKER": marker}
+        for statement in definition.body:
+            if (
+                isinstance(statement, ast.Assign)
+                and len(statement.targets) == 1
+                and isinstance(statement.targets[0], ast.Name)
+            ):
+                values[statement.targets[0].id] = evaluate(statement.value, values)
+            elif isinstance(statement, ast.Return):
+                return evaluate(statement.value, values)
+            else:
+                raise ValueError("Unsupported frozen planner statement")
+        raise ValueError("Frozen planner has no return")
+
+    return marker, build
 
 
 def rows(path):
@@ -60,6 +129,96 @@ def audit(root):
     )
     if expected_required != Counter((e["episode"], e["query"]) for e in required):
         raise ValueError("Required cache misses and quota claims disagree")
+
+    planner_contexts = [e for e in events if e["event"] == "speculation_planner_context"]
+    if config.get("speculation_planner", "legacy") != "legacy":
+        from .capture import CaptureStore
+        from .quota_speculation import parse_queries
+
+        # Prompts evolved during development. Audit the exact recorded version,
+        # rather than silently checking old evidence with today's instructions.
+        frozen_path = root / "source-snapshot" / "quota_speculation.py"
+        frozen_source = frozen_path.read_bytes()
+        if hashlib.sha256(frozen_source).hexdigest() != config["source_sha256"].get(
+            "quota_speculation.py"
+        ):
+            raise ValueError("Frozen quota planner source hash mismatch")
+        MARKER, planner_prompt = frozen_prompt_builder(frozen_source)
+
+        store = CaptureStore(root / "capture")
+        active, counts = set(), Counter()
+        for event in events:
+            kind = event["event"]
+            if kind == "episode_started":
+                active.add(event["episode"])
+            elif kind == "answer_ready":
+                active.remove(event["episode"])
+            elif kind == "quota_claimed":
+                counts[event["window_index"]] += 1
+            elif kind == "speculation_planner_context":
+                context = event["quota"]
+                if event["planner"] == "blind":
+                    if context is not None:
+                        raise ValueError("Blind planner received quota state")
+                    continue
+                window = math.floor(context["observed_at_s"] / config["window_s"])
+                if set(context) != {
+                    "api",
+                    "quota_type",
+                    "capacity",
+                    "remaining_calls",
+                    "refill_period_s",
+                    "seconds_to_refill",
+                    "window_index",
+                    "observed_at_s",
+                    "active_workers",
+                    "other_active_workers",
+                    "queued_required_calls",
+                    "running_required_workers",
+                    "required_calls_in_current_window",
+                }:
+                    raise ValueError("Unexpected field in observed quota context")
+                if (
+                    context["api"] != "Wikipedia Search"
+                    or context["quota_type"] != "fixed_window_no_refund"
+                    or context["capacity"] != config["capacity"]
+                    or context["refill_period_s"] != config["window_s"]
+                    or context["window_index"] != window
+                    or context["remaining_calls"] != config["capacity"] - counts[window]
+                    or context["active_workers"] != len(active)
+                    or context["other_active_workers"] != len(active - {event["episode"]})
+                    or context["observed_at_s"] > event["time_s"]
+                    or abs(
+                        context["seconds_to_refill"]
+                        - ((window + 1) * config["window_s"] - context["observed_at_s"])
+                    )
+                    > 1e-6
+                ):
+                    raise ValueError("Planner quota context differs from observed scheduler state")
+        for node in store.nodes:
+            if node["kind"] == "model" and node["branch"] == "actor":
+                if MARKER in store.blob(node["input"])["prompt"]:
+                    raise ValueError("Optional planner instruction leaked to the main actor")
+            if node["kind"] != "generation" or node["branch"] != "speculative_actor":
+                continue
+            data = store.blob(node["input"])
+            context = data["quota_context"]
+            if not any(
+                e["episode"] == node["episode"]
+                and e["step"] == node["step"]
+                and e["quota"] == context
+                for e in planner_contexts
+            ):
+                raise ValueError("Planner request lacks an observed context event")
+            attempt = store.by_id[data["attempts"][-1]]
+            expected = planner_prompt(data["prefix"], node["step"], data["width"], context)
+            if store.blob(attempt["input"])["prompt"] != expected:
+                raise ValueError("Planner prompt differs from captured context")
+            if (
+                parse_queries(store.blob(attempt["output"])["content"], data["width"])
+                != store.blob(node["output"])["actions"]
+            ):
+                raise ValueError("Planner output does not reproduce candidates")
 
     # Reconstruct only observations already published at each forecast snapshot.
     # This calculation does not import the context engine or inspect future tapes.
@@ -165,6 +324,7 @@ def audit(root):
         "state_transitions": captured["state_transitions_reexecuted"],
         "authoritative_prompts": captured["authoritative_prompts_checked"],
         "forecast_observed_contexts_checked": checked,
+        "speculation_planner_contexts_checked": len(planner_contexts),
         "quota_claims": len(claims),
         "quota_windows": dict(windows),
         "required_fifo_valid": True,

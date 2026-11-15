@@ -1,0 +1,1535 @@
+{
+  "live_pilot": true,
+  "runs": 30,
+  "complete": true,
+  "known_cost_usd": 0.7211752180000002,
+  "account_snapshot_delta_usd": 0.6975911679999998,
+  "account_snapshot_unreconciled_usd": 0.02358405000000041,
+  "accounting_note": "Immediate key-usage snapshots can lag provider usage; reconcile the whole campaign after settlement",
+  "aggregates": [
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "allow_all",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 9.577042601631547,
+      "resource_makespan_s": 24.261193437530892,
+      "em": 0.375,
+      "f1": 0.5237833403155984,
+      "prefetches": 41,
+      "cache_hits": 3,
+      "unused_prefetches": 38,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": []
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "blind",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 6.233167309870623,
+      "resource_makespan_s": 14.991260979004437,
+      "em": 0.4375,
+      "f1": 0.5093344155844155,
+      "prefetches": 24,
+      "cache_hits": 4,
+      "unused_prefetches": 20,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": [
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        }
+      ]
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "jev",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 6.951488924500154,
+      "resource_makespan_s": 21.252854791498976,
+      "em": 0.5,
+      "f1": 0.5718344155844156,
+      "prefetches": 2,
+      "cache_hits": 1,
+      "unused_prefetches": 1,
+      "optional_failures": 0,
+      "forecast_requests": 109,
+      "planner_choices": []
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "no_speculation",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.978040781305026,
+      "resource_makespan_s": 15.54053087500506,
+      "em": 0.4375,
+      "f1": 0.5093344155844156,
+      "prefetches": 0,
+      "cache_hits": 0,
+      "unused_prefetches": 0,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": []
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "quota",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 6.573239906425442,
+      "resource_makespan_s": 17.108246645511827,
+      "em": 0.4375,
+      "f1": 0.5164772727272727,
+      "prefetches": 10,
+      "cache_hits": 1,
+      "unused_prefetches": 9,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": [
+        {
+          "remaining_calls": 4,
+          "queries": 0,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 3,
+          "queries": 2,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 3,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 3,
+          "observed_headroom": 4,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 0,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 3,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 3,
+          "queries": 2,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 2,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 2,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 2,
+          "queries": 0,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 1,
+          "queries": 2,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": false
+        }
+      ]
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "allow_all",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 4.363262645500072,
+      "resource_makespan_s": 11.225892895512516,
+      "em": 0.4375,
+      "f1": 0.5093344155844155,
+      "prefetches": 31,
+      "cache_hits": 1,
+      "unused_prefetches": 30,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": []
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "blind",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.2254246719385264,
+      "resource_makespan_s": 15.332797562528867,
+      "em": 0.375,
+      "f1": 0.4468344155844156,
+      "prefetches": 30,
+      "cache_hits": 6,
+      "unused_prefetches": 24,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": [
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        }
+      ]
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "jev",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.408153518194013,
+      "resource_makespan_s": 14.573236646014266,
+      "em": 0.4375,
+      "f1": 0.5093344155844156,
+      "prefetches": 9,
+      "cache_hits": 0,
+      "unused_prefetches": 9,
+      "optional_failures": 0,
+      "forecast_requests": 93,
+      "planner_choices": []
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "no_speculation",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 4.53348230219126,
+      "resource_makespan_s": 12.374343249975936,
+      "em": 0.375,
+      "f1": 0.46577380952380953,
+      "prefetches": 0,
+      "cache_hits": 0,
+      "unused_prefetches": 0,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": []
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "quota",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.000676130242937,
+      "resource_makespan_s": 14.38226577048772,
+      "em": 0.375,
+      "f1": 0.48850108225108224,
+      "prefetches": 27,
+      "cache_hits": 8,
+      "unused_prefetches": 19,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": [
+        {
+          "remaining_calls": 8,
+          "queries": 0,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 3,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 2,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 1,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 6,
+          "queries": 3,
+          "observed_headroom": 3,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 2,
+          "queries": 2,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 0,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 0,
+          "queries": 2,
+          "observed_headroom": 0,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 2,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 2,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 1,
+          "queries": 1,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 3,
+          "observed_headroom": 1,
+          "preserves_instructed_headroom": false
+        },
+        {
+          "remaining_calls": 7,
+          "queries": 1,
+          "observed_headroom": 6,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 12,
+          "queries": 1,
+          "observed_headroom": 12,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 1,
+          "observed_headroom": 5,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 2,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 0,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 9,
+          "queries": 2,
+          "observed_headroom": 6,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 8,
+          "queries": 1,
+          "observed_headroom": 5,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 4,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 4,
+          "queries": 1,
+          "observed_headroom": 4,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 11,
+          "queries": 1,
+          "observed_headroom": 8,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 9,
+          "queries": 1,
+          "observed_headroom": 7,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 5,
+          "queries": 2,
+          "observed_headroom": 5,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 6,
+          "queries": 2,
+          "observed_headroom": 6,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 6,
+          "queries": 2,
+          "observed_headroom": 6,
+          "preserves_instructed_headroom": true
+        }
+      ]
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "policy": "allow_all",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.049751304628444,
+      "resource_makespan_s": 14.449562936992152,
+      "em": 0.375,
+      "f1": 0.49683441558441555,
+      "prefetches": 45,
+      "cache_hits": 3,
+      "unused_prefetches": 42,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": []
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "policy": "blind",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.676449169241096,
+      "resource_makespan_s": 13.955927708477248,
+      "em": 0.375,
+      "f1": 0.48850108225108224,
+      "prefetches": 28,
+      "cache_hits": 5,
+      "unused_prefetches": 23,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": [
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 3,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 1,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 2,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        },
+        {
+          "remaining_calls": null,
+          "queries": 0,
+          "observed_headroom": null,
+          "preserves_instructed_headroom": null
+        }
+      ]
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "policy": "jev",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 5.559764182191429,
+      "resource_makespan_s": 14.911337187484605,
+      "em": 0.4375,
+      "f1": 0.5074404761904762,
+      "prefetches": 7,
+      "cache_hits": 0,
+      "unused_prefetches": 7,
+      "optional_failures": 0,
+      "forecast_requests": 80,
+      "planner_choices": []
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "policy": "no_speculation",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 6.932341249936144,
+      "resource_makespan_s": 16.75604202048271,
+      "em": 0.375,
+      "f1": 0.44494047619047616,
+      "prefetches": 0,
+      "cache_hits": 0,
+      "unused_prefetches": 0,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": []
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "policy": "quota",
+      "tasks": 16,
+      "blocks": 2,
+      "mean_completion_s": 4.879622828135325,
+      "resource_makespan_s": 15.13524818746373,
+      "em": 0.3125,
+      "f1": 0.4343344155844156,
+      "prefetches": 21,
+      "cache_hits": 5,
+      "unused_prefetches": 16,
+      "optional_failures": 0,
+      "forecast_requests": 0,
+      "planner_choices": [
+        {
+          "remaining_calls": 23,
+          "queries": 0,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 22,
+          "queries": 2,
+          "observed_headroom": 22,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 2,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 19,
+          "queries": 1,
+          "observed_headroom": 19,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 3,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 3,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 20,
+          "queries": 1,
+          "observed_headroom": 20,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 0,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 22,
+          "queries": 1,
+          "observed_headroom": 22,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 1,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 1,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 0,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 3,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 3,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 2,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 0,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 21,
+          "queries": 2,
+          "observed_headroom": 21,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 1,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 0,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 1,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 1,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 22,
+          "queries": 1,
+          "observed_headroom": 22,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 22,
+          "queries": 2,
+          "observed_headroom": 22,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 0,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 23,
+          "queries": 2,
+          "observed_headroom": 23,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 3,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        },
+        {
+          "remaining_calls": 24,
+          "queries": 1,
+          "observed_headroom": 24,
+          "preserves_instructed_headroom": true
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "baseline": "no_speculation",
+      "pairs": 16,
+      "identical_action_paths": 4,
+      "quota_mean_saving_s": -0.5951991251204163,
+      "quota_mean_saving_percent": -9.956424636341847,
+      "descriptive_question_bootstrap_95_s": [
+        -2.2172784011854674,
+        1.115469190001022
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "baseline": "allow_all",
+      "pairs": 16,
+      "identical_action_paths": 2,
+      "quota_mean_saving_s": 3.0038026952061045,
+      "quota_mean_saving_percent": 31.36461661655735,
+      "descriptive_question_bootstrap_95_s": [
+        1.1304163983368198,
+        4.728904103893001
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "baseline": "jev",
+      "pairs": 16,
+      "identical_action_paths": 6,
+      "quota_mean_saving_s": 0.3782490180747118,
+      "quota_mean_saving_percent": 5.441266211927537,
+      "descriptive_question_bootstrap_95_s": [
+        -1.4759419790461834,
+        2.6606993096320366
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "baseline": "blind",
+      "pairs": 16,
+      "identical_action_paths": 3,
+      "quota_mean_saving_s": -0.34007259655481903,
+      "quota_mean_saving_percent": -5.455855420666987,
+      "descriptive_question_bootstrap_95_s": [
+        -1.3457260211180255,
+        0.6603526690087165
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "no_speculation",
+      "pairs": 16,
+      "identical_action_paths": 6,
+      "quota_mean_saving_s": -0.467193828051677,
+      "quota_mean_saving_percent": -10.305407563317468,
+      "descriptive_question_bootstrap_95_s": [
+        -1.0845748046158405,
+        0.11096226056542946
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "allow_all",
+      "pairs": 16,
+      "identical_action_paths": 4,
+      "quota_mean_saving_s": -0.637413484742865,
+      "quota_mean_saving_percent": -14.608643497549785,
+      "descriptive_question_bootstrap_95_s": [
+        -2.0005752579927503,
+        0.6134992000661441
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "jev",
+      "pairs": 16,
+      "identical_action_paths": 5,
+      "quota_mean_saving_s": 0.4074773879510758,
+      "quota_mean_saving_percent": 7.534501130196244,
+      "descriptive_question_bootstrap_95_s": [
+        -0.9785366717951547,
+        1.6224138827637944
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "blind",
+      "pairs": 16,
+      "identical_action_paths": 8,
+      "quota_mean_saving_s": 0.22474854169558967,
+      "quota_mean_saving_percent": 4.301057919799895,
+      "descriptive_question_bootstrap_95_s": [
+        -0.6515895182456006,
+        1.1719448308867868
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "baseline": "no_speculation",
+      "pairs": 16,
+      "identical_action_paths": 6,
+      "quota_mean_saving_s": 2.0527184218008188,
+      "quota_mean_saving_percent": 29.610752670603556,
+      "descriptive_question_bootstrap_95_s": [
+        0.1858530441095354,
+        4.254782122367033
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "baseline": "allow_all",
+      "pairs": 16,
+      "identical_action_paths": 8,
+      "quota_mean_saving_s": 0.1701284764931188,
+      "quota_mean_saving_percent": 3.369046636755841,
+      "descriptive_question_bootstrap_95_s": [
+        -0.7968363568215864,
+        1.2105895909953688
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "baseline": "jev",
+      "pairs": 16,
+      "identical_action_paths": 7,
+      "quota_mean_saving_s": 0.6801413540561043,
+      "quota_mean_saving_percent": 12.233277019818145,
+      "descriptive_question_bootstrap_95_s": [
+        -0.52371539863816,
+        2.009792348871997
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "baseline": "blind",
+      "pairs": 16,
+      "identical_action_paths": 7,
+      "quota_mean_saving_s": 0.7968263411057706,
+      "quota_mean_saving_percent": 14.03740819918768,
+      "descriptive_question_bootstrap_95_s": [
+        -0.44422261713043554,
+        2.187937304726802
+      ],
+      "caveat": "Shared workers and provider variability make questions dependent; only two independent blocks per setting"
+    }
+  ],
+  "limitations": "Exploratory autonomous live paths; this does not replace the locked matched-replay result"
+}

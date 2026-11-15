@@ -1,0 +1,446 @@
+{
+  "requests": 3713,
+  "known_cost_usd": 1.256674044,
+  "unknown_cost_attempts": 15,
+  "unknown_upper_bound_usd": 0.10286429999999999,
+  "source_files_verified": 2891,
+  "sources": [
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/00-12-3-b0-quota/inference.jsonl",
+      "requests": 76,
+      "known_cost_usd": 0.02858004,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/01-12-3-b0-jev/inference.jsonl",
+      "requests": 73,
+      "known_cost_usd": 0.0304532,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/02-12-3-b0-no_speculation/inference.jsonl",
+      "requests": 35,
+      "known_cost_usd": 0.01869391,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/03-12-3-b0-blind/inference.jsonl",
+      "requests": 74,
+      "known_cost_usd": 0.0282478,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/04-12-3-b0-allow_all/inference.jsonl",
+      "requests": 83,
+      "known_cost_usd": 0.03199067,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/05-12-3-b1-jev/inference.jsonl",
+      "requests": 84,
+      "known_cost_usd": 0.03432705,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/06-12-3-b1-allow_all/inference.jsonl",
+      "requests": 78,
+      "known_cost_usd": 0.02940334,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/07-12-3-b1-quota/inference.jsonl",
+      "requests": 77,
+      "known_cost_usd": 0.02955614,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/08-12-3-b1-blind/inference.jsonl",
+      "requests": 78,
+      "known_cost_usd": 0.02658812,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/01-12-3-b0-jev/forecasts.jsonl",
+      "requests": 52,
+      "known_cost_usd": 0.001431654,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-clean-pilot/05-12-3-b1-jev/forecasts.jsonl",
+      "requests": 84,
+      "known_cost_usd": 0.002301978,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-context-probe/inference.jsonl",
+      "requests": 3,
+      "known_cost_usd": 0.00105648,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-context-probe-complete/inference.jsonl",
+      "requests": 32,
+      "known_cost_usd": 0.00940293,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/00-12-3-b0-quota/inference.jsonl",
+      "requests": 72,
+      "known_cost_usd": 0.02756722,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/01-12-3-b0-jev/inference.jsonl",
+      "requests": 90,
+      "known_cost_usd": 0.03807652,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/02-12-3-b0-no_speculation/inference.jsonl",
+      "requests": 36,
+      "known_cost_usd": 0.01912321,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/03-12-3-b0-blind/inference.jsonl",
+      "requests": 87,
+      "known_cost_usd": 0.03024915,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/04-12-3-b0-allow_all/inference.jsonl",
+      "requests": 79,
+      "known_cost_usd": 0.03328626,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/05-12-3-b1-jev/inference.jsonl",
+      "requests": 80,
+      "known_cost_usd": 0.03160714,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/06-12-3-b1-allow_all/inference.jsonl",
+      "requests": 80,
+      "known_cost_usd": 0.03279054,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/07-12-3-b1-quota/inference.jsonl",
+      "requests": 60,
+      "known_cost_usd": 0.02098712,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/01-12-3-b0-jev/forecasts.jsonl",
+      "requests": 88,
+      "known_cost_usd": 0.00237825,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-live-pilot/05-12-3-b1-jev/forecasts.jsonl",
+      "requests": 80,
+      "known_cost_usd": 0.002100714,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-context-probe/inference.jsonl",
+      "requests": 32,
+      "known_cost_usd": 0.01051427,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/00-12-3-b0-quota/inference.jsonl",
+      "requests": 63,
+      "known_cost_usd": 0.02517447,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/01-12-3-b0-jev/inference.jsonl",
+      "requests": 82,
+      "known_cost_usd": 0.03168302,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/02-12-3-b0-no_speculation/inference.jsonl",
+      "requests": 34,
+      "known_cost_usd": 0.01783165,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/03-12-3-b0-blind/inference.jsonl",
+      "requests": 76,
+      "known_cost_usd": 0.02929817,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/04-12-3-b0-allow_all/inference.jsonl",
+      "requests": 71,
+      "known_cost_usd": 0.02767528,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/05-12-3-b1-jev/inference.jsonl",
+      "requests": 55,
+      "known_cost_usd": 0.02143589,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/06-12-3-b1-allow_all/inference.jsonl",
+      "requests": 59,
+      "known_cost_usd": 0.02324069,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/07-12-3-b1-quota/inference.jsonl",
+      "requests": 55,
+      "known_cost_usd": 0.02429488,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/08-12-3-b1-blind/inference.jsonl",
+      "requests": 52,
+      "known_cost_usd": 0.02167844,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/09-12-3-b1-no_speculation/inference.jsonl",
+      "requests": 28,
+      "known_cost_usd": 0.0164955,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/10-8-5-b0-no_speculation/inference.jsonl",
+      "requests": 35,
+      "known_cost_usd": 0.01680095,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/11-8-5-b0-quota/inference.jsonl",
+      "requests": 78,
+      "known_cost_usd": 0.02826218,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/12-8-5-b0-blind/inference.jsonl",
+      "requests": 62,
+      "known_cost_usd": 0.02193857,
+      "unknown_cost_attempts": 1,
+      "unknown_upper_bound_usd": 0.006522399999999999
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/13-8-5-b0-allow_all/inference.jsonl",
+      "requests": 74,
+      "known_cost_usd": 0.03025129,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/14-8-5-b0-jev/inference.jsonl",
+      "requests": 72,
+      "known_cost_usd": 0.02684617,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/15-8-5-b1-blind/inference.jsonl",
+      "requests": 51,
+      "known_cost_usd": 0.01976461,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/16-8-5-b1-no_speculation/inference.jsonl",
+      "requests": 27,
+      "known_cost_usd": 0.01377424,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/17-8-5-b1-quota/inference.jsonl",
+      "requests": 63,
+      "known_cost_usd": 0.02349468,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/18-8-5-b1-allow_all/inference.jsonl",
+      "requests": 68,
+      "known_cost_usd": 0.02686088,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/19-8-5-b1-jev/inference.jsonl",
+      "requests": 60,
+      "known_cost_usd": 0.02631135,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/20-24-1-b0-quota/inference.jsonl",
+      "requests": 65,
+      "known_cost_usd": 0.0249785,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/21-24-1-b0-allow_all/inference.jsonl",
+      "requests": 76,
+      "known_cost_usd": 0.02877271,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/22-24-1-b0-no_speculation/inference.jsonl",
+      "requests": 40,
+      "known_cost_usd": 0.01999958,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/23-24-1-b0-jev/inference.jsonl",
+      "requests": 64,
+      "known_cost_usd": 0.02419796,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/24-24-1-b0-blind/inference.jsonl",
+      "requests": 75,
+      "known_cost_usd": 0.0277075,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/25-24-1-b1-quota/inference.jsonl",
+      "requests": 58,
+      "known_cost_usd": 0.02233351,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/26-24-1-b1-allow_all/inference.jsonl",
+      "requests": 67,
+      "known_cost_usd": 0.02567587,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/27-24-1-b1-no_speculation/inference.jsonl",
+      "requests": 28,
+      "known_cost_usd": 0.01698708,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/28-24-1-b1-jev/inference.jsonl",
+      "requests": 63,
+      "known_cost_usd": 0.02574378,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/29-24-1-b1-blind/inference.jsonl",
+      "requests": 61,
+      "known_cost_usd": 0.024248660000000002,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/01-12-3-b0-jev/forecasts.jsonl",
+      "requests": 62,
+      "known_cost_usd": 0.001659168,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/05-12-3-b1-jev/forecasts.jsonl",
+      "requests": 31,
+      "known_cost_usd": 0.000794346,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/14-8-5-b0-jev/forecasts.jsonl",
+      "requests": 67,
+      "known_cost_usd": 0.00175896,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/19-8-5-b1-jev/forecasts.jsonl",
+      "requests": 42,
+      "known_cost_usd": 0.001091286,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/23-24-1-b0-jev/forecasts.jsonl",
+      "requests": 47,
+      "known_cost_usd": 0.001252104,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-reserve-pilot/28-24-1-b1-jev/forecasts.jsonl",
+      "requests": 33,
+      "known_cost_usd": 0.000861294,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-schema-pilot/00-12-3-b0-quota/inference.jsonl",
+      "requests": 54,
+      "known_cost_usd": 0.01455672,
+      "unknown_cost_attempts": 14,
+      "unknown_upper_bound_usd": 0.0963419
+    },
+    {
+      "file": "results/quota-prompt-2026-11-15-schema-preflight/inference.jsonl",
+      "requests": 2,
+      "known_cost_usd": 0.0002284,
+      "unknown_cost_attempts": 0,
+      "unknown_upper_bound_usd": 0
+    }
+  ],
+  "account_delta_usd": 1.2566740440000004,
+  "account_minus_known_usd": 4.440892098500626e-16,
+  "reconciled_to_known_costs": true
+}

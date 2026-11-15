@@ -1,0 +1,1 @@
+Compact aggregate evidence for the experimental direct quota-aware speculation mode. Raw API responses and captures remain in ignored local results directories. The live pilot uses 16 unique questions, repeated across policies and quota regimes; it is not 240 independent questions. The headroom controller replay is a separate control with saved quota-unaware candidates.

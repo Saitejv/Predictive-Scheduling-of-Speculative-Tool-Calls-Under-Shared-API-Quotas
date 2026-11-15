@@ -1,5 +1,13 @@
 # Current implementation status
 
+**Quota-aware speculation experiment:** the optional speculative branch can now
+receive remaining calls, capacity, refill timing and competing required work
+without sending that context to the main agent or calling Jev. The final pilot
+contains 240 clean episodes on 16 unique questions across three quota regimes. It reduces unused calls,
+but does not establish a win over both baselines; Jev remains the default.
+281 tests pass; additional known API charges are $1.256674044, reconciled to the
+settled account delta. See [the experiment, controls and results](QUOTA_PROMPT_2026-11-15.md).
+
 **November 15: confirmed matched-replay wins over both baselines.** On 80 new
 held-out questions, the locked 4-worker / 12-Search / 3-second setting reduces
 mean completion by **1.57% vs no speculation** and **10.11% vs allow-all**;

@@ -101,6 +101,8 @@ async def run(args):
         raise ValueError("Invalid reserve or forecast request limit")
     if args.optional_slots is not None and args.optional_slots < 1:
         raise ValueError("Use at least one optional inference slot")
+    if args.speculation_planner != "legacy" and args.policy != "current_capacity":
+        raise ValueError("Direct planners replace Jev: use --policy current_capacity")
     if not 1 <= args.forecast_workers <= 64:
         raise ValueError("Use 1..64 forecast workers")
     if not math.isfinite(args.wiki_min_interval_s) or args.wiki_min_interval_s < 0:
@@ -318,6 +320,7 @@ async def run(args):
                 speculative_width=args.width,
                 model_retries=args.model_retries,
                 max_generation_step=args.generation_step_budget,
+                speculation_planner=args.speculation_planner,
             )
             mode = "sequential" if args.policy == "no_speculation" else "speculative"
             row = await runtime.episode(
@@ -455,6 +458,12 @@ def parser():
     p.add_argument("--forecast-workers", type=int, default=4)
     p.add_argument("--pooled-jev", action="store_true")
     p.add_argument("--generation-step-budget", type=int, default=None)
+    p.add_argument(
+        "--speculation-planner",
+        choices=("legacy", "blind", "quota"),
+        default="legacy",
+        help="Direct optional Search planner; quota state is never sent to the main actor",
+    )
     p.add_argument(
         "--optional-slots",
         type=int,

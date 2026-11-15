@@ -1,0 +1,182 @@
+[
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/00-12-3-b0-quota",
+    "episodes": 8,
+    "planner_contexts": 15,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/01-12-3-b0-jev",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/02-12-3-b0-no_speculation",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/03-12-3-b0-blind",
+    "episodes": 8,
+    "planner_contexts": 19,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/04-12-3-b0-allow_all",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/05-12-3-b1-jev",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/06-12-3-b1-allow_all",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/07-12-3-b1-quota",
+    "episodes": 8,
+    "planner_contexts": 12,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/08-12-3-b1-blind",
+    "episodes": 8,
+    "planner_contexts": 12,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/09-12-3-b1-no_speculation",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/10-8-5-b0-no_speculation",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/11-8-5-b0-quota",
+    "episodes": 8,
+    "planner_contexts": 21,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/12-8-5-b0-blind",
+    "episodes": 8,
+    "planner_contexts": 17,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/13-8-5-b0-allow_all",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/14-8-5-b0-jev",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/15-8-5-b1-blind",
+    "episodes": 8,
+    "planner_contexts": 12,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/16-8-5-b1-no_speculation",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/17-8-5-b1-quota",
+    "episodes": 8,
+    "planner_contexts": 16,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/18-8-5-b1-allow_all",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/19-8-5-b1-jev",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/20-24-1-b0-quota",
+    "episodes": 8,
+    "planner_contexts": 16,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/21-24-1-b0-allow_all",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/22-24-1-b0-no_speculation",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/23-24-1-b0-jev",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/24-24-1-b0-blind",
+    "episodes": 8,
+    "planner_contexts": 18,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/25-24-1-b1-quota",
+    "episodes": 8,
+    "planner_contexts": 14,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/26-24-1-b1-allow_all",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/27-24-1-b1-no_speculation",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/28-24-1-b1-jev",
+    "episodes": 8,
+    "planner_contexts": 0,
+    "pass": true
+  },
+  {
+    "directory": "results/quota-prompt-2026-11-15-reserve-pilot/29-24-1-b1-blind",
+    "episodes": 8,
+    "planner_contexts": 14,
+    "pass": true
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "exploratory": true,
+  "limitation": "Controller ablation, not quota-aware language-generation evidence",
+  "settings": [
+    {
+      "capacity": 12,
+      "window_s": 3,
+      "orders": 10,
+      "tasks": 80,
+      "method": "observed_headroom_rule_with_saved_quota_unaware_candidates",
+      "means": {
+        "none": {
+          "mean_completion_s": 6.163623154156085,
+          "resource_makespan_s": 126.70459030341007
+        },
+        "all": {
+          "mean_completion_s": 6.749070243144452,
+          "resource_makespan_s": 138.87022228302084
+        },
+        "headroom": {
+          "mean_completion_s": 6.100706575713921,
+          "resource_makespan_s": 125.63091041489388
+        }
+      }
+    },
+    {
+      "capacity": 8,
+      "window_s": 5,
+      "orders": 10,
+      "tasks": 80,
+      "method": "observed_headroom_rule_with_saved_quota_unaware_candidates",
+      "means": {
+        "none": {
+          "mean_completion_s": 8.610448718972838,
+          "resource_makespan_s": 176.44235111708986
+        },
+        "all": {
+          "mean_completion_s": 15.399602513490754,
+          "resource_makespan_s": 314.5130339707597
+        },
+        "headroom": {
+          "mean_completion_s": 9.699485119748642,
+          "resource_makespan_s": 198.58606266674468
+        }
+      }
+    },
+    {
+      "capacity": 24,
+      "window_s": 1,
+      "orders": 10,
+      "tasks": 80,
+      "method": "observed_headroom_rule_with_saved_quota_unaware_candidates",
+      "means": {
+        "none": {
+          "mean_completion_s": 6.163623154156085,
+          "resource_makespan_s": 126.70459030341007
+        },
+        "all": {
+          "mean_completion_s": 5.97003476509708,
+          "resource_makespan_s": 123.12533545366605
+        },
+        "headroom": {
+          "mean_completion_s": 5.970492518747051,
+          "resource_makespan_s": 122.99082816003356
+        }
+      }
+    }
+  ],
+  "new_api_requests": 0,
+  "generation_accounting": "Saved observation/hypothetical model service and started background work remain charged"
+}

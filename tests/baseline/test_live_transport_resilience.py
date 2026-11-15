@@ -17,6 +17,44 @@ from quota_spec.transport import LiveChat, OptionalExpired
 
 
 class ResilienceTests(unittest.IsolatedAsyncioTestCase):
+    async def test_schema_is_sent_only_for_direct_speculative_planner(self):
+        from quota_spec.quota_speculation import MARKER, response_format
+
+        payloads = []
+
+        async def handler(request):
+            payloads.append(json.loads(request.content))
+            return httpx.Response(
+                200,
+                json={
+                    "choices": [{"message": {"content": '{"queries":[]}'}}],
+                    "usage": {"cost": 0.00001},
+                },
+            )
+
+        with tempfile.TemporaryDirectory() as temp:
+            async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+                chat = LiveChat(
+                    client,
+                    "fixture-key",
+                    {"fixture": {"prompt": "0", "completion": "0"}},
+                    Path(temp),
+                    Events(),
+                    0.01,
+                    4,
+                    "fixture",
+                    "fixture",
+                )
+                for role in ["actor", "observation_speculator", "speculative_actor"]:
+                    await chat.call(MARKER, role, "episode", 1)
+        self.assertNotIn("response_format", payloads[0])
+        self.assertNotIn("response_format", payloads[1])
+        self.assertEqual(payloads[2]["response_format"], response_format())
+        self.assertEqual(payloads[2]["provider"], {"require_parameters": True})
+        self.assertNotIn("frequency_penalty", payloads[2])
+        self.assertNotIn("presence_penalty", payloads[2])
+        self.assertIn("frequency_penalty", payloads[0])
+
     async def test_provider_502_retries_with_separate_nodes_and_conservative_budget(self):
         attempts = []
 

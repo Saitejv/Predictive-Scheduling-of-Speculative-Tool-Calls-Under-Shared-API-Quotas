@@ -1,0 +1,89 @@
+{
+  "success": true,
+  "primary_comparisons": [
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "no_speculation",
+      "endpoint": "mean_completion_s",
+      "mean_saving_s": 0.09669336900733469,
+      "saving_percent": 1.5687748356603386,
+      "order_seed_interval_s": [
+        0.08379818025350678,
+        0.11029726859371296
+      ],
+      "positive_orders": 10,
+      "orders": 10
+    },
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "no_speculation",
+      "endpoint": "resource_makespan_s",
+      "mean_saving_s": 1.8480448470567352,
+      "saving_percent": 1.458546089475811,
+      "order_seed_interval_s": [
+        1.5225325428822543,
+        2.16530258814455
+      ],
+      "positive_orders": 10,
+      "orders": 10
+    },
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "allow_all",
+      "endpoint": "mean_completion_s",
+      "mean_saving_s": 0.6821404579957016,
+      "saving_percent": 10.107176743175906,
+      "order_seed_interval_s": [
+        0.6285859399671607,
+        0.735520760157451
+      ],
+      "positive_orders": 10,
+      "orders": 10
+    },
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "baseline": "allow_all",
+      "endpoint": "resource_makespan_s",
+      "mean_saving_s": 14.013676826667506,
+      "saving_percent": 10.091203568542792,
+      "order_seed_interval_s": [
+        12.938204264873638,
+        15.087492715823464
+      ],
+      "positive_orders": 10,
+      "orders": 10
+    }
+  ],
+  "task_bootstrap_intervals_s": {
+    "no_speculation:mean_completion_s": [
+      0.03132724742099491,
+      0.1604685698475805
+    ],
+    "no_speculation:resource_makespan_s": [
+      0.36337257362902164,
+      3.646802546165418
+    ],
+    "allow_all:mean_completion_s": [
+      0.33158118075807597,
+      1.0917140010365989
+    ],
+    "allow_all:resource_makespan_s": [
+      5.988309956388548,
+      23.222734831040725
+    ]
+  },
+  "native_timing": true,
+  "answers_preserved": true,
+  "network_blocked": true,
+  "forecast_fallbacks": 0,
+  "replay_runs": 540,
+  "limitations": "Order-seed intervals measure scheduling-order variation. Task bootstrap conditions on the trained predictor and measured service-time sample; neither estimates live-provider variability."
+}

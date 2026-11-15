@@ -90,6 +90,16 @@ class LiveChat:
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
         }
+        if role == "speculative_actor":
+            from .quota_speculation import MARKER, response_format
+
+            if MARKER in prompt:
+                # Gemini does not support these legacy zero-valued penalties.
+                # require_parameters would reject an otherwise valid schema request.
+                payload.pop("frequency_penalty")
+                payload.pop("presence_penalty")
+                payload["response_format"] = response_format()
+                payload["provider"] = {"require_parameters": True}
         price = self.prices[model]
         reserve = (len(json.dumps(payload).encode()) + 4096) * float(price["prompt"]) + payload[
             "max_tokens"

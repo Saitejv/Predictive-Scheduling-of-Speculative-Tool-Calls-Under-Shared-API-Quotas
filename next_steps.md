@@ -6,6 +6,21 @@ single-agent-only priority and earlier $0.50 testing-turn limits. Keep individua
 experiments explicitly bounded, retain all attempts and preserve existing paid
 evidence. Do not commit or publish without a request.
 
+## Direct quota-aware speculation experiment
+
+The previous checkpoint was pushed as `2deb6f5` before this experiment.
+Read [the quota-prompt report](docs/QUOTA_PROMPT_2026-11-15.md). Opt in with
+`--policy current_capacity --speculation-planner quota`; use `blind` for the
+same planner without quota context. Actual main-agent prompts remain unchanged.
+The final 240-episode / 16-unique-question live pilot completed cleanly across
+three regimes, but does not establish a dual-baseline win. Keep Jev as default.
+281 tests pass. All attempts cost $1.256674044 in known charges, reconciled;
+15 unknown-cost attempts retain a $0.1028643 conservative reservation.
+Next unused seeded offset: 306. Raw results, failures and source snapshots remain
+under `results/quota-prompt-2026-11-15-*`. A future live confirmation should align
+the quota epoch at batch dispatch and control actor randomness; alternatively,
+collect exact dynamic quota-planner contexts for a matched-path replay.
+
 ## Latest confirmed result
 
 Read [the quota wins report](docs/QUOTA_WINS_2026-11-15.md) first. The locked

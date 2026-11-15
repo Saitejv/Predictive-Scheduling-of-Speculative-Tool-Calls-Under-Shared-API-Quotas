@@ -181,6 +181,28 @@ class ContextCoordinator:
     def now(self):
         return self.events.clock() - self.events.start
 
+    def speculation_context(self, episode):
+        """Public scheduler state only; no demand forecasts or future trajectories."""
+        now = self.now()
+        remaining = self.quota.remaining(now)
+        return {
+            "api": "Wikipedia Search",
+            "quota_type": "fixed_window_no_refund",
+            "capacity": self.quota.capacity,
+            "remaining_calls": remaining,
+            "refill_period_s": self.quota.window_s,
+            "seconds_to_refill": max(0.0, self.quota.next_refill(now) - now),
+            "window_index": self.quota.window_index,
+            "observed_at_s": now,
+            "active_workers": len(self.agents),
+            "other_active_workers": sum(a != episode for a in self.agents),
+            "queued_required_calls": len(self.queue),
+            "running_required_workers": sum(a.phase == "running" for a in self.agents.values()),
+            "required_calls_in_current_window": sum(
+                t >= self.quota.window_index * self.quota.window_s for t in self.recent_required
+            ),
+        }
+
     def update(self, episode, **fields):
         if episode in self.agents:
             self.agents[episode] = replace(self.agents[episode], observed_at_s=self.now(), **fields)

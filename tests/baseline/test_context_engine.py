@@ -59,6 +59,13 @@ class ContextTests(unittest.IsolatedAsyncioTestCase):
         state = c.observation("a", "candidate")
         self.assertEqual(state.snapshot.agents[0].result_excerpt, "")
         self.assertEqual(len(state.snapshot.agents[0].history), 1)
+        context = c.speculation_context("a")
+        self.assertEqual(context["remaining_calls"], 12)
+        self.assertEqual(context["active_workers"], 1)
+        self.assertEqual(context["other_active_workers"], 0)
+        self.assertTrue(c.claim_candidate("a", "new query"))
+        self.assertEqual(c.speculation_context("a")["remaining_calls"], 11)
+        self.assertLessEqual(context["seconds_to_refill"], context["refill_period_s"])
         events.emit(
             "tool_observed",
             episode="a",
@@ -244,6 +251,54 @@ class ContextTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result["forecasts"]["failures"], 0)
             self.assertIsNone(result["em"])
             self.assertGreater(result["forecasts"]["requests"], 0)
+
+    async def test_quota_planner_live_audit_rejects_invented_remaining_capacity(self):
+        from quota_spec.live_context_audit import audit as context_audit
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "run"
+            args = parser().parse_args(
+                [
+                    "--backend",
+                    "mock",
+                    "--agents",
+                    "2",
+                    "--count",
+                    "2",
+                    "--policy",
+                    "current_capacity",
+                    "--speculation-planner",
+                    "quota",
+                    "--capacity",
+                    "8",
+                    "--window-s",
+                    "3",
+                    "--output",
+                    str(root),
+                ]
+            )
+            with patch.object(socket.socket, "connect", side_effect=AssertionError("Network")):
+                result = await run(args)
+                checked = context_audit(root)
+            self.assertEqual(result["forecasts"]["requests"], 0)
+            self.assertEqual(result["optional_failures"], 0)
+            self.assertGreater(checked["speculation_planner_contexts_checked"], 0)
+            with patch(
+                "quota_spec.quota_speculation.planner_prompt",
+                side_effect=AssertionError("Current prompt must not audit old evidence"),
+            ):
+                context_audit(root)
+            events = [json.loads(s) for s in (root / "events.jsonl").read_text().splitlines()]
+            changed = next(e for e in events if e["event"] == "speculation_planner_context")
+            changed["quota"]["remaining_calls"] += 1
+            (root / "events.jsonl").write_text("".join(json.dumps(e) + "\n" for e in events))
+            with self.assertRaisesRegex(ValueError, "Planner quota context"):
+                context_audit(root)
+
+            snapshot = root / "source-snapshot" / "quota_speculation.py"
+            snapshot.write_text(snapshot.read_text() + "\n# tampered\n")
+            with self.assertRaisesRegex(ValueError, "source hash mismatch"):
+                context_audit(root)
 
 
 if __name__ == "__main__":

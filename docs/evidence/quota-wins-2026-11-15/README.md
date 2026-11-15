@@ -1,0 +1,1 @@
+Compact public evidence for the locked 80-question replication. Full schedules, API responses, captures and executed source snapshots remain under local `results/quota-win-2026-11-15-*`, which Git intentionally ignores. Surface means average all three paired orders; the primary confirmation uses ten orders. Negative cells are retained.

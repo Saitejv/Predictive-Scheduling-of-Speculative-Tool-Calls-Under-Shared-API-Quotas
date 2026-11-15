@@ -12,6 +12,14 @@ measured replay evidence; the final live smoke verifies operation, not live A/B
 speed. **275 tests pass; $1.439993844 additional API spend is reconciled.**
 See [the full result, controls, quota maps and reproduction](docs/QUOTA_WINS_2026-11-15.md).
 
+**Quota-aware speculation experiment:** the optional speculative branch can now
+receive remaining calls, capacity, refill timing and competing required work
+without sending that context to the main agent or calling Jev. The final pilot
+contains 240 clean episodes on 16 unique questions across three quota regimes. It reduces unused calls,
+but does not establish a win over both baselines; Jev remains the default.
+281 tests pass; additional known API charges are $1.256674044, reconciled to the
+settled account delta. See [the experiment, controls and results](docs/QUOTA_PROMPT_2026-11-15.md).
+
 **Live multi-agent integration is implemented and tested.**
 [`multi_agent.py`](src/quota_spec/multi_agent.py) runs the pinned ReAct agent with
 shared Search quota and an asynchronous Jev context engine. It supports observed

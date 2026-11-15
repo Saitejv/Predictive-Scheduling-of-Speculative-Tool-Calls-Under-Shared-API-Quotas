@@ -107,6 +107,11 @@ class MockChat:
         await asyncio.sleep(0.002 if role == "observation_speculator" else 0.004)
         if role == "observation_speculator":
             return "Mock entity has a keyword. It is a mock page."
+        if role == "speculative_actor":
+            from .quota_speculation import MARKER
+
+            if MARKER in prompt:
+                return json.dumps({"queries": ["Mock second"] if step == 2 else []})
         action = {1: "Search[Mock first]", 2: "Search[Mock second]", 3: "Lookup[keyword]"}.get(
             step, "Finish[mock answer]"
         )
@@ -167,6 +172,7 @@ class Runtime:
         speculative_width=3,
         model_retries=0,
         max_generation_step=None,
+        speculation_planner="legacy",
     ):
         self.module, self.chat, self.search, self.events = module, chat, search, events
         self.base_prompt, self.max_steps = base_prompt, max_steps
@@ -188,6 +194,11 @@ class Runtime:
         ):
             raise ValueError("Generation step budget must be a nonnegative integer")
         self.max_generation_step = max_generation_step
+        if speculation_planner not in ("legacy", "blind", "quota"):
+            raise ValueError("Unknown speculation planner")
+        if speculation_planner == "quota" and coordinator is None:
+            raise ValueError("Quota planner requires the shared coordinator")
+        self.speculation_planner = speculation_planner
 
     async def model(self, prompt, role, episode, step, dependencies=()):
         import httpx
@@ -240,6 +251,49 @@ class Runtime:
         return None
 
     async def generate(self, prefix, step, width, role, episode, dependencies=()):
+        if role == "speculative_actor" and self.speculation_planner != "legacy":
+            from .quota_speculation import parse_queries, planner_prompt
+
+            quota = (
+                self.coordinator.speculation_context(episode)
+                if self.speculation_planner == "quota"
+                else None
+            )
+            prompt = planner_prompt(prefix, step, width, quota)
+            self.events.emit(
+                "speculation_planner_context",
+                episode=episode,
+                step=step,
+                planner=self.speculation_planner,
+                quota=quota,
+            )
+            content, node = await self.model(prompt, role, episode, step, dependencies)
+            actions = parse_queries(content, width)
+            self.events.emit(
+                "speculation_planner_output",
+                episode=episode,
+                step=step,
+                proposed=len(json.loads(content)["queries"]),
+                retained=len(actions),
+                skipped=not actions,
+            )
+            self.generations[(episode, role, step)] = self.record(
+                "generation",
+                episode,
+                step,
+                [node],
+                {
+                    "prefix": prefix,
+                    "width": width,
+                    "role": role,
+                    "attempts": [node] if node else [],
+                    "planner": self.speculation_planner,
+                    "quota_context": quota,
+                },
+                {"thought": "", "actions": actions, "all_parsed_actions": actions},
+                branch=role,
+            )
+            return "", actions
         prompt = prefix + self.module.PromptTemplates.ACTION_GUESS_PROMPT.format(
             i=step, num_guesses=width
         )

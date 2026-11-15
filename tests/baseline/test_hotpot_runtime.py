@@ -113,6 +113,49 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(summary["live_execution"])
         self.assertEqual(summary["paired"]["identical_action_pairs"], 1)
 
+    async def test_quota_context_only_reaches_speculative_actor_and_allows_skip(self):
+        from quota_spec.context_engine import ContextCoordinator
+        from quota_spec.quota_speculation import MARKER
+
+        prompts = []
+
+        class SkippingPlanner(MockChat):
+            async def call(self, prompt, role, episode, step):
+                prompts.append((role, prompt))
+                if role == "speculative_actor":
+                    return '{"queries":[]}'
+                return await super().call(prompt, role, episode, step)
+
+        legacy = MockChat()
+        expected = []
+
+        class RecordingActor(MockChat):
+            async def call(self, prompt, role, episode, step):
+                if role == "actor":
+                    expected.append(prompt)
+                return await legacy.call(prompt, role, episode, step)
+
+        await self.episode(chat=RecordingActor(), mode="sequential")
+        coordinator = ContextCoordinator(self.events, policy="current_capacity")
+        runtime = Runtime(
+            self.module,
+            SkippingPlanner(),
+            MockSearch(self.events),
+            self.events,
+            "Examples\n",
+            coordinator=coordinator,
+            speculation_planner="quota",
+        )
+        result = await runtime.episode(1, "Fixture?", "mock answer", "speculative", "mock")
+        self.assertIsNone(result["failure"])
+        self.assertEqual(result["optional_failures"], 0)
+        self.assertEqual(result["prefetches"], 0)
+        self.assertEqual([p for role, p in prompts if role == "actor"], expected)
+        drafts = [p for role, p in prompts if role == "speculative_actor"]
+        self.assertTrue(drafts)
+        self.assertTrue(all(MARKER in p and '"remaining_calls"' in p for p in drafts))
+        self.assertTrue(all(MARKER not in p for role, p in prompts if role != "speculative_actor"))
+
     async def test_late_observation_never_blocks_answer_and_launches_nothing(self):
         class SlowObservation(MockChat):
             async def call(self, prompt, role, episode, step):
