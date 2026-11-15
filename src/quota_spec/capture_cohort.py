@@ -8,7 +8,7 @@ from pathlib import Path
 
 from .artifacts import write_json
 from .capture import CaptureStore
-from .capture_bank import generation_span
+from .capture_bank import generation_span, model_span
 from .frozen_replay import load_dataset
 
 
@@ -108,24 +108,39 @@ def select_pairs(source, output):
     return keep
 
 
-def merge_datasets(parts, output):
+def merge_datasets(parts, output, *, task_ids=None):
     output = Path(output)
     if output.exists():
         raise ValueError("Choose a fresh merged dataset directory")
 
-    def flatten(paths):
+    def flatten(paths, permitted=None):
         result = []
         for path in paths:
             path = Path(path)
             value = load_dataset(path)
+            selected = {t["task_id"] for t in value["tapes"]}
+            if permitted is not None:
+                selected &= permitted
+            if not selected:
+                continue
             if "parts" in value:
-                result += flatten([path / "parts" / p["shard"] for p in value["parts"]])
+                result += flatten([path / "parts" / p["shard"] for p in value["parts"]], selected)
             else:
-                result.append(path)
+                result.append((path, selected))
         return result
 
-    parts = flatten(parts)
-    data = [load_dataset(p) for p in parts]
+    requested = {str(i) for i in task_ids} if task_ids is not None else None
+    entries = flatten(parts, requested)
+    if not entries:
+        raise ValueError("Cohort selection must contain at least one question")
+    if requested is not None and requested != set().union(*(ids for _, ids in entries)):
+        raise ValueError("Requested cohort questions are missing")
+    parts = [path for path, _ in entries]
+    data = []
+    for path, selected in entries:
+        value = load_dataset(path)
+        value["tapes"] = [t for t in value["tapes"] if t["task_id"] in selected]
+        data.append(value)
     tasks = [t["task_id"] for d in data for t in d["tapes"]]
     if len(tasks) != len(set(tasks)):
         raise ValueError("Cohort shards overlap")
@@ -152,19 +167,29 @@ def merge_datasets(parts, output):
                         stores[window["observation_store"]],
                         stores[window["hypothetical_store"]],
                     )
-                    window["observation_duration_s"] = obs_store.by_id[window["observation_node"]][
-                        "service_s"
-                    ]
+                    window["observation_duration_s"] = model_span(
+                        obs_store.by_id[window["observation_node"]], obs_store
+                    )
                     window["hypothetical_duration_s"] = generation_span(
                         hyp_store, hyp_store.by_id[window["hypothetical_node"]]
                     )
             tapes.append(task)
-        cases += json.loads((source / "forecast-cases.json").read_text())
-        labels += json.loads((source / "forecast-labels.json").read_text())
+        selected = {t["task_id"] for t in dataset["tapes"]}
+        cases += [
+            r
+            for r in json.loads((source / "forecast-cases.json").read_text())
+            if r["task_id"] in selected
+        ]
+        labels += [
+            r
+            for r in json.loads((source / "forecast-labels.json").read_text())
+            if r["id"].split(":")[0] in selected
+        ]
         provenance.append(
             {
                 "shard": shard,
                 "source": str(source.resolve()),
+                "selected_task_ids": sorted(selected),
                 "manifest_sha256": hashlib.sha256(
                     (source / "dataset-manifest.json").read_bytes()
                 ).hexdigest(),
@@ -210,12 +235,13 @@ def main():
     merge = sub.add_parser("merge")
     merge.add_argument("parts", nargs="+", type=Path)
     merge.add_argument("--output", type=Path, required=True)
+    merge.add_argument("--task-ids", nargs="+")
     args = parser.parse_args()
     print(
         json.dumps(
             select_pairs(args.source, args.output)
             if args.command == "select"
-            else merge_datasets(args.parts, args.output),
+            else merge_datasets(args.parts, args.output, task_ids=args.task_ids),
             indent=2,
         )
     )

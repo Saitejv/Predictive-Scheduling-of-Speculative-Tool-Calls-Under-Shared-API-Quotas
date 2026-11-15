@@ -45,6 +45,7 @@ def cases(tapes, mode="progress", *, max_candidate_age=0):
                     task_context=tape["question"],
                     history=history,
                     result_excerpt=steps[index - 1].get("observed_excerpt", "") if index else "",
+                    intent=(steps[boundary - 1].get("thought") or "") if boundary else "",
                 )
                 candidates = [None]
                 latest = index if phase == "running" else index - 1
@@ -144,7 +145,7 @@ class TapeHistory:
         )
 
 
-def collect(
+def _collect(
     dataset,
     output,
     *,
@@ -157,6 +158,8 @@ def collect(
     split="all",
     max_candidate_age=0,
     seed_bank=None,
+    seed_exact_contexts_across_datasets=False,
+    _pool=None,
 ):
     positive_int(workers, "workers")
     positive_int(max_requests, "max_requests")
@@ -179,9 +182,14 @@ def collect(
         "kev-space": KevSpacePredictor,
         "mock": MockSystemOnePredictor,
     }[backend]
+    if _pool is not None:
+        from .pooled_jev import PooledJevPredictor
+
+        constructor = PooledJevPredictor
 
     def predictor():
-        return constructor(history, context=mode, timeout_s=30, decision_timeout_s=60)
+        extra = {"pool": _pool} if _pool is not None else {}
+        return constructor(history, context=mode, timeout_s=30, decision_timeout_s=60, **extra)
 
     probe = predictor()
     config = {
@@ -206,22 +214,37 @@ def collect(
     if max_candidate_age or seed_bank:
         config["max_candidate_age"] = max_candidate_age
         config["seed_bank_sha256"] = None
+    if seed_exact_contexts_across_datasets:
+        config["seed_exact_contexts_across_datasets"] = True
+    if _pool is not None:
+        config["http_transport"] = "pooled"
     seeded = []
     if seed_bank:
         prior = json.loads(Path(seed_bank).read_text())
         if prior.get("sha256") != digest({k: v for k, v in prior.items() if k != "sha256"}):
             raise ValueError("Seed bank checksum mismatch")
+        if prior["config"].get("http_transport", "per_request") != config.get(
+            "http_transport", "per_request"
+        ):
+            raise ValueError("Seed bank HTTP transport/latency mismatch")
         for field in (
             "backend",
             "mode",
             "model",
             "revision",
             "base_url",
-            "dataset_sha256",
             "development",
+            "adapter_sha256",
         ):
             if prior["config"][field] != config[field]:
                 raise ValueError("Seed bank model/input mismatch: " + field)
+        if (
+            prior["config"]["dataset_sha256"] != config["dataset_sha256"]
+            and not seed_exact_contexts_across_datasets
+        ):
+            raise ValueError("Seed bank model/input mismatch: dataset_sha256")
+        if seed_exact_contexts_across_datasets:
+            config["seed_dataset_sha256"] = prior["config"]["dataset_sha256"]
         config["seed_bank_sha256"] = prior["sha256"]
         seeded = [
             {**value, "seed_bank_sha256": prior["sha256"]}
@@ -326,6 +349,18 @@ def collect(
     return report
 
 
+def collect(dataset, output, *, pooled_http=False, **kwargs):
+    """Collect with explicit lifetime ownership of a reusable HTTP pool."""
+    if not pooled_http:
+        return _collect(dataset, output, **kwargs)
+    if kwargs.get("backend", "jev") != "jev":
+        raise ValueError("Pooled HTTP is supported for Jev collection")
+    from .pooled_jev import JevHTTPPool
+
+    with JevHTTPPool(connections=kwargs.get("workers", 4)) as pool:
+        return _collect(dataset, output, _pool=pool, **kwargs)
+
+
 class TapeBankPredictor:
     """Exact finite bank; runtime contains neither task labels nor network clients.
 
@@ -402,6 +437,8 @@ def main():
     p.add_argument("--resume", action="store_true")
     p.add_argument("--max-candidate-age", type=int, default=0)
     p.add_argument("--seed-bank", type=Path)
+    p.add_argument("--seed-exact-contexts-across-datasets", action="store_true")
+    p.add_argument("--pooled-http", action="store_true")
     a = p.parse_args()
     print(
         json.dumps(
@@ -417,6 +454,8 @@ def main():
                 resume=a.resume,
                 max_candidate_age=a.max_candidate_age,
                 seed_bank=a.seed_bank,
+                seed_exact_contexts_across_datasets=a.seed_exact_contexts_across_datasets,
+                pooled_http=a.pooled_http,
             ),
             indent=2,
         )

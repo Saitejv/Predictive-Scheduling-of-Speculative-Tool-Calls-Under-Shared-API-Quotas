@@ -20,8 +20,9 @@ from pathlib import Path
 from .artifacts import append_json, source_hashes, write_json
 from .capture import Capture, snapshot
 from .telemetry import summarize_inference
-from .transport import LiveChat  # compatibility export
+from .transport import InvalidProviderResponse, LiveChat, OptionalExpired  # compatibility export
 from .upstream import REVISION, load_upstream, prepare, workload_indices
+from .wiki_http import WikiHTTP
 
 
 class Events:
@@ -38,18 +39,14 @@ class Events:
 
 
 class WikiSearch:
-    def __init__(self, module, events):
+    def __init__(self, module, events, *, min_interval_s=0):
         self.module, self.events = module, events
         import requests
 
-        def safe_get(*args, **kwargs):
-            kwargs.setdefault("timeout", 30)
-            response = requests.get(*args, **kwargs)
-            response.raise_for_status()
-            return response
+        self.http = WikiHTTP(requests.get, interval_s=min_interval_s)
 
         # Isolate the dependency override to this imported upstream module.
-        module.environment.requests = types.SimpleNamespace(get=safe_get)
+        module.environment.requests = types.SimpleNamespace(get=self.http.get)
 
     async def search(self, query, episode, step, speculative=False):
         self.events.emit(
@@ -60,14 +57,20 @@ class WikiSearch:
 
         def fetch():
             worker_started = time.perf_counter()
+            self.http.begin()
             env = self.module.environment.WikiEnv("unused")
             state_before = snapshot(env)
             env.search_step(query)
             return {
                 "state_before": state_before,
                 "state_after": snapshot(env),
-                "queue_s": worker_started - submitted,
-                "service_s": time.perf_counter() - worker_started,
+                "queue_s": worker_started - submitted + self.http.local.pacing_s,
+                "service_s": time.perf_counter() - worker_started - self.http.local.pacing_s,
+                "collection_pacing_s": self.http.local.pacing_s,
+                "http_backoff_s": self.http.local.backoff_s,
+                "http_attempts": self.http.local.attempts,
+                "http_mutex_wait_s": self.http.local.mutex_s,
+                "http_network_s": self.http.local.network_s,
                 "obs": env.obs,
                 "page": env.page,
                 "result_titles": getattr(env, "result_titles", None),
@@ -160,6 +163,10 @@ class Runtime:
         clock=None,
         local_step=None,
         candidate_lifetime="episode",
+        coordinator=None,
+        speculative_width=3,
+        model_retries=0,
+        max_generation_step=None,
     ):
         self.module, self.chat, self.search, self.events = module, chat, search, events
         self.base_prompt, self.max_steps = base_prompt, max_steps
@@ -171,11 +178,42 @@ class Runtime:
         if candidate_lifetime not in ("episode", "next_action"):
             raise ValueError("candidate_lifetime must be episode or next_action")
         self.candidate_lifetime = candidate_lifetime
+        self.coordinator = coordinator
+        if speculative_width not in (1, 3):
+            raise ValueError("speculative_width must be 1 or 3")
+        self.speculative_width = speculative_width
+        self.model_retries = model_retries
+        if max_generation_step is not None and (
+            type(max_generation_step) is not int or max_generation_step < 0
+        ):
+            raise ValueError("Generation step budget must be a nonnegative integer")
+        self.max_generation_step = max_generation_step
 
     async def model(self, prompt, role, episode, step, dependencies=()):
-        if self.capture:
-            return await self.capture.model(self.chat, prompt, role, episode, step, dependencies)
-        return await self.chat.call(prompt, role, episode, step), None
+        import httpx
+
+        for attempt in range(self.model_retries + 1):
+            try:
+                if self.capture:
+                    return await self.capture.model(
+                        self.chat, prompt, role, episode, step, dependencies
+                    )
+                return await self.chat.call(prompt, role, episode, step), None
+            except (httpx.HTTPStatusError, httpx.TransportError, InvalidProviderResponse) as exc:
+                status = getattr(getattr(exc, "response", None), "status_code", None)
+                if attempt == self.model_retries or (
+                    status is not None and status not in (429, 502, 503, 504)
+                ):
+                    raise
+                self.events.emit(
+                    "inference_retry",
+                    episode=episode,
+                    step=step,
+                    role=role,
+                    attempt=attempt + 1,
+                    http_status=status,
+                )
+                await asyncio.sleep(0.2 * 2**attempt)
 
     async def search_call(self, query, episode, step, speculative=False, dependencies=()):
         if self.capture:
@@ -258,8 +296,11 @@ class Runtime:
             "optional_failures": 0,
             "prefetches_while_actor_thinking": 0,
             "duplicate_candidates_suppressed": 0,
+            "generation_windows_suppressed": 0,
         }
-        self.events.emit("episode_started", episode=episode, mode=mode, question_index=index)
+        self.events.emit(
+            "episode_started", episode=episode, mode=mode, question_index=index, question=question
+        )
         started, failure = self.clock(), None
         previous = self.record(
             "episode_start",
@@ -287,7 +328,12 @@ class Runtime:
                     i=step, thought=thought, action=action, obs=obs
                 )
                 _, candidates = await self.generate(
-                    hypothetical, step + 1, 3, "speculative_actor", episode, [prediction_node]
+                    hypothetical,
+                    step + 1,
+                    self.speculative_width,
+                    "speculative_actor",
+                    episode,
+                    [prediction_node],
                 )
                 self.events.emit(
                     "candidates_ready",
@@ -317,10 +363,11 @@ class Runtime:
                 if not window["valid"]:
                     stats["late_windows"] += 1
                     return
-                for candidate in candidates:
+
+                async def launch(candidate):
                     parsed = split_action(candidate)
                     if parsed[0] != "search":
-                        continue
+                        return
                     guessed_query = parsed[1]
                     # Don't turn the already-running required call into a free
                     # generic cache entry for the next step.
@@ -333,7 +380,27 @@ class Runtime:
                         )
                     ):
                         stats["duplicate_candidates_suppressed"] += 1
-                        continue
+                        return
+                    if self.coordinator:
+
+                        def valid():
+                            return (
+                                window["valid"]
+                                and guessed_query not in cache
+                                and guessed_query not in requested_queries
+                            )
+
+                        if not await self.coordinator.admit_candidate(
+                            episode, guessed_query, valid
+                        ):
+                            return
+                        # No suspension between final validation, quota claim and
+                        # cache installation. Required work can advance while the
+                        # forecast runs and must never join an unadmitted draft.
+                        if not valid() or not self.coordinator.claim_candidate(
+                            episode, guessed_query
+                        ):
+                            return
                     cache[guessed_query] = asyncio.create_task(
                         self.search_call(guessed_query, episode, step + 1, True, [candidates_node])
                     )
@@ -348,6 +415,11 @@ class Runtime:
                         actor_step=actor_phase["step"],
                         actor_thinking=actor_phase["thinking"],
                     )
+
+                await asyncio.gather(*(launch(candidate) for candidate in candidates))
+            except OptionalExpired:
+                stats["late_windows"] += 1
+                self.events.emit("optional_expired_unsent", episode=episode, step=step)
             except Exception as exc:
                 stats["optional_failures"] += 1
                 self.events.emit(
@@ -370,7 +442,9 @@ class Runtime:
                         window["valid"] = False
                 action = actions[0]
                 tool, value = split_action(action)
-                self.events.emit("required_action", episode=episode, step=step, action=action)
+                self.events.emit(
+                    "required_action", episode=episode, step=step, action=action, thought=thought
+                )
                 actor_node = self.generations[(episode, "actor", step)]
                 boundary = self.record(
                     "boundary",
@@ -409,15 +483,21 @@ class Runtime:
                             self.search_call(value, episode, step, False, [boundary])
                         )
                         if mode == "speculative" and step < self.max_steps:
-                            window = {"valid": True}
-                            windows.append(window)
-                            window_tasks.append(
-                                asyncio.create_task(
-                                    speculate(
-                                        window, prefix, thought, action, step, value, boundary
+                            if (
+                                self.max_generation_step is not None
+                                and step > self.max_generation_step
+                            ):
+                                stats["generation_windows_suppressed"] += 1
+                            else:
+                                window = {"valid": True}
+                                windows.append(window)
+                                window_tasks.append(
+                                    asyncio.create_task(
+                                        speculate(
+                                            window, prefix, thought, action, step, value, boundary
+                                        )
                                     )
                                 )
-                            )
                         result = await required
                     self.apply_search(env, result)
                     obs, done = env.obs, False
@@ -429,6 +509,15 @@ class Runtime:
                         obs, _, done, _ = await self.local_step(env, action, step)
                     local_service = self.clock() - local_started
                 tool_wait_s = self.clock() - wait_started
+                if self.coordinator:
+                    self.events.emit(
+                        "tool_observed",
+                        episode=episode,
+                        step=step,
+                        action=action,
+                        observation=obs,
+                        done=done,
+                    )
                 previous = self.record(
                     "application",
                     episode,

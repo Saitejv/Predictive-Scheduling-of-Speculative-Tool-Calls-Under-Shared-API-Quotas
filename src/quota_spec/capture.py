@@ -109,7 +109,11 @@ class Capture:
             queue_s=fields.pop("queue_s", 0.0),
             service_s=fields.pop("service_s", ended - node["start_s"]),
             output=self.blob(output),
-            status="failed" if error else "completed",
+            status="skipped"
+            if fields.pop("skipped", False)
+            else "failed"
+            if error
+            else "completed",
             error=error,
             **fields,
         )
@@ -138,7 +142,9 @@ class Capture:
         try:
             content = await chat.call(prompt, role, episode, step)
         except BaseException as exc:
-            self.finish(node, error=type(exc).__name__)
+            from .transport import OptionalExpired
+
+            self.finish(node, error=type(exc).__name__, skipped=isinstance(exc, OptionalExpired))
             raise
         else:
             self.finish(

@@ -147,6 +147,7 @@ class AgentState:
     task_context: str = ""
     history: tuple[Call, ...] = ()
     result_excerpt: str = ""
+    intent: str = ""  # Last completed authoritative Thought; never in-flight reasoning.
 
     def __post_init__(self):
         if not isinstance(self.task_id, str) or not self.task_id.strip():

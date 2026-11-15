@@ -79,6 +79,16 @@ class BankIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 nested = merge_datasets([root / "combined"], root / "flattened")
                 self.assertEqual(nested["questions"], 2)
                 self.assertEqual(len(load_dataset(root / "flattened")["tapes"]), 2)
+                selected_id = dataset["tapes"][0]["task_id"]
+                subset = merge_datasets(
+                    [root / "combined"], root / "selected", task_ids=[selected_id]
+                )
+                self.assertEqual(subset["questions"], 1)
+                self.assertEqual(
+                    [t["task_id"] for t in load_dataset(root / "selected")["tapes"]], [selected_id]
+                )
+                retained = merge_datasets([root / "selected"], root / "selected-flattened")
+                self.assertEqual(retained["questions"], 1)
                 result_path = next((root / "bank/live-capture/blobs").glob("*.json"))
                 result_path.write_text("tampered")
                 with self.assertRaisesRegex(ValueError, "integrity"):

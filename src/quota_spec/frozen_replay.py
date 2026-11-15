@@ -22,6 +22,8 @@ from .replay import percentile
 
 def load_dataset(root):
     root = Path(root)
+    if (root / "INVALID_TIMING.json").exists():
+        raise ValueError("Dataset has invalidated native timing; use its corrected replacement")
     manifest = json.loads((root / "dataset-manifest.json").read_text())
     for name, expected in manifest["files"].items():
         path = (root / name).resolve()
@@ -104,6 +106,7 @@ class FrozenReplay:
         cache_required_results=False,
         generation_trigger="dispatch",
         retry_candidates=False,
+        max_generation_step=None,
     ):
         self.tapes = {t["task_id"]: t for t in tapes}
         if not self.tapes or len(self.tapes) != len(tapes):
@@ -139,6 +142,11 @@ class FrozenReplay:
             raise ValueError("generation_trigger must be dispatch or request")
         self.generation_trigger = generation_trigger
         self.retry_candidates = retry_candidates
+        if max_generation_step is not None and (
+            type(max_generation_step) is not int or max_generation_step < 0
+        ):
+            raise ValueError("Generation step budget must be a nonnegative integer")
+        self.max_generation_step = max_generation_step
 
     def run(
         self,
@@ -305,6 +313,8 @@ class FrozenReplay:
             )
             if generation_windows is not None:
                 allowed = allowed and (tid, index + 1) in generation_windows
+            if self.max_generation_step is not None:
+                allowed = allowed and index < self.max_generation_step
             if speculation and row["window"] and not allowed:
                 stats["generation_windows_suppressed"] += 1
             if speculation and row["window"] and allowed:
@@ -367,6 +377,14 @@ class FrozenReplay:
                             "observed_excerpt", ""
                         )
                         if completed[task_id]
+                        else "",
+                        intent=(
+                            self.tapes[task_id]["steps"][
+                                completed[task_id] + int(phases[task_id] != "thinking") - 1
+                            ].get("thought")
+                            or ""
+                        )
+                        if completed[task_id] + int(phases[task_id] != "thinking")
                         else "",
                     )
                 )

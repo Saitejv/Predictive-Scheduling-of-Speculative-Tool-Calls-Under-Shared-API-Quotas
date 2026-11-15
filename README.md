@@ -2,7 +2,36 @@
 
 CSE 585 project by Jack McClure, Saitej Velaga, and Angela Li.
 
-The active agent is [`hotpot_runtime.py`](src/quota_spec/hotpot_runtime.py): one
+**November 15: confirmed matched-replay wins over both baselines.** On 80 new
+held-out questions, the locked 4-worker / 12-Search / 3-second setting reduces
+mean completion by **1.57% vs no speculation** and **10.11% vs allow-all**;
+whole-batch time falls **1.46% / 10.09%**. All ten paired orders and the 95%
+question-bootstrap intervals favor the method. The 75-setting quota/refill map
+retains losses: 13 settings beat both baselines on both endpoints. This is
+measured replay evidence; the final live smoke verifies operation, not live A/B
+speed. **275 tests pass; $1.439993844 additional API spend is reconciled.**
+See [the full result, controls, quota maps and reproduction](docs/QUOTA_WINS_2026-11-15.md).
+
+**Live multi-agent integration is implemented and tested.**
+[`multi_agent.py`](src/quota_spec/multi_agent.py) runs the pinned ReAct agent with
+shared Search quota and an asynchronous Jev context engine. It supports observed
+task/history/progress inputs, forecast caching, full/own admission, development-only
+calibration, exact-query reuse, required FIFO priority and complete cost accounting.
+The November 15 campaign includes **236 live episodes**, real 2/4/8-agent
+concurrency and **216 matched offline replays**. Cross-agent admission protects
+other workers, and the later locked replication now demonstrates the replay wins described above.
+Read [the integration results and commands](docs/MULTI_AGENT_CONTEXT_2026-11-15.md).
+
+```sh
+make multi-agent-offline COUNT=8 OUTPUT=results/multi-agent-mock-fresh
+make multi-agent-live COUNT=16 OFFSET=98 AGENTS=8 MAX_USD=.7 OUTPUT=results/multi-agent-live-fresh
+make multi-agent-audit EVIDENCE=results/multi-agent-live-fresh
+```
+
+The live command spends API credit and requires the private environment settings
+described in the integration guide. Mock mode needs no paid recordings or keys.
+
+The underlying single-agent baseline is [`hotpot_runtime.py`](src/quota_spec/hotpot_runtime.py): one
 real ReAct actor using Wikipedia, with asynchronous speculative Searches.
 Observation prediction uses **GPT-4.1 nano**; authoritative and hypothetical
 reasoning use **Gemini 2.5 Flash**. Both are configurable.

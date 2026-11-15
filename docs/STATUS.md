@@ -1,5 +1,27 @@
 # Current implementation status
 
+**November 15: confirmed matched-replay wins over both baselines.** On 80 new
+held-out questions, the locked 4-worker / 12-Search / 3-second setting reduces
+mean completion by **1.57% vs no speculation** and **10.11% vs allow-all**;
+whole-batch time falls **1.46% / 10.09%**. All ten paired orders and the 95%
+question-bootstrap intervals favor the method. The 75-setting quota/refill map
+retains losses: 13 settings beat both baselines on both endpoints. This is
+measured replay evidence; the final live smoke verifies operation, not live A/B
+speed. **275 tests pass; $1.439993844 additional API spend is reconciled.**
+See [the full result, controls, quota maps and reproduction](QUOTA_WINS_2026-11-15.md).
+
+**November 15: live multi-agent Jev integration works end to end.**
+The new driver runs real 2/4/8-agent workloads with shared quota, asynchronous
+observed-state forecasting, exact reuse and atomic admission. The campaign
+retains 236 live episodes (including two failed runs that exposed repaired
+provider-handling bugs), 216 matched replays and a complete 3,054-context bank.
+The final eight-worker confirmation has zero actor/optional failures; 266 tests
+pass. Known costs match the $0.841052284 account delta; unknown-attempt reservations
+raise the conservative bound to $0.847911884. Cross-agent protection is measured,
+but a general gain over no speculation remains unproven. See
+[the integration report](MULTI_AGENT_CONTEXT_2026-11-15.md) and
+[current handoff](../next_steps.md). Entries below are historical checkpoints.
+
 **Latest throughput repair:** request-triggered generation, candidate retry at
 quota resets and answer-time worker release are now the named `overlap` replay
 profile. Historical controls remain reproducible. The live answer-time delta

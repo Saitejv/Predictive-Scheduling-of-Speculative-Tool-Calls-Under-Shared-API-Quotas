@@ -1,5 +1,30 @@
 # Active baseline architecture
 
+**November 15 live extension:** `multi_agent.py` now composes the baseline with
+`context_engine.py`, `admission.py`, `quota.py`, `prediction.py` and the Jev adapter.
+The registry contains only observed state; final claims atomically enforce the
+shared quota and required FIFO priority. `live_context_audit.py` independently
+checks forecast inputs against past events and reuses immutable capture validation.
+See [the current implementation and results](MULTI_AGENT_CONTEXT_2026-11-15.md).
+
+```mermaid
+flowchart LR
+    Driver[Multi-agent worker pool] --> Runtime[Pinned async ReAct runtime]
+    Runtime --> Events[Authoritative observation events]
+    Events --> Registry[Observed context registry]
+    Registry --> Jev[Parallel Jev forecasts and TTL cache]
+    Jev --> Gate[Paired cross-agent admission]
+    Gate --> Claim[Atomic quota claim]
+    Runtime --> Required[FIFO required Search queue]
+    Required --> Claim
+    Claim --> Wiki[Isolated Wikipedia execution]
+    Wiki --> Cache[Exact episode-local prefetch cache]
+    Cache --> Runtime
+```
+
+The standalone baseline architecture below remains intact. The historical gateway
+and BM25 drivers are not used by the current multi-agent HotpotQA path.
+
 Version 2 capture is now active by default. `capture.py` stores immutable blobs
 and exact per-stage dependencies/timing; `capture_audit.py` restores/re-executes
 states with sockets blocked. `capture_bank.py` completes skipped alternatives

@@ -49,7 +49,14 @@ class SystemOnePredictor:
             )
         if not isinstance(model, str) or not model.strip():
             raise ValueError("model must be nonblank")
-        if context not in ("task", "history", "progress", "no_history", "no_progress"):
+        if context not in (
+            "task",
+            "history",
+            "progress",
+            "no_history",
+            "no_progress",
+            "progress_intent",
+        ):
             raise ValueError("Unknown context mode")
         for price in (input_usd_per_million, output_usd_per_million):
             if price is not None:
@@ -79,23 +86,31 @@ class SystemOnePredictor:
     async def _request(self, payload):
         import httpx
 
-        headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
         async with httpx.AsyncClient(timeout=self.timeout_s, transport=self.transport) as client:
-            endpoint = self.base_url + (
-                "/decisions"
-                if self.base_url.endswith("/alpha")
-                else "/systemone"
-                if self.base_url.endswith("/v1")
-                else "/v1/systemone"
-            )
-            async with client.stream("POST", endpoint, json=payload, headers=headers) as response:
-                response.raise_for_status()
-                content = bytearray()
-                async for chunk in response.aiter_bytes():
-                    content.extend(chunk)
-                    if len(content) > 65536:
-                        raise ValueError("Prediction response exceeds 64 KiB")
-                return json.loads(content)
+            return await self._request_with_client(client, payload)
+
+    async def _request_with_client(self, client, payload):
+        headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
+        endpoint = self.base_url + (
+            "/decisions"
+            if self.base_url.endswith("/alpha")
+            else "/systemone"
+            if self.base_url.endswith("/v1")
+            else "/v1/systemone"
+        )
+        async with client.stream(
+            "POST", endpoint, json=payload, headers=headers, timeout=self.timeout_s
+        ) as response:
+            response.raise_for_status()
+            content = bytearray()
+            async for chunk in response.aiter_bytes():
+                content.extend(chunk)
+                if len(content) > 65536:
+                    raise ValueError("Prediction response exceeds 64 KiB")
+            return json.loads(content)
+
+    def _infer(self, payload):
+        return asyncio.run(self._bounded_request(payload))
 
     async def _bounded_request(self, payload):
         remaining = (
@@ -140,7 +155,7 @@ class SystemOnePredictor:
         try:
             if len(json.dumps(payload).encode()) > 65536:
                 raise ValueError("Prediction request exceeds 64 KiB")
-            response = asyncio.run(self._bounded_request(payload))
+            response = self._infer(payload)
             if not isinstance(response, dict):
                 raise ValueError("Prediction response must be an object")
             # Retain the complete bounded provider result for frozen replay audits.

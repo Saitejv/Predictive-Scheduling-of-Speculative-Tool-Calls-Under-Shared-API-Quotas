@@ -54,6 +54,37 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         ):
             return await runtime.episode(1, "Fixture?", "mock answer", mode, "mock")
 
+    async def test_live_generation_budget_uses_progress_without_changing_authoritative_actions(
+        self,
+    ):
+        roles = []
+
+        class DraftLookup(MockChat):
+            async def call(self, prompt, role, episode, step):
+                roles.append(role)
+                if role == "speculative_actor":
+                    return f"Thought {step}: Need a local lookup.\nAction {step}: Lookup[keyword]"
+                return await super().call(prompt, role, episode, step)
+
+        sequential = await self.episode(mode="sequential")
+        runtime = Runtime(
+            self.module,
+            DraftLookup(),
+            MockSearch(self.events),
+            self.events,
+            "Examples\n",
+            max_generation_step=1,
+        )
+        result = await runtime.episode(1, "Fixture?", "mock answer", "speculative", "mock")
+        self.assertEqual(roles.count("observation_speculator"), 1)
+        self.assertEqual(roles.count("speculative_actor"), 1)
+        self.assertEqual(result["generation_windows_suppressed"], 1)
+        self.assertEqual(result["answer"], sequential["answer"])
+        self.assertEqual(
+            [s["action"] for s in result["trajectory"]],
+            [s["action"] for s in sequential["trajectory"]],
+        )
+
     async def test_real_concurrency_exact_reuse_and_authoritative_lookup(self):
         sequential = await self.episode(mode="sequential")
         speculative = await self.episode()

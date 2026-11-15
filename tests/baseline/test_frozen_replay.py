@@ -58,6 +58,21 @@ def tape(identity="a"):
 
 
 class FrozenReplayTests(unittest.TestCase):
+    def test_generation_budget_is_an_observed_step_rule_with_identical_required_work(self):
+        saved = tape()
+        saved["steps"][0]["window"]["candidates"] = []
+        saved["steps"][1]["window"] = copy.deepcopy(saved["steps"][0]["window"])
+        full = FrozenReplay([saved], 100, 100).run(CurrentCapacity())
+        budgeted = FrozenReplay([saved], 100, 100, max_generation_step=1).run(CurrentCapacity())
+        self.assertEqual(full["metrics"]["observation_runs"], 2)
+        self.assertEqual(budgeted["metrics"]["observation_runs"], 1)
+        self.assertEqual(budgeted["metrics"]["generation_windows_suppressed"], 1)
+        self.assertEqual(full["metrics"]["answers"], budgeted["metrics"]["answers"])
+        self.assertEqual(
+            full["metrics"]["mean_completion_s"], budgeted["metrics"]["mean_completion_s"]
+        )
+        self.assertEqual(full["metrics"]["search_calls"], budgeted["metrics"]["search_calls"])
+
     def test_worker_pool_preserves_one_quota_across_successive_questions(self):
         result = FrozenReplay([tape(str(i)) for i in range(4)], 2, 10, max_active_agents=1).run(
             NoSpeculation()

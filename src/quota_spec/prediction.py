@@ -172,6 +172,9 @@ def decision_seed(state: Observation, seed: int) -> int:
 
 
 def bounded_context(state: Observation, agent: AgentState, mode="progress") -> dict:
+    include_intent = mode == "progress_intent"
+    if include_intent:
+        mode = "progress"
     if mode not in ("task", "history", "progress", "no_history", "no_progress"):
         raise ValueError("Unknown context mode")
     if agent.observed_at_s > state.now_s or agent.phase_since_s > state.now_s:
@@ -192,6 +195,8 @@ def bounded_context(state: Observation, agent: AgentState, mode="progress") -> d
             phase=agent.phase,
             elapsed_s=state.now_s - agent.phase_since_s,
         )
+    if include_intent:
+        result["actor_intent"] = agent.intent[:1024]
     return result
 
 

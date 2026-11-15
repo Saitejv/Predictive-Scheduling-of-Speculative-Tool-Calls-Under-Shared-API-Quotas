@@ -127,8 +127,13 @@ def audit(root, source=None):
                     raise ValueError("Prefetch thinking flag does not match actor span")
                 thinking_launches += 1
         timing_checks += 1
-    if len(steps) != len(tasks) or len(tasks) != 2 * len(config["indices"]):
-        raise ValueError("Incomplete paired capture")
+    episodes_per_question = 1 if config.get("capture_protocol") == "multi_agent" else 2
+    if len(steps) != len(tasks) or len(tasks) != episodes_per_question * len(config["indices"]):
+        raise ValueError("Incomplete episode capture")
+    if Counter(t["question_index"] for t in tasks.values()) != Counter(
+        {i: episodes_per_question for i in config["indices"]}
+    ):
+        raise ValueError("Captured question inventory mismatch")
     with (
         patch.object(socket.socket, "connect", side_effect=AssertionError("Network forbidden")),
         patch.object(socket.socket, "connect_ex", side_effect=AssertionError("Network forbidden")),
@@ -202,7 +207,13 @@ def audit(root, source=None):
             expected_answer = "" if task["forced_finish"] else last_state["answer"]
             if expected_answer != task["answer"]:
                 raise ValueError("Answer does not match final captured state")
-    model_nodes = [n for n in store.nodes if n["kind"] == "model"]
+    skipped_nodes = [n for n in store.nodes if n["kind"] == "model" and n["status"] == "skipped"]
+    if any(
+        n["branch"] == "actor" or n["error"] != "OptionalExpired" or "request_id" in n
+        for n in skipped_nodes
+    ):
+        raise ValueError("Invalid skipped model stage")
+    model_nodes = [n for n in store.nodes if n["kind"] == "model" and n["status"] != "skipped"]
     if config["backend"] == "http":
         records = [json.loads(line) for line in (root / "inference.jsonl").read_text().splitlines()]
         raw = [json.loads(line) for line in (root / "requests.jsonl").read_text().splitlines()]
@@ -210,8 +221,30 @@ def audit(root, source=None):
             raise ValueError("Paid request inventory differs from captured model stages")
         if {n.get("request_id") for n in model_nodes} != {r["request_id"] for r in records}:
             raise ValueError("Paid request IDs differ from capture")
-        if any(n["status"] != "completed" or n["usage"]["cost_usd"] is None for n in model_nodes):
-            raise ValueError("Failed model stage or unknown paid cost")
+        if len({r["request_id"] for r in records}) != len(records) or len(
+            {r["request_id"] for r in raw}
+        ) != len(raw):
+            raise ValueError("Duplicate paid request ID")
+        records_by_id = {r["request_id"]: r for r in records}
+        raw_by_id = {r["request_id"]: r for r in raw}
+        for node in model_nodes:
+            request_id = node["request_id"]
+            if (
+                node["usage"] != records_by_id[request_id]
+                or store.blob(node["response"]) != raw_by_id[request_id]
+            ):
+                raise ValueError("Paid request evidence differs from immutable capture")
+        conservative = config.get("transport", {}).get("unknown_cost") == "conservative_reservation"
+        for node in model_nodes:
+            usage = node["usage"]
+            if not conservative and (node["status"] != "completed" or usage["cost_usd"] is None):
+                raise ValueError("Failed model stage or unknown paid cost")
+            if conservative:
+                charge = usage.get("budget_charge_usd")
+                if not isinstance(charge, (int, float)) or not math.isfinite(charge) or charge < 0:
+                    raise ValueError("Attempt lacks conservative budget accounting")
+                if usage["cost_usd"] is not None and charge != usage["cost_usd"]:
+                    raise ValueError("Known cost differs from budget charge")
     result = {
         "capture_version": 2,
         "passed": True,
@@ -223,6 +256,8 @@ def audit(root, source=None):
         "recorded_schedule_max_residual_s": max(replay_error, default=0),
         "schedule_tolerance_s": 1e-6,
         "prefetch_hits": sum(t["cache_hits"] for t in tasks.values()),
+        "skipped_unsent_model_stages": len(skipped_nodes),
+        "failed_model_attempts": sum(n["status"] == "failed" for n in model_nodes),
         "unused_prefetches": sum(t["unused_prefetches"] for t in tasks.values()),
         "bank_complete": False,
         "scope": "Observed schedule DAG with measured lags and pinned state transitions; alternatives require completed tapes",

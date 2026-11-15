@@ -24,13 +24,41 @@ from .upstream import REVISION
 def generation_span(store, generation):
     data = store.blob(generation["input"])
     attempts = [store.by_id[i] for i in data["attempts"]]
-    return sum(n["service_s"] for n in attempts) + max(
+    return sum(model_span(n, store) for n in attempts) + max(
         0.0, generation["ready_s"] - attempts[-1]["end_s"]
     )
 
 
-def model_span(node):
-    return node["service_s"]
+def model_span(node, store=None):
+    """Include failed HTTP attempts and real retry backoff; exclude serving queue."""
+    duration = node.get("transport_service_s", node["service_s"])
+    if store is None:
+        return duration
+    matching = sorted(
+        (
+            n
+            for n in store.nodes
+            if n["kind"] == "model"
+            and n["episode"] == node["episode"]
+            and n["branch"] == node["branch"]
+            and n["step"] == node["step"]
+            and n["input"] == node["input"]
+            and n["start_s"] < node["start_s"]
+        ),
+        key=lambda n: n["start_s"],
+    )
+    retries = []
+    for prior in reversed(matching):
+        if prior["status"] == "completed":
+            break
+        if prior["status"] == "failed" and "request_id" in prior:
+            retries.append(prior)
+    chain = list(reversed(retries)) + [node]
+    return (
+        duration
+        + sum(n.get("transport_service_s", n["service_s"]) for n in retries)
+        + sum(max(0.0, b["ready_s"] - a["end_s"]) for a, b in zip(chain, chain[1:]))
+    )
 
 
 def needed_windows(source):
@@ -54,6 +82,7 @@ def needed_windows(source):
                 and n["step"] == step["step"]
                 and n["kind"] == "model"
                 and n["branch"] == "observation_speculator"
+                and n["status"] == "completed"
             ]
             hypothetical = [
                 n
@@ -147,12 +176,14 @@ async def complete(source, output, *, backend="mock", upstream=None, max_usd=0.5
                 max_requests,
                 config["actor"],
                 config["speculator"],
+                draft_actor=config.get("draft_actor"),
+                reserve_unknown_cost=True,
                 min_request_interval_s=max(1.1, config.get("min_request_interval_s", 0.0)),
             )
-            search = WikiSearch(module, events)
+            search = WikiSearch(module, events, min_interval_s=1.1)
         else:
             chat, search = MockChat(), MockSearch(events)
-        runtime = Runtime(module, chat, search, events, "", capture=capture)
+        runtime = Runtime(module, chat, search, events, "", capture=capture, model_retries=2)
         try:
             for position, index in enumerate(config["indices"]):
                 episode = f"{index}:speculative"
@@ -218,6 +249,7 @@ async def complete(source, output, *, backend="mock", upstream=None, max_usd=0.5
                             if n["kind"] == "model"
                             and n["branch"] == "observation_speculator"
                             and n["step"] == step
+                            and n["status"] == "completed"
                         ]
                         if observations:
                             observation_store, observation = live, observations[-1]
@@ -265,7 +297,7 @@ async def complete(source, output, *, backend="mock", upstream=None, max_usd=0.5
                             _, actions = await runtime.generate(
                                 hypothetical_prefix,
                                 step + 1,
-                                3,
+                                config.get("width", 3),
                                 "speculative_actor",
                                 episode,
                                 [observation["id"]],
@@ -274,7 +306,7 @@ async def complete(source, output, *, backend="mock", upstream=None, max_usd=0.5
                             inputs = read(capture, generation["input"])
                             children = {n["id"]: n for n in capture.nodes}
                             hypothetical_duration = sum(
-                                children[n]["service_s"] for n in inputs["attempts"]
+                                model_span(children[n], capture) for n in inputs["attempts"]
                             ) + max(
                                 0.0,
                                 generation["ready_s"] - children[inputs["attempts"][-1]]["end_s"],
@@ -343,7 +375,7 @@ async def complete(source, output, *, backend="mock", upstream=None, max_usd=0.5
                                 )
                             candidates.append(candidate)
                         row["window"] = {
-                            "observation_duration_s": model_span(observation),
+                            "observation_duration_s": model_span(observation, observation_store),
                             "hypothetical_duration_s": hypothetical_duration,
                             "observation_node": observation["id"],
                             "hypothetical_node": generation["id"],
