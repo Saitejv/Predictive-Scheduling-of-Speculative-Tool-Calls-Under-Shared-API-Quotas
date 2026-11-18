@@ -1,0 +1,99 @@
+{
+  "team": {
+    "passed": true,
+    "episodes": 8,
+    "state_transitions": 38,
+    "authoritative_prompts": 38,
+    "forecast_observed_contexts_checked": 0,
+    "speculation_planner_contexts_checked": 19,
+    "quota_claims": 38,
+    "quota_windows": {
+      "0": 8,
+      "1": 8,
+      "2": 8,
+      "3": 8,
+      "4": 6
+    },
+    "required_fifo_valid": true,
+    "required_priority_valid": true,
+    "inference": {
+      "requests": 78,
+      "failures": 0,
+      "cancelled": 0,
+      "input_tokens": 153643,
+      "known_input_tokens": 153643,
+      "unknown_input_tokens_requests": 0,
+      "output_tokens": 5220,
+      "known_output_tokens": 5220,
+      "unknown_output_tokens_requests": 0,
+      "cost_usd": 0.03618414,
+      "known_cost_usd": 0.03618414,
+      "unknown_cost_usd_requests": 0
+    },
+    "forecasts": {
+      "requests": 0,
+      "failures": 0,
+      "cancelled": 0,
+      "input_tokens": 0,
+      "known_input_tokens": 0,
+      "unknown_input_tokens_requests": 0,
+      "output_tokens": 0,
+      "known_output_tokens": 0,
+      "unknown_output_tokens_requests": 0,
+      "cost_usd": 0,
+      "known_cost_usd": 0,
+      "unknown_cost_usd_requests": 0
+    },
+    "total_known_cost_usd": 0.03618414,
+    "limitations": "Audits observed trajectories and exposed state; does not establish counterfactual speedup or predictor calibration."
+  },
+  "quota": {
+    "passed": true,
+    "episodes": 8,
+    "state_transitions": 41,
+    "authoritative_prompts": 41,
+    "forecast_observed_contexts_checked": 0,
+    "speculation_planner_contexts_checked": 21,
+    "quota_claims": 38,
+    "quota_windows": {
+      "0": 8,
+      "1": 8,
+      "2": 8,
+      "3": 8,
+      "4": 5,
+      "5": 1
+    },
+    "required_fifo_valid": true,
+    "required_priority_valid": true,
+    "inference": {
+      "requests": 84,
+      "failures": 0,
+      "cancelled": 0,
+      "input_tokens": 150131,
+      "known_input_tokens": 150131,
+      "unknown_input_tokens_requests": 0,
+      "output_tokens": 5832,
+      "known_output_tokens": 5832,
+      "unknown_output_tokens_requests": 0,
+      "cost_usd": 0.03245719,
+      "known_cost_usd": 0.03245719,
+      "unknown_cost_usd_requests": 0
+    },
+    "forecasts": {
+      "requests": 0,
+      "failures": 0,
+      "cancelled": 0,
+      "input_tokens": 0,
+      "known_input_tokens": 0,
+      "unknown_input_tokens_requests": 0,
+      "output_tokens": 0,
+      "known_output_tokens": 0,
+      "unknown_output_tokens_requests": 0,
+      "cost_usd": 0,
+      "known_cost_usd": 0,
+      "unknown_cost_usd_requests": 0
+    },
+    "total_known_cost_usd": 0.03245719,
+    "limitations": "Audits observed trajectories and exposed state; does not establish counterfactual speedup or predictor calibration."
+  }
+}

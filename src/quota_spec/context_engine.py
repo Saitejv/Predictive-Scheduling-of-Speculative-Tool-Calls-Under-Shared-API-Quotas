@@ -181,27 +181,26 @@ class ContextCoordinator:
     def now(self):
         return self.events.clock() - self.events.start
 
-    def speculation_context(self, episode):
+    def speculation_context(self, episode, *, include_peers=False):
         """Public scheduler state only; no demand forecasts or future trajectories."""
+        from .team_context import query_planner_context
+
         now = self.now()
-        remaining = self.quota.remaining(now)
-        return {
-            "api": "Wikipedia Search",
-            "quota_type": "fixed_window_no_refund",
-            "capacity": self.quota.capacity,
-            "remaining_calls": remaining,
-            "refill_period_s": self.quota.window_s,
-            "seconds_to_refill": max(0.0, self.quota.next_refill(now) - now),
-            "window_index": self.quota.window_index,
-            "observed_at_s": now,
-            "active_workers": len(self.agents),
-            "other_active_workers": sum(a != episode for a in self.agents),
-            "queued_required_calls": len(self.queue),
-            "running_required_workers": sum(a.phase == "running" for a in self.agents.values()),
-            "required_calls_in_current_window": sum(
-                t >= self.quota.window_index * self.quota.window_s for t in self.recent_required
+        state = Observation(
+            now,
+            episode,
+            self.agents[episode].completed_calls if episode in self.agents else 0,
+            Call.search("context only"),
+            self.quota.remaining(now),
+            len(self.queue),
+            Snapshot(
+                self.quota.capacity,
+                self.quota.window_s,
+                tuple(self.agents.values()),
+                recent_required_s=tuple(self.recent_required),
             ),
-        }
+        )
+        return query_planner_context(state, include_peers=include_peers)
 
     def update(self, episode, **fields):
         if episode in self.agents:
@@ -219,6 +218,12 @@ class ContextCoordinator:
             self.max_active = max(self.max_active, len(self.agents))
         elif event == "required_action" and episode in self.agents:
             tool, value = split_action(row["action"])
+            if tool == "search":
+                # Offered task demand includes exact speculative cache hits.
+                # Count it when the actor returns its action, as fixed-path
+                # replay does, rather than only when a cache miss queues.
+                self.recent_required.append(row["time_s"])
+                self.recent_required = self.recent_required[-4096:]
             call = (
                 Call.search(value) if tool == "search" else Call(tool, json.dumps({"value": value}))
             )
@@ -385,8 +390,6 @@ class ContextCoordinator:
     async def acquire_required(self, episode, query):
         ticket = (episode, query, self.now(), object())
         self.queue.append(ticket)
-        self.recent_required.append(ticket[2])
-        self.recent_required = self.recent_required[-4096:]
         try:
             async with self.condition:
                 while True:

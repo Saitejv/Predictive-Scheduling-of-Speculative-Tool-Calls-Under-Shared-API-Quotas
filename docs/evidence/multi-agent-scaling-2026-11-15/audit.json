@@ -1,0 +1,347 @@
+{
+  "pass": true,
+  "runs": 48,
+  "episodes": 384,
+  "actor_requests_seed_checked": 1233,
+  "source_files_verified": 2832,
+  "main_quota_context_leaks": 0,
+  "quota_or_fifo_violations": 0,
+  "checks": [
+    {
+      "directory": "results/multi-agent-2026-11-15-final/00-a4-c8-w5-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/01-a4-c8-w5-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/02-a4-c8-w5-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/03-a4-c8-w5-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/04-a2-c8-w5-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/05-a2-c8-w5-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/06-a2-c8-w5-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/07-a2-c8-w5-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/08-a4-c12-w3-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/09-a4-c12-w3-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/10-a4-c12-w3-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/11-a4-c12-w3-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/12-a8-c12-w3-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/13-a8-c12-w3-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/14-a8-c12-w3-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/15-a8-c12-w3-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/16-a2-c12-w3-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/17-a2-c12-w3-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/18-a2-c12-w3-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/19-a2-c12-w3-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/20-a8-c8-w5-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/21-a8-c8-w5-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/22-a8-c8-w5-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-final/23-a8-c8-w5-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851516
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/00-a4-c12-w3-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/01-a4-c12-w3-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/02-a4-c12-w3-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/03-a4-c12-w3-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/04-a8-c12-w3-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/05-a8-c12-w3-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/06-a8-c12-w3-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/07-a8-c12-w3-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/08-a8-c8-w5-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/09-a8-c8-w5-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/10-a8-c8-w5-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/11-a8-c8-w5-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 8,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/12-a4-c8-w5-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/13-a4-c8-w5-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/14-a4-c8-w5-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/15-a4-c8-w5-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 4,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/16-a2-c12-w3-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/17-a2-c12-w3-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/18-a2-c12-w3-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/19-a2-c12-w3-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/20-a2-c8-w5-quota",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/21-a2-c8-w5-no_speculation",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/22-a2-c8-w5-jev",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    },
+    {
+      "directory": "results/multi-agent-2026-11-15-repeat/23-a2-c8-w5-allow_all",
+      "pass": true,
+      "episodes": 8,
+      "agents": 2,
+      "actor_seed": 5851517
+    }
+  ]
+}

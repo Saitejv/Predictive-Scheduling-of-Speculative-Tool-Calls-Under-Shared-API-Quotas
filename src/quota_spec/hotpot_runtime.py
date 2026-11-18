@@ -194,9 +194,9 @@ class Runtime:
         ):
             raise ValueError("Generation step budget must be a nonnegative integer")
         self.max_generation_step = max_generation_step
-        if speculation_planner not in ("legacy", "blind", "quota"):
+        if speculation_planner not in ("legacy", "blind", "quota", "team", "quota_team"):
             raise ValueError("Unknown speculation planner")
-        if speculation_planner == "quota" and coordinator is None:
+        if speculation_planner in ("quota", "team", "quota_team") and coordinator is None:
             raise ValueError("Quota planner requires the shared coordinator")
         self.speculation_planner = speculation_planner
 
@@ -255,8 +255,10 @@ class Runtime:
             from .quota_speculation import parse_queries, planner_prompt
 
             quota = (
-                self.coordinator.speculation_context(episode)
-                if self.speculation_planner == "quota"
+                self.coordinator.speculation_context(
+                    episode, include_peers=self.speculation_planner in ("team", "quota_team")
+                )
+                if self.speculation_planner in ("quota", "team", "quota_team")
                 else None
             )
             prompt = planner_prompt(prefix, step, width, quota)

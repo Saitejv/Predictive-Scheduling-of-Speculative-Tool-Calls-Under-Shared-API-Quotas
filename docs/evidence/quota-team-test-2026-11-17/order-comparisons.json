@@ -1,0 +1,82 @@
+[
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 0.1,
+    "orders": [
+      {
+        "seed": 248,
+        "mean_better_than_quota": false,
+        "mean_from_submit_better_than_quota": false,
+        "batch_better_than_quota": false
+      },
+      {
+        "seed": 249,
+        "mean_better_than_quota": false,
+        "mean_from_submit_better_than_quota": false,
+        "batch_better_than_quota": false
+      }
+    ]
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 3.0,
+    "orders": [
+      {
+        "seed": 248,
+        "mean_better_than_quota": false,
+        "mean_from_submit_better_than_quota": false,
+        "batch_better_than_quota": false
+      },
+      {
+        "seed": 249,
+        "mean_better_than_quota": true,
+        "mean_from_submit_better_than_quota": true,
+        "batch_better_than_quota": true
+      }
+    ]
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 0.1,
+    "orders": [
+      {
+        "seed": 248,
+        "mean_better_than_quota": true,
+        "mean_from_submit_better_than_quota": true,
+        "batch_better_than_quota": true
+      },
+      {
+        "seed": 249,
+        "mean_better_than_quota": false,
+        "mean_from_submit_better_than_quota": true,
+        "batch_better_than_quota": true
+      }
+    ]
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 3.0,
+    "orders": [
+      {
+        "seed": 248,
+        "mean_better_than_quota": false,
+        "mean_from_submit_better_than_quota": false,
+        "batch_better_than_quota": false
+      },
+      {
+        "seed": 249,
+        "mean_better_than_quota": true,
+        "mean_from_submit_better_than_quota": true,
+        "batch_better_than_quota": true
+      }
+    ]
+  }
+]

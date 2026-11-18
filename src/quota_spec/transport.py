@@ -1,6 +1,7 @@
 """Async OpenRouter transport with concurrent request/dollar reservations."""
 
 import asyncio
+import hashlib
 import json
 import math
 import time
@@ -36,6 +37,7 @@ class LiveChat:
         draft_actor=None,
         reserve_unknown_cost=False,
         optional_allowed=None,
+        actor_seed=None,
     ):
         self.client, self.key, self.prices = client, key, prices
         self.output, self.events = output, events
@@ -44,6 +46,7 @@ class LiveChat:
         self.draft_actor = draft_actor or actor
         self.reserve_unknown_cost = reserve_unknown_cost
         self.optional_allowed = optional_allowed
+        self.actor_seed = actor_seed
         self.lock, self.semaphore = asyncio.Lock(), asyncio.Semaphore(4)
         # Leave one of the four serving slots available to authoritative work.
         # Waiting optional calls must not acquire a global slot first.
@@ -90,6 +93,11 @@ class LiveChat:
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
         }
+        if role == "actor" and self.actor_seed is not None:
+            identity = f"{self.actor_seed}:{episode.split(':')[0]}:{step}"
+            payload["seed"] = (
+                int.from_bytes(hashlib.sha256(identity.encode()).digest()[:4], "big") & 0x7FFFFFFF
+            )
         if role == "speculative_actor":
             from .quota_speculation import MARKER, response_format
 
@@ -99,6 +107,10 @@ class LiveChat:
                 payload.pop("frequency_penalty")
                 payload.pop("presence_penalty")
                 payload["response_format"] = response_format()
+                from .team_context import ADMISSION_MARKER, admission_response_format
+
+                if prompt.startswith(MARKER + "\n" + ADMISSION_MARKER + "\n"):
+                    payload["response_format"] = admission_response_format(prompt)
                 payload["provider"] = {"require_parameters": True}
         price = self.prices[model]
         reserve = (len(json.dumps(payload).encode()) + 4096) * float(price["prompt"]) + payload[

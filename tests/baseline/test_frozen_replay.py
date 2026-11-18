@@ -58,6 +58,47 @@ def tape(identity="a"):
 
 
 class FrozenReplayTests(unittest.TestCase):
+    def test_actual_query_provider_can_propose_fresh_queries_without_future_context(self):
+        states = []
+
+        def provider(state, source_step):
+            states.append((state, source_step))
+            return {"queries": ["B", "Fresh unused query"], "latency_s": 0.2}
+
+        result = FrozenReplay(
+            [tape()], 100, 30, tool_duration_s=1, generation_provider=provider
+        ).run(CurrentCapacity())
+        base = FrozenReplay([tape()], 100, 30, tool_duration_s=1).run(NoSpeculation())
+        self.assertEqual(result["metrics"]["answers"], base["metrics"]["answers"])
+        self.assertLess(
+            result["metrics"]["mean_completion_s"], base["metrics"]["mean_completion_s"]
+        )
+        self.assertTrue(any(e.get("query") == "Fresh unused query" for e in result["events"]))
+        state, step = states[0]
+        self.assertEqual(step, 1)
+        self.assertEqual(state.completed_calls, 0)
+        self.assertEqual(state.snapshot.agents[0].result_excerpt, "")
+        self.assertEqual(state.snapshot.agents[0].history, (state.snapshot.agents[0].history[0],))
+        self.assertEqual(state.snapshot.agents[0].history[0].arguments_json, '{"query": "A"}')
+
+    def test_fresh_query_generation_latency_advances_main_and_requires_explicit_service(self):
+        def provider(*args):
+            return {"queries": ["B"], "latency_s": 10.0}
+
+        with self.assertRaisesRegex(ValueError, "explicit counterfactual Search service"):
+            FrozenReplay([tape()], 100, 30, generation_provider=provider)
+        result = FrozenReplay(
+            [tape()], 100, 30, tool_duration_s=1, generation_provider=provider
+        ).run(CurrentCapacity())
+        base = FrozenReplay([tape()], 100, 30, tool_duration_s=1).run(NoSpeculation())
+        self.assertEqual(
+            result["metrics"]["mean_completion_s"], base["metrics"]["mean_completion_s"]
+        )
+        self.assertGreater(
+            result["metrics"]["resource_makespan_s"], base["metrics"]["resource_makespan_s"]
+        )
+        self.assertEqual(result["metrics"]["speculative_calls"], 0)
+
     def test_generation_budget_is_an_observed_step_rule_with_identical_required_work(self):
         saved = tape()
         saved["steps"][0]["window"]["candidates"] = []

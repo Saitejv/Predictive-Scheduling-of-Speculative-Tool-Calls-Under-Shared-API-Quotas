@@ -41,12 +41,20 @@ class ResilienceTests(unittest.IsolatedAsyncioTestCase):
                     Path(temp),
                     Events(),
                     0.01,
-                    4,
+                    5,
                     "fixture",
                     "fixture",
+                    actor_seed=585,
                 )
                 for role in ["actor", "observation_speculator", "speculative_actor"]:
                     await chat.call(MARKER, role, "episode", 1)
+                await chat.call(MARKER, "actor", "episode:speculative", 1)
+                from quota_spec.team_context import gate_context, gate_prompt
+                from tests.baseline.test_team_context import observed
+
+                await chat.call(
+                    gate_prompt(gate_context(observed(), "team")), "speculative_actor", "episode", 1
+                )
         self.assertNotIn("response_format", payloads[0])
         self.assertNotIn("response_format", payloads[1])
         self.assertEqual(payloads[2]["response_format"], response_format())
@@ -54,6 +62,16 @@ class ResilienceTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("frequency_penalty", payloads[2])
         self.assertNotIn("presence_penalty", payloads[2])
         self.assertIn("frequency_penalty", payloads[0])
+        self.assertEqual(payloads[0]["seed"], payloads[3]["seed"])
+        self.assertNotIn("seed", payloads[1])
+        self.assertNotIn("seed", payloads[2])
+        self.assertEqual(
+            payloads[4]["response_format"]["json_schema"]["schema"]["properties"]["queries"][
+                "items"
+            ]["enum"],
+            ["candidate"],
+        )
+        self.assertNotIn("seed", payloads[4])
 
     async def test_provider_502_retries_with_separate_nodes_and_conservative_budget(self):
         attempts = []
@@ -109,6 +127,7 @@ class ResilienceTests(unittest.IsolatedAsyncioTestCase):
         async def handler(request):
             nonlocal failed
             if request.method == "GET":
+                await asyncio.sleep(0.08)  # Setup must not advance the batch's quota clock.
                 if request.url.path.endswith("/models"):
                     return httpx.Response(
                         200,
@@ -175,6 +194,7 @@ class ResilienceTests(unittest.IsolatedAsyncioTestCase):
                 checked = audit(args.output)
             self.assertTrue(checked["passed"])
             self.assertEqual(result["failures"], 0)
+            self.assertLess(result["batch_started_at_s"], 0.05)
             self.assertEqual(result["inference"]["failures"], 1)
             self.assertEqual(result["inference"]["unknown_cost_usd_requests"], 1)
             self.assertGreater(result["unknown_cost_upper_bound_usd"], 0)

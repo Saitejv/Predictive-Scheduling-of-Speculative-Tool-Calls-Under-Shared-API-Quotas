@@ -1,0 +1,221 @@
+{
+  "purpose": "Multi-agent comparison: Jev vs direct quota context and both baselines",
+  "offset": 322,
+  "tasks_per_run": 8,
+  "unique_questions": 8,
+  "actor_seed": 5851517,
+  "actor_seed_guarantee": "Best effort; verify actual path agreement",
+  "quota_epoch": "batch dispatch after setup",
+  "max_budget_charge_usd": 0.8,
+  "cooldown_s": 30.0,
+  "cooldown_inside_batch_timing": false,
+  "policies_frozen": true,
+  "cases": [
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "quota"
+    },
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "jev"
+    },
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "allow_all"
+    },
+    {
+      "agents": 4,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "no_speculation"
+    },
+    {
+      "agents": 8,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "jev"
+    },
+    {
+      "agents": 8,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "quota"
+    },
+    {
+      "agents": 8,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "no_speculation"
+    },
+    {
+      "agents": 8,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "allow_all"
+    },
+    {
+      "agents": 8,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "no_speculation"
+    },
+    {
+      "agents": 8,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "quota"
+    },
+    {
+      "agents": 8,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "jev"
+    },
+    {
+      "agents": 8,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "allow_all"
+    },
+    {
+      "agents": 4,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "allow_all"
+    },
+    {
+      "agents": 4,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "no_speculation"
+    },
+    {
+      "agents": 4,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "jev"
+    },
+    {
+      "agents": 4,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "quota"
+    },
+    {
+      "agents": 2,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "jev"
+    },
+    {
+      "agents": 2,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "no_speculation"
+    },
+    {
+      "agents": 2,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "quota"
+    },
+    {
+      "agents": 2,
+      "capacity": 12,
+      "window_s": 3,
+      "policy": "allow_all"
+    },
+    {
+      "agents": 2,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "quota"
+    },
+    {
+      "agents": 2,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "no_speculation"
+    },
+    {
+      "agents": 2,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "jev"
+    },
+    {
+      "agents": 2,
+      "capacity": 8,
+      "window_s": 5,
+      "policy": "allow_all"
+    }
+  ],
+  "source_sha256": {
+    "__init__.py": "5cdd380de4f1de999001a79b6ade5dc96439538371d20e2c9c3b0498efa11d45",
+    "adapters.py": "e5faca59a791dfe0189e31c7490510966d105886be7163eed8d5edbb7819993e",
+    "admission.py": "f335341bf6f64747969b5c405ef6a65b0c900f003d07d0ac568c88b8e69a68d3",
+    "artifacts.py": "c5e4b870ff3eb821db91d2aa3707a48f986fa0e62563113e3b215362447656f4",
+    "async_study.py": "3142207a75651eb4b4b8c0ee0d9bb7bc56355c4f880e809b6b669a9ae45a3cab",
+    "capture.py": "87cb47fc59599acea3b0b1454f3e62b2395c25c715ad398a4817cd8062df8789",
+    "capture_audit.py": "b4d934aa08f6d2c0de273fbad06b866cf864e19358c34dc0cc65be495aad9da4",
+    "capture_bank.py": "4cb9c0275d3ac6623a7642e10183bc8310139c50f045a4e5388e9f8773accbfe",
+    "capture_cohort.py": "0ebe2f1b9f8c46981df5231235f66aca987a159390e6e229036cfe710e6b4b9b",
+    "cli.py": "316673a0bc1ed7f8504c98b9b156de2fdcc5167ce656c7618d83214fc375f17b",
+    "collect.py": "9e770beea4e958c495a5c4ecce6b47a048f4739a63668e76ebafce172a68d1b2",
+    "collect_qa.py": "bb687dc5ea7aadc610a5dad0ef9c52d512a488749cb099314acc00cf7ba6d660",
+    "configuration.py": "03730b95c8d007b756ed2c766ef882a3f6ddff50e78742de361042a8aa84f47d",
+    "context_engine.py": "ec8600d4bb1565a02d23a19f508a8dd24918b9571b1869b0dcaf617da7dea339",
+    "experiments.py": "86bce0ccaa56539c07aeed72b0035104cba771eed50e1502c364d099318ddce3",
+    "forecast_bank.py": "7ee18ed2b11b8c93f81ed40a7bbaf21d9f0a622414e25dd2c7e8e4604bf6a042",
+    "forecast_study.py": "002c56bbf087bd07deb6e398a802a326ecfbda1515a91b16bd41930e82b42a9b",
+    "frozen_forecasts.py": "a0ef3a29f7ef0e26c5a1b1cc1a15d78282307bd0547dbde90749be42ad8ecfac",
+    "frozen_replay.py": "7b3e31002abd61da88f163193687ca9d68039c433a33ed5ba46bc3a0bf0ebc00",
+    "gate_lifetime_study.py": "b2cbe8ca54a1f1a717e4b95567950957231dcc9797d8a20beebfad31f36063d7",
+    "gate_study.py": "0ca0d3cdb5a33c8d39b09854d376eb4d18decf73da1c29b8fdefe35085de0a0b",
+    "gateway.py": "282994a258489968a3abaa99398560064114bce32692c6f411c2f0046bd1cca5",
+    "hotpot_runtime.py": "1be7f70ae8f5e7f057d32f8fdd440b306601dbfedba4a68bd95d2c6f12dcd55d",
+    "latency_study.py": "3a95863ff02f7dd0a5104f7583779533a5a2406e6666f3ee82b25c12293af07e",
+    "live.py": "e1a48fac982c50bbea2d9c3fb6b77b8c7010c10b2031a009f5ed50591364366e",
+    "live_context_audit.py": "dde3d6c3206f5f57916238ae500a83884244f62592b374bc77e201016b04509a",
+    "matched_context_study.py": "9434174f6eb4c2017f1e68560561cf48efa26c5a3775e5da23a6ca55b94c5f07",
+    "models.py": "54c0ce1249eca427a348124a8b90a32cad74eb542be96ccf7018a00da9772205",
+    "multi_agent.py": "876f57c404e88e410e9e430025e04dcc2a6dd48a128c8878197d273ef7505bfe",
+    "paper.py": "db39ff2c82a5356dad786029d9cd16bd0d576065b50124441caca5fada43a980",
+    "paper_collect.py": "eb8e6c356398b7424c7379deac82095b31f3149414ad7710a88e69af8d3d8db7",
+    "paper_pipeline.py": "84a37f61cd67fdb879738787ab77f5bb32333b56bd0db3db0ac1829e592f33ec",
+    "paper_reproduction.py": "008b8d8d2230ada5173f3fc9a129ff43d045788427a7ce548360334a28a327e3",
+    "perfect_gate.py": "8fbcddd86fb6954fae37f3c93eb935315c833c1853a24f0362b381061b475ef1",
+    "pipeline.py": "62e9f62a32f104003614eaae50c69514b121618aa9f5c5322af842055c387a23",
+    "policies.py": "75916e647d1a46201a55e108973015fe1ddeab26c3176c5f3d238a3950b97c9a",
+    "pooled_jev.py": "bab98a0a7020ed655f463a2076e0b895f86ab886833c0f4e9ff40900f2511f27",
+    "prediction.py": "167c0918bdb2007f0bd096090e19f73f799a974d0eafdbad4418936b2412438c",
+    "preflight.py": "e6780b5251a669fdccb29db93c41a2af724b5384fb1df76a34ac67b16added85",
+    "probability_calibration.py": "2d6233c712db0c43fdd2e8bf0b61ba89d19ede2a1c3ac1b21912871b2caccde8",
+    "provenance.py": "c19f6172da5c2c92909d1d44f31c2a9f2f50d36edf1ed8925addce7a57b4309d",
+    "qa.py": "3180193604ae26c1ca65f92161084867aeb1874bb317db789fdfffc0279c5dfb",
+    "quota.py": "e1e5e68f55265623367b25fe345f68d4954a58350d4bc2f7cc72efd9075c4866",
+    "quota_confirmation.py": "717de51a079dfa72310e209e31f8c23c68b8739985fc214ac3dc65fffff02fa5",
+    "quota_speculation.py": "93afb6fcc38532356c12e56a7fef2ce84e9ad77451f826b81d03b137931088bd",
+    "quota_surface.py": "0923e246dd6006fb245f3cb4ed404ab968e49fc0cc1280b8c08fe44842674295",
+    "replay.py": "05e1c1e5c2212422133fcaac8f4b30714540422c1d6040f03791a7fb2e71f38d",
+    "search.py": "72b06b4a9933b57c5fbc9a0f92bd7cc79a8bea076efad9c67f6eab81d15873b7",
+    "single_agent_reference.py": "67d38ff7dc030dfbc57855014b12d8a3cc273a2e2140abdf8c770869663bcea7",
+    "speculation.py": "8ac32783332e9a40b9c476d3a7bfe57745b89612749c9fa711e875542bfc46a5",
+    "speculation_audit.py": "e74b1123ee0e3fdc424e69f52e5552fbbcf8469aa0b28d6c58625aeff1a594c1",
+    "stage_export.py": "dad03b3783f0d7fbd19ab3b99002747202253be0515b9901f4be1671624f8680",
+    "tape_forecasts.py": "a008fd74bdce114231d9b51ec2890e45d0f61f2a30d04f83da44ea5829d1d99a",
+    "telemetry.py": "f9c41a07c35d9665497078f04447d871f5ea305c0e8d015a7d8a0df7f76cceca",
+    "throughput_audit.py": "f0368e849644bed821d9e5de2b59ed1a822fea6201de265027d95dd3b581b115",
+    "transport.py": "4a50d0c9227cd82713493c1d29c1825b6b9a402562b05ab6e0d4f863ed2cb06e",
+    "upstream.py": "26626b112ddd80cb1fdef9abf52c3af1695d57d732cb271aeca50ade62eac6ee",
+    "wiki_http.py": "b3f5004aa3df527db4b8a0dabb0f237ed897dd6b48bb4ef5ed7bd63ccd25553f",
+    "workload.py": "5912f8ea4bd621d9e9df1a4c56cb3bc2a2b602364486b5377a7399f9c00ba63b"
+  },
+  "limitations": "One live batch per cell; paths and provider timing may vary despite common seeds"
+}

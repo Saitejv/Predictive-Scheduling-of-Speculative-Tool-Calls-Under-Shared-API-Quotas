@@ -20,6 +20,63 @@ class History:
 
 
 class ContextTests(unittest.IsolatedAsyncioTestCase):
+    async def test_offered_search_demand_counts_cache_hits_without_double_counting_misses(self):
+        events, c = self.setup_engine(policy="current_capacity")
+        events.emit("required_action", episode="a", action="Search[first]", step=1)
+        await c.acquire_required("a", "first")
+        events.emit("tool_observed", episode="a", step=1, observation="Real result")
+        events.emit("required_action", episode="a", action="Search[cached]", step=2)
+        # A hit delivers a real result without entering the required API queue.
+        events.emit("tool_observed", episode="a", step=2, observation="Cached real result")
+        context = c.speculation_context("a")
+        self.assertEqual(context["required_calls_in_current_window"], 2)
+        self.assertEqual(context["remaining_calls"], 11)
+        self.assertEqual(context["queued_required_calls"], 0)
+
+    async def test_team_planner_uses_observed_peers_and_audit_rejects_fabricated_intent(self):
+        from quota_spec.live_context_audit import audit as context_audit
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "run"
+            args = parser().parse_args(
+                [
+                    "--backend",
+                    "mock",
+                    "--agents",
+                    "2",
+                    "--count",
+                    "2",
+                    "--policy",
+                    "current_capacity",
+                    "--speculation-planner",
+                    "quota_team",
+                    "--capacity",
+                    "8",
+                    "--window-s",
+                    "3",
+                    "--output",
+                    str(root),
+                ]
+            )
+            with patch.object(socket.socket, "connect", side_effect=AssertionError("Network")):
+                result = await run(args)
+                checked = context_audit(root)
+            self.assertEqual(result["optional_failures"], 0)
+            self.assertGreater(checked["speculation_planner_contexts_checked"], 0)
+            events = [json.loads(s) for s in (root / "events.jsonl").read_text().splitlines()]
+            changed = next(
+                e
+                for e in events
+                if e["event"] == "speculation_planner_context"
+                and e["quota"]["observed_peers"]["workers"]
+            )
+            changed["quota"]["observed_peers"]["workers"][0]["last_returned_actor_intent"] = (
+                "Future invented action"
+            )
+            (root / "events.jsonl").write_text("".join(json.dumps(e) + "\n" for e in events))
+            with self.assertRaisesRegex(ValueError, "Peer context differs"):
+                context_audit(root)
+
     def setup_engine(self, **kwargs):
         events = ObservedEvents()
         c = ContextCoordinator(events, **kwargs)
@@ -245,6 +302,7 @@ class ContextTests(unittest.IsolatedAsyncioTestCase):
                 checked = audit(args.output)
                 self.assertEqual(checked["episodes"], 8)
             self.assertEqual(result["tasks"], 8)
+            self.assertLess(result["batch_started_at_s"], 0.02)
             self.assertEqual(result["max_active_agents"], 4)
             self.assertTrue(result["quota_valid"])
             self.assertEqual(result["optional_failures"], 0)

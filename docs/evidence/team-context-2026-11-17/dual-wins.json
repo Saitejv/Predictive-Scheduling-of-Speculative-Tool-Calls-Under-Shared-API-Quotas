@@ -1,0 +1,177 @@
+[
+  {
+    "agents": 2,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 0.1,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 4.193812981951816,
+    "resource_makespan_s": 169.16602851577292,
+    "p95_completion_s": 7.937321999086994,
+    "mean_required_wait_s": 0.0005114603139615087,
+    "speculative_calls": 112,
+    "unused_speculative_calls": 100,
+    "predictor_overhead_s": 41.23930374639497,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 0.3139961275859582,
+        "all": 0.9720574550701966
+      },
+      "resource_makespan_s": {
+        "none": 0.15295533932044858,
+        "all": 1.0232035031218056
+      }
+    }
+  },
+  {
+    "agents": 2,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 1.0,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 7.234949179797695,
+    "resource_makespan_s": 290.92651619086973,
+    "p95_completion_s": 13.651688957897326,
+    "mean_required_wait_s": 0.02483268665320273,
+    "speculative_calls": 140.66666666666666,
+    "unused_speculative_calls": 119.66666666666667,
+    "predictor_overhead_s": 58.72750018108248,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 1.6592811140889174,
+        "all": 15.130821013683981
+      },
+      "resource_makespan_s": {
+        "none": 1.4922580274865815,
+        "all": 15.14746858895174
+      }
+    }
+  },
+  {
+    "agents": 4,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": null,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 6.056794127628382,
+    "resource_makespan_s": 124.50143008201849,
+    "p95_completion_s": 11.66783283489834,
+    "mean_required_wait_s": 0.005144402695476034,
+    "speculative_calls": 142.33333333333334,
+    "unused_speculative_calls": 126.66666666666667,
+    "predictor_overhead_s": 58.949335777161956,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 1.7332180092105243,
+        "all": 11.15842816246041
+      },
+      "resource_makespan_s": {
+        "none": 1.7254251363028272,
+        "all": 11.12375618625705
+      }
+    }
+  },
+  {
+    "agents": 4,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 1.0,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 7.156344947243634,
+    "resource_makespan_s": 146.8727810420678,
+    "p95_completion_s": 13.323229570756666,
+    "mean_required_wait_s": 0.002893306402395302,
+    "speculative_calls": 153.33333333333334,
+    "unused_speculative_calls": 131.66666666666666,
+    "predictor_overhead_s": 66.28928983603448,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 2.72770558325125,
+        "all": 2.349577994575247
+      },
+      "resource_makespan_s": {
+        "none": 2.2745721198188074,
+        "all": 2.6389499690542495
+      }
+    }
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 3.0,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 13.560526101178645,
+    "resource_makespan_s": 278.3152685560053,
+    "p95_completion_s": 27.47953468132376,
+    "mean_required_wait_s": 0.10549645439930914,
+    "speculative_calls": 176.66666666666666,
+    "unused_speculative_calls": 137,
+    "predictor_overhead_s": 71.30035483891454,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 5.547785058497967,
+        "all": 16.322074690056233
+      },
+      "resource_makespan_s": {
+        "none": 5.375184409075762,
+        "all": 16.18140488642291
+      }
+    }
+  },
+  {
+    "agents": 6,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 1.0,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 7.326436054306396,
+    "resource_makespan_s": 102.30297424979896,
+    "p95_completion_s": 13.59806484670844,
+    "mean_required_wait_s": 0.03723312890741952,
+    "speculative_calls": 116.66666666666667,
+    "unused_speculative_calls": 101,
+    "predictor_overhead_s": 73.1330619052945,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 0.415749917915087,
+        "all": 24.909542285705864
+      },
+      "resource_makespan_s": {
+        "none": 0.609934186725225,
+        "all": 24.795277620913513
+      }
+    }
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 3.0,
+    "policy": "jev_full",
+    "paired_orders": 3,
+    "mean_completion_s": 13.048264123260015,
+    "resource_makespan_s": 142.09336087542275,
+    "p95_completion_s": 26.664087041669216,
+    "mean_required_wait_s": 0.01338932356337041,
+    "speculative_calls": 222.33333333333334,
+    "unused_speculative_calls": 174,
+    "predictor_overhead_s": 80.19997872126987,
+    "savings_percent": {
+      "mean_completion_s": {
+        "none": 9.1158087534285,
+        "all": 5.14993347501499
+      },
+      "resource_makespan_s": {
+        "none": 9.586526106992466,
+        "all": 4.601210185136484
+      }
+    }
+  }
+]

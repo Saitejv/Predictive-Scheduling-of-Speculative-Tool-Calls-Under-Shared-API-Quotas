@@ -1,0 +1,110 @@
+[
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 0.1,
+    "metric": "mean_from_batch_submit_s",
+    "savings_vs_quota_percent": -6.328851414505765,
+    "saves_vs_none_and_full": false
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 3.0,
+    "metric": "mean_from_batch_submit_s",
+    "savings_vs_quota_percent": 0.26533503514232226,
+    "saves_vs_none_and_full": true
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 0.1,
+    "metric": "mean_from_batch_submit_s",
+    "savings_vs_quota_percent": 5.029656241248015,
+    "saves_vs_none_and_full": false
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 3.0,
+    "metric": "mean_from_batch_submit_s",
+    "savings_vs_quota_percent": -0.021947054425131007,
+    "saves_vs_none_and_full": true
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 0.1,
+    "metric": "mean_completion_s",
+    "savings_vs_quota_percent": -5.421459424121755,
+    "saves_vs_none_and_full": false
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 3.0,
+    "metric": "mean_completion_s",
+    "savings_vs_quota_percent": -0.45621005229825595,
+    "saves_vs_none_and_full": true
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 0.1,
+    "metric": "mean_completion_s",
+    "savings_vs_quota_percent": 3.2512589076588605,
+    "saves_vs_none_and_full": false
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 3.0,
+    "metric": "mean_completion_s",
+    "savings_vs_quota_percent": 0.8887256762484919,
+    "saves_vs_none_and_full": true
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 0.1,
+    "metric": "resource_makespan_s",
+    "savings_vs_quota_percent": 0.0,
+    "saves_vs_none_and_full": false
+  },
+  {
+    "agents": 4,
+    "capacity": 8,
+    "window_s": 5,
+    "search_s": 3.0,
+    "metric": "resource_makespan_s",
+    "savings_vs_quota_percent": -0.4524041584320626,
+    "saves_vs_none_and_full": true
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 0.1,
+    "metric": "resource_makespan_s",
+    "savings_vs_quota_percent": 5.1088962403270655,
+    "saves_vs_none_and_full": false
+  },
+  {
+    "agents": 8,
+    "capacity": 12,
+    "window_s": 3,
+    "search_s": 3.0,
+    "metric": "resource_makespan_s",
+    "savings_vs_quota_percent": 0.664157721762737,
+    "saves_vs_none_and_full": false
+  }
+]

@@ -37,3 +37,27 @@ def planner_prompt(prefix, step, width, quota):
         quota = planner_prompt("Observed trajectory", 2, 3, {"remaining_calls": 2})
         self.assertTrue(quota.startswith(blind))
         self.assertIn('"remaining_calls":2', quota)
+
+    def test_joint_instructions_use_peer_demand_instead_of_an_unconditional_count_floor(self):
+        prompt = planner_prompt(
+            "Observed trajectory",
+            2,
+            3,
+            {
+                "remaining_calls": 2,
+                "observed_peers": {"workers": [{"worker": "peer", "phase": "thinking"}]},
+            },
+        )
+        self.assertIn("Reserve calls for that competing demand", prompt)
+        self.assertIn("Without observed_peers use that fallback", prompt)
+        self.assertIn("not only this owner's cache hit", prompt)
+        from pathlib import Path
+
+        import quota_spec.quota_speculation as module
+        from quota_spec.live_context_audit import frozen_prompt_builder
+
+        _, frozen = frozen_prompt_builder(Path(module.__file__).read_text())
+        self.assertEqual(
+            frozen("Observed trajectory", 2, 3, None),
+            planner_prompt("Observed trajectory", 2, 3, None),
+        )

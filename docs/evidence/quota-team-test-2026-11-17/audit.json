@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "schedules": 32,
+  "fresh_generations_checked": 765,
+  "retries_with_delay_charged": 0,
+  "source_files_checked": 60,
+  "authoritative_actions_answers_and_observations_preserved": true,
+  "quota_and_required_fifo_valid": true,
+  "exact_prompt_context_and_outputs_verified": true
+}

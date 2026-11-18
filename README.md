@@ -1,6 +1,30 @@
 # Speculative tool calls under shared API quotas
 
+**Controlled test of the actual joint query planner:** 16 fixed questions,
+two orders, 32 schedules and 765 successful planner calls. Quota-plus-agent
+awareness improves queued-work latency by 5.03% over quota-only at 8 workers
+C12/3s with 0.1s Search, but loses 6.33% at 4 workers C8/5s with 0.1s Search;
+slow-search differences between the two are small. Main paths and answers stay
+fixed. 291 tests pass; $0.35091159 new known charges reconcile.
+See [the complete comparison](docs/QUOTA_TEAM_TEST_2026-11-17.md).
+
+**Combined quota and agent awareness:** `--speculation-planner quota_team`
+now supplies both API state and observed peers to the direct optional planner.
+Its instructions reserve quota using peer demand, with a conservative fallback.
+288 tests pass and a 16-episode native check passes all audits; no mean-latency
+improvement is established. See [the implementation and check](docs/QUOTA_TEAM_2026-11-17.md).
+
 CSE 585 project by Jack McClure, Saitej Velaga, and Angela Li.
+
+**November 17: peer-context and Search-time experiments.** 900 fixed-path schedules
+now cover 1/2/4/6/8 workers, three quotas and four Search service settings.
+At 4 workers / 8 calls per 5s / 3s Search, Jev cuts mean latency 5.55% versus
+no speculation and 16.32% versus full speculation. Both mean and batch time
+improve in all three orders. Other settings still lose. A separate paid
+fixed-candidate language-gate pilot finds no consistent benefit from full peer
+histories. The opt-in live `team` planner receives bounded observed peer context;
+the main actor does not. **287 tests pass; $0.27274865 new API spend reconciles.**
+See [the tables, context flow and limitations](docs/TEAM_CONTEXT_2026-11-17.md).
 
 **November 15: confirmed matched-replay wins over both baselines.** On 80 new
 held-out questions, the locked 4-worker / 12-Search / 3-second setting reduces
@@ -11,6 +35,20 @@ retains losses: 13 settings beat both baselines on both endpoints. This is
 measured replay evidence; the final live smoke verifies operation, not live A/B
 speed. **275 tests pass; $1.439993844 additional API spend is reconciled.**
 See [the full result, controls, quota maps and reproduction](docs/QUOTA_WINS_2026-11-15.md).
+
+**Speed-only scenario table:** single-agent without a binding quota,
+single-agent with quota, and 2/4/6/8 agents with quota now have all four live
+styles measured. Finite rows share C=12 Search calls per 3 seconds. An independent
+80-question fixed-path comparison covers no/full/Jev and shows where scheduling
+benefits reverse with concurrency. The quota-aware language planner remains a
+live-only measurement. See [the speed tables](docs/SPEED_SCENARIOS.md).
+
+**Multi-agent scaling comparison:** 384 clean live episodes now compare
+2/4/8 agents, two quotas, four policies and two actor seeds. These live runs used independent actor paths, so their exact-match differences
+are not an accuracy tradeoff caused by speculation. Use the fixed-path studies
+for speed comparisons that preserve the authoritative work. See the
+[simple table and full controls](docs/MULTI_AGENT_SCALING_2026-11-15.md). The main
+agent still receives no quota context. 281 tests and the independent audits pass.
 
 **Quota-aware speculation experiment:** the optional speculative branch can now
 receive remaining calls, capacity, refill timing and competing required work

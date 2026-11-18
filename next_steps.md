@@ -1,10 +1,148 @@
 # Current handoff
 
-Updated November 15, 2026. The current user direction authorizes API spending
+Updated November 17, 2026. The current user direction authorizes API spending
 for making the multi-agent Jev context-engine idea work. It supersedes the older
 single-agent-only priority and earlier $0.50 testing-turn limits. Keep individual
 experiments explicitly bounded, retain all attempts and preserve existing paid
 evidence. Do not commit or publish without a request.
+
+## Actual joint query-planner controlled test
+
+Read [the full test](docs/QUOTA_TEAM_TEST_2026-11-17.md). Raw matrix:
+`results/quota-team-test-2026-11-17-paced`, stopped initial trial:
+`...-controlled`. 16 historical eval questions × 4 scenarios × 2 orders,
+24 paid speculative schedules + 8 no-spec controls = 32 schedules, 512 replayed
+episode completions. 765 successful API calls actually generate fresh queries
+using the current quota/quota_team template, **not** the earlier fixed-candidate
+gate. Saved observation-prediction prefixes/times and all main paths/results/
+answers remain fixed. Search has a declared constant 0.1s or 3s response time,
+both required and optional. It is counterfactual scheduling, not a native Search
+benchmark. Full uses a quota-blind version of the same prompt and step-4 budget.
+
+Primary metric now counts queued-work latency: all 16 questions ready at t=0,
+mean `task_finish_s`. Prior worker-relative metric (finish minus task start) is
+reported separately; do not mix the two clocks. Combined vs quota-only queued
+latency: +6.33% slower (4/C8/5/0.1s), 0.27% faster (4/C8/5/3s), 5.03% faster
+(8/C12/3/0.1s), 0.02% slower (8/C12/3/3s). The useful 8-worker fast-search win
+also improves batch time 5.11% in both orders, but no speculation still wins.
+4-worker slow Search beats no/full on mean and batch with either quota-aware
+method; extra peers do not provide a reliable additional win. No default change.
+
+Shared live/replay context serializer added. Live demand counter now counts
+returned required Search actions including cache hits, matching replay, instead
+of only misses entering the queue. New audit metadata identifies the convention;
+old captures preserve old semantics. The counter regression, replay fresh-query
+hook and independent all-765-context provenance/FIFO/quota audit pass. 291 tests,
+Ruff (140 files) pass. No new native questions used: next unused offset stays346.
+
+Initial unpaced attempt: 58 calls, 5 upstream shared-pool 429s, retained; matrix
+was restarted with predeclared .75s inter-collection gap excluded from simulated
+service. Genuine retry/backoff remains charged. Completed matrix has zero API
+failures/retries. Total 823 attempts / $0.35091159 known charges, exact account
+usage-delta reconciliation; 5 unknown individual failed receipts retain .0354497
+reservation, total budget charge .38636129. No API/provider limit changes.
+
+Storage recovered by transparently compressing 27 older JSONL logs, SHA-verified,
+no data/paths removed. Manifests `results/quota-team-test-2026-11-17-lossless-*
+.json` retain allocation changes. Compact results are under
+`docs/evidence/quota-team-test-2026-11-17`. All jobs completed, no paid job running.
+
+## Explicit combined quota/peer planner
+
+Read [the follow-up](docs/QUOTA_TEAM_2026-11-17.md). `quota_team` is an explicit
+alias for combined API and observed-peer context. The query-planner prompt now
+uses peer phase/progress/history/results/returned intent to estimate demand
+before refill; the worker-count reserve is only a missing/uncertain-context
+fallback. Both quota-only and combined use the same updated instructions.
+The `team` alias remains supported. This is the actual query generator, separate
+from the earlier fixed-candidate admission gate. Main actors see neither quota
+nor peer context. No default change away from Jev.
+
+A new native check compares quota_team/quota on eight new questions, offsets
+338–345, 4 workers C8/5s, generation budget 4. All 16 episodes finish with zero
+actor/optional failures, zero Jev calls, valid quota/FIFO/peer audits. Combined
+mean 8.788s vs quota-only 8.223s, batch 21.099s vs 21.208s. Independent actor
+paths have 39 versus 37 actions; do not call the batch difference a speedup.
+All 20 combined contexts contain both quota and peers. Next unused offset346.
+288 tests and Ruff (137 files) pass. New known API receipts: $0.0687131/156 calls.
+Artifacts: `results/quota-team-2026-11-17-*`, compact live report under
+`docs/evidence/quota-team-2026-11-17`. All recordings are retained. Disk space
+was down to ~412MiB at the final run: check free space before further paid runs.
+
+## Latest peer-context and Search-time work
+
+Read [the November 17 report](docs/TEAM_CONTEXT_2026-11-17.md). Artifacts are
+`results/team-context-2026-11-17-*`; compact CSVs, audits and plot are tracked under
+`docs/evidence/team-context-2026-11-17`. No data was deleted. No new commit/push.
+
+900 fixed-path schedules cover 80 evaluation questions, five worker counts,
+C=1,000,000/3s, C=12/3s and C=8/5s, native/0.1/1/3-second Search service,
+three orders and no/full/full-step4/Jev-owner/Jev-global. Seven aggregate settings
+beat both baselines on mean and all-background batch time. The useful larger
+wins are 4 workers C8/5 with 3s Search and 8 workers C12/3 with 3s Search;
+all three orders favor Jev on both endpoints against both baselines.
+8 workers C8/5 with 3s Search has a tiny mean win but a batch loss—do not call it
+a global win. For constant Search settings, forecast service duration gets the
+same known configuration; development probabilities and actor/generation timing
+are unchanged. This is counterfactual replay with unlimited provider service.
+
+A separate 8-question pilot uses actual Gemini calls to gate saved candidates:
+quota vs phase/progress vs full observed peer context. This **new admission gate
+is not the existing live quota-aware query generator**. 24 valid paid schedules,
+548 valid calls; no consistent advantage from the larger semantic payload.
+Two earlier schema failures are retained and charged (115 calls). The corrected
+schema enumerates only the supplied query, and dispatch still validates exact
+identity. The independent audit validates all 548 observed contexts against
+returned actions, result excerpts and returned intent. Jev-owner still sees all
+forecasts; only its gain objective changes, so it is not a no-sharing ablation.
+
+The live runtime also now supports `--speculation-planner team`, keeping its
+query-planner instructions while appending bounded observed peer state. Two
+8-question native smoke batches on new offsets 330–337 completed cleanly with
+independent context/quota/FIFO audits, but independent actor paths make their
+speed comparison descriptive only. Next unused live offset: 338. Do not turn
+this opt-in option into the default based on the small gate pilot.
+
+287 tests pass; Ruff passes for 137 files. Total new API spend $0.27274865,
+825 calls, no unknown costs, exact account-delta reconciliation. Source snapshots
+and gzip schedules retained. No paid jobs remain running. The next useful work
+is a larger repeated-order fixed-candidate gate study (especially compact peer
+progress), followed by a prospective live test; do not claim more context alone
+is a demonstrated improvement. Preserve the earlier held-out native Jev proof
+as separate evidence.
+
+## Latest speed-only scenario comparison
+
+Read [the speed tables](docs/SPEED_SCENARIOS.md). New live runs fill 1-agent
+unconstrained (verified nonbinding C=1,000,000), 1-agent C=12/3s, and 6-agent C=12/3s.
+The main table reuses only the common first-seed 2/4/8-agent runs for consistent
+8-question samples; it does not mix in the older two-seed averages. All four
+styles are present. Do not present these live observations as isolated causal
+policy speedups: the six-agent full-speculation run has a 30.218s actor tail.
+A separate 80-question fixed-path table covers no/full/Jev for all scenarios;
+quota-aware LLM results cannot be copied into it without dynamic context data.
+Added API cost: $0.190243988, reconciled; one recovered attempt retains a
+$0.0064369 unknown-cost reservation. All 281 tests pass. New controller/report
+sources and live/replay artifacts are under `scenario-speed-2026-11-15-*`.
+The original 80-question primary Jev win remains separate evidence.
+
+## Latest multi-agent matrix
+
+Read [the scaling table](docs/MULTI_AGENT_SCALING_2026-11-15.md). Two complete
+192-episode matrices compare 2/4/8 agents and 8/5s vs 12/3s quotas on the same
+eight questions with two common actor seeds. Quota epochs now start at batch
+dispatch. Actual actor prompts remain quota-free. No universal dual-baseline win
+was established; quota-aware was faster than Jev in four settings, Jev scored
+higher on exact match in five. Keep the earlier controlled 80-question result
+separate. All 281 tests and 48 independent run audits pass.
+Total new charges: $0.953237138 including the retained storage failure and two
+budget-probe runs. $0.0006088 has only an aggregate account receipt. About $0.509
+of the configured daily allowance remained at the final account check.
+Raw evidence paths and byte content survived content-verified storage dedup and
+transparent compression. Main data: `results/multi-agent-2026-11-15-final` and
+`results/multi-agent-2026-11-15-repeat`; combined report in `...-comparison`.
+Next unused offset: 330. Future confirmation needs larger question batches and
+controlled actor paths; two eight-question batches are exploratory.
 
 ## Direct quota-aware speculation experiment
 

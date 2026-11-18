@@ -192,6 +192,7 @@ async def run(args):
                 draft_actor=args.draft_actor,
                 reserve_unknown_cost=True,
                 optional_allowed=lambda episode: episode in coordinator.agents,
+                actor_seed=args.actor_seed,
             )
             optional_slots = args.optional_slots or args.agents
             chat.semaphore = asyncio.Semaphore(args.agents + optional_slots)
@@ -289,6 +290,8 @@ async def run(args):
                 "comparison": "Independent live trajectories; no causal speedup inferred",
                 "required_result_cache": False,
                 "context_history_argument_key": "value",
+                "required_demand_counter": "offered_search_actions_including_cache_hits",
+                "quota_epoch": "batch_dispatch; setup excluded",
                 "max_steps": 7,
                 "width": args.width,
                 "calibration_sha256": calibrated.artifact["sha256"] if calibrated else None,
@@ -351,6 +354,9 @@ async def run(args):
                 if task.done() and task.exception():
                     raise task.exception()
 
+        # Catalog/account fetches and HTTP-pool setup must not shift the first
+        # quota reset differently for the policies being compared.
+        events.start = capture.clock_start = time.perf_counter()
         await asyncio.gather(*(worker(i) for i in range(min(args.agents, args.count))))
         await asyncio.gather(*tasks)
         capture.seal()
@@ -438,6 +444,12 @@ def parser():
     p.add_argument("--count", type=int, default=8)
     p.add_argument("--offset", type=int, default=50)
     p.add_argument("--actor", default="google/gemini-2.5-flash")
+    p.add_argument(
+        "--actor-seed",
+        type=int,
+        default=None,
+        help="Best-effort common actor randomness across policy comparisons",
+    )
     p.add_argument("--speculator", default="openai/gpt-4.1-nano")
     p.add_argument(
         "--draft-actor",
@@ -460,9 +472,9 @@ def parser():
     p.add_argument("--generation-step-budget", type=int, default=None)
     p.add_argument(
         "--speculation-planner",
-        choices=("legacy", "blind", "quota"),
+        choices=("legacy", "blind", "quota", "team", "quota_team"),
         default="legacy",
-        help="Direct optional Search planner; quota state is never sent to the main actor",
+        help="Optional Search planner: quota uses API state; quota_team also uses observed peers (team alias). Main actor receives neither.",
     )
     p.add_argument(
         "--optional-slots",

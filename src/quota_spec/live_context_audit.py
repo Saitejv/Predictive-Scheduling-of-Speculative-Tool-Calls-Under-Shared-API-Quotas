@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 from collections import Counter
+from dataclasses import asdict
 from pathlib import Path
 
 from .artifacts import write_json
@@ -146,13 +147,54 @@ def audit(root):
         MARKER, planner_prompt = frozen_prompt_builder(frozen_source)
 
         store = CaptureStore(root / "capture")
-        active, counts = set(), Counter()
+        active, counts, peer_registry = set(), Counter(), {}
+        demand_times = []
         for event in events:
             kind = event["event"]
             if kind == "episode_started":
                 active.add(event["episode"])
+                peer_registry[event["episode"]] = {
+                    "worker": event["episode"],
+                    "task": event["question"][:2048],
+                    "completed_calls": 0,
+                    "phase": "thinking",
+                    "since": event["time_s"],
+                    "history": [],
+                    "last_result": "",
+                    "last_returned_actor_intent": "",
+                }
             elif kind == "answer_ready":
                 active.remove(event["episode"])
+                peer_registry.pop(event["episode"])
+            elif kind == "required_action" and event["episode"] in peer_registry:
+                peer = peer_registry[event["episode"]]
+                tool, value = split_action(event["action"])
+                if tool == "search":
+                    demand_times.append(event["time_s"])
+                call = (
+                    Call.search(value)
+                    if tool == "search"
+                    else Call(tool, json.dumps({"value": value}))
+                )
+                peer["history"] = [*peer["history"][-7:], asdict(call)]
+                peer.update(
+                    phase="queued" if tool == "search" else "running",
+                    since=event["time_s"],
+                    last_returned_actor_intent=event.get("thought", "")[:1024],
+                )
+            elif (
+                kind == "search_started"
+                and not event["speculative"]
+                and event["episode"] in peer_registry
+            ):
+                peer_registry[event["episode"]].update(phase="running", since=event["time_s"])
+            elif kind == "tool_observed" and event["episode"] in peer_registry:
+                peer_registry[event["episode"]].update(
+                    phase="thinking",
+                    since=event["time_s"],
+                    completed_calls=event["step"],
+                    last_result=event["observation"][:1024],
+                )
             elif kind == "quota_claimed":
                 counts[event["window_index"]] += 1
             elif kind == "speculation_planner_context":
@@ -162,7 +204,15 @@ def audit(root):
                         raise ValueError("Blind planner received quota state")
                     continue
                 window = math.floor(context["observed_at_s"] / config["window_s"])
-                if set(context) != {
+                if (
+                    config.get("required_demand_counter")
+                    == "offered_search_actions_including_cache_hits"
+                ):
+                    if context["required_calls_in_current_window"] != sum(
+                        t >= window * config["window_s"] for t in demand_times[-4096:]
+                    ):
+                        raise ValueError("Planner required demand differs from observed actions")
+                expected_keys = {
                     "api",
                     "quota_type",
                     "capacity",
@@ -176,7 +226,26 @@ def audit(root):
                     "queued_required_calls",
                     "running_required_workers",
                     "required_calls_in_current_window",
-                }:
+                }
+                if event["planner"] in ("team", "quota_team"):
+                    expected_keys.add("observed_peers")
+                    actual = context["observed_peers"]
+                    peers = sorted(active - {event["episode"]})
+                    if actual["omitted_workers"] != max(0, len(peers) - 16) or len(
+                        actual["workers"]
+                    ) != min(16, len(peers)):
+                        raise ValueError("Peer registry size differs from observed workers")
+                    for tid, supplied in zip(peers[:16], actual["workers"], strict=True):
+                        expected = dict(peer_registry[tid])
+                        since = expected.pop("since")
+                        row = dict(supplied)
+                        elapsed = row.pop("elapsed_s")
+                        if (
+                            row != expected
+                            or abs(elapsed - (context["observed_at_s"] - since)) > 0.001
+                        ):
+                            raise ValueError("Peer context differs from observed event history")
+                if set(context) != expected_keys:
                     raise ValueError("Unexpected field in observed quota context")
                 if (
                     context["api"] != "Wikipedia Search"

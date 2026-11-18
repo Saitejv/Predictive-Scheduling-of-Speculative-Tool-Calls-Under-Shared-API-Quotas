@@ -1,0 +1,38 @@
+{
+  "latency": {
+    "passed": true,
+    "runs": 900,
+    "answers_preserved": true,
+    "required_fifo": true,
+    "shared_quota_valid": true,
+    "observed_contexts_checked": 0,
+    "source_files_checked": 60
+  },
+  "gates-enum": {
+    "passed": true,
+    "runs": 40,
+    "answers_preserved": true,
+    "required_fifo": true,
+    "shared_quota_valid": true,
+    "observed_contexts_checked": 368,
+    "source_files_checked": 60
+  },
+  "phases": {
+    "passed": true,
+    "runs": 32,
+    "answers_preserved": true,
+    "required_fifo": true,
+    "shared_quota_valid": true,
+    "observed_contexts_checked": 180,
+    "source_files_checked": 60
+  },
+  "matched-jev": {
+    "passed": true,
+    "runs": 16,
+    "answers_preserved": true,
+    "required_fifo": true,
+    "shared_quota_valid": true,
+    "observed_contexts_checked": 0,
+    "source_files_checked": 60
+  }
+}

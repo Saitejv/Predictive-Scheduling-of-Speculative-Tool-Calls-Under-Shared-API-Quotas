@@ -1,0 +1,45 @@
+{
+  "runs": [
+    {
+      "path": "results/team-context-2026-11-17-gates-enum/inference.jsonl",
+      "requests": 368,
+      "known_cost_usd": 0.12371007,
+      "unknown_cost_requests": 0
+    },
+    {
+      "path": "results/team-context-2026-11-17-gates/inference.jsonl",
+      "requests": 11,
+      "known_cost_usd": 0.0020728,
+      "unknown_cost_requests": 0
+    },
+    {
+      "path": "results/team-context-2026-11-17-live-smoke/team/inference.jsonl",
+      "requests": 78,
+      "known_cost_usd": 0.03618414,
+      "unknown_cost_requests": 0
+    },
+    {
+      "path": "results/team-context-2026-11-17-live-smoke/quota/inference.jsonl",
+      "requests": 84,
+      "known_cost_usd": 0.03245719,
+      "unknown_cost_requests": 0
+    },
+    {
+      "path": "results/team-context-2026-11-17-gates-strict/inference.jsonl",
+      "requests": 104,
+      "known_cost_usd": 0.03313405,
+      "unknown_cost_requests": 0
+    },
+    {
+      "path": "results/team-context-2026-11-17-phases/inference.jsonl",
+      "requests": 180,
+      "known_cost_usd": 0.0451904,
+      "unknown_cost_requests": 0
+    }
+  ],
+  "requests": 825,
+  "known_cost_usd": 0.27274865,
+  "unknown_cost_requests": 0,
+  "account_usage_delta_usd": 0.2727486500000005,
+  "account_delta_matches": true
+}

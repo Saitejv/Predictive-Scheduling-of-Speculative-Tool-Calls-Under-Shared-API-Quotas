@@ -1,0 +1,26 @@
+{
+  "trials": [
+    {
+      "root": "results/quota-team-test-2026-11-17-controlled",
+      "requests": 58,
+      "failures": 5,
+      "known_cost_usd": 0.02330405,
+      "unknown_cost_attempts": 5,
+      "budget_charge_usd": 0.05875375
+    },
+    {
+      "root": "results/quota-team-test-2026-11-17-paced",
+      "requests": 765,
+      "failures": 0,
+      "known_cost_usd": 0.32760754,
+      "unknown_cost_attempts": 0,
+      "budget_charge_usd": 0.32760754
+    }
+  ],
+  "requests": 823,
+  "known_cost_usd": 0.35091159,
+  "budget_charge_usd": 0.38636128999999997,
+  "unknown_cost_attempts": 5,
+  "usage_delta_usd": 0.35091158999999994,
+  "usage_delta_matches_known_cost": true
+}

@@ -107,6 +107,7 @@ class FrozenReplay:
         generation_trigger="dispatch",
         retry_candidates=False,
         max_generation_step=None,
+        generation_provider=None,
     ):
         self.tapes = {t["task_id"]: t for t in tapes}
         if not self.tapes or len(self.tapes) != len(tapes):
@@ -147,6 +148,11 @@ class FrozenReplay:
         ):
             raise ValueError("Generation step budget must be a nonnegative integer")
         self.max_generation_step = max_generation_step
+        if generation_provider is not None and tool_duration_s is None:
+            raise ValueError(
+                "Fresh-query generation requires explicit counterfactual Search service"
+            )
+        self.generation_provider = generation_provider
 
     def run(
         self,
@@ -176,6 +182,7 @@ class FrozenReplay:
         agent_waits = {tid: 0.0 for tid in self.tapes}
         recent, decisions = [], []
         requested = set()
+        generated = {}
         deferred = {}
         retry_scheduled = False
         stats = {
@@ -537,7 +544,35 @@ class FrozenReplay:
                 if active(tid, index):
                     stats["hypothetical_runs"] += 1
                     window = self.tapes[tid]["steps"][index]["window"]
-                    push(now + window["hypothetical_duration_s"], "hypothetical_done", data)
+                    if self.generation_provider is None:
+                        elapsed = window["hypothetical_duration_s"]
+                    else:
+                        from .quota_speculation import parse_queries
+
+                        state = observed(tid, index, {"query": "context only"})
+                        proposal = self.generation_provider(state, index + 1)
+                        elapsed = proposal["latency_s"]
+                        if not math.isfinite(elapsed) or elapsed < 0:
+                            raise ValueError("Invalid fresh-query generation latency")
+                        actions = parse_queries(json.dumps({"queries": proposal["queries"]}), 3)
+                        generated[tid, index] = [
+                            {
+                                "query": action[7:-1],
+                                "rank": rank,
+                                "eligible": True,
+                                "duration_s": self.tool_duration_s,
+                            }
+                            for rank, action in enumerate(actions, 1)
+                        ]
+                        log(
+                            "planner_generation_requested",
+                            task_id=tid,
+                            step=index + 1,
+                            latency_s=elapsed,
+                            queries=proposal["queries"],
+                            provenance=proposal.get("provenance", {}),
+                        )
+                    push(now + elapsed, "hypothetical_done", data)
                 else:
                     stats["late_windows"] += 1
             elif kind == "hypothetical_done":
@@ -546,7 +581,12 @@ class FrozenReplay:
                     stats["late_windows"] += 1
                     release(tid)
                     continue
-                for candidate in self.tapes[tid]["steps"][index]["window"]["candidates"]:
+                candidates = (
+                    self.tapes[tid]["steps"][index]["window"]["candidates"]
+                    if self.generation_provider is None
+                    else generated.pop((tid, index))
+                )
+                for candidate in candidates:
                     if not candidate["eligible"]:
                         continue
                     if known(tid, candidate["query"]):

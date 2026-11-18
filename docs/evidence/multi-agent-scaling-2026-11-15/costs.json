@@ -1,0 +1,7 @@
+{
+  "model_api_attempt_records": 3043,
+  "known_receipt_cost_usd": 0.9526283380000033,
+  "account_delta_usd": 0.9532371379999995,
+  "account_only_cost_usd": 0.0006087999999961902,
+  "note": "Storage-failed first attempt retained; an aggregate charge of $0.0006088 has no per-request receipt. Includes the separate 16-question budget-probe batches, excluded from performance comparisons."
+}
